@@ -4,6 +4,7 @@
 # PCB Iteration
 
 # Schematic
+<img src="img/schem.png" width=300>  
 
 ## Protoboard
 First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. You can see these efforts below:
