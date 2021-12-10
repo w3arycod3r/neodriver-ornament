@@ -3,8 +3,8 @@
 
 # PCB Iteration
 ## Protoboard
-![a](img/proto2.png)
-![a](img/proto1.png)
+![a](img/proto2.jpg)
+![a](img/proto1.jpg)
 
 ## v1
 
