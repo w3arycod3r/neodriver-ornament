@@ -5,7 +5,7 @@
 		{
 			"label": "build neo_driver_app",
 			"type": "shell",
-			"command": "cd Arduino/neo_driver_app/ ; ./build.bat",
+			"command": "cd arduino/neo_driver_app/ ; ./build.bat",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -25,7 +25,7 @@
 		{
 			"label": "build eep_data_write",
 			"type": "shell",
-			"command": "cd Arduino/eep_data_write/ ; ./build.bat",
+			"command": "cd arduino/eep_data_write/ ; ./build.bat",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
