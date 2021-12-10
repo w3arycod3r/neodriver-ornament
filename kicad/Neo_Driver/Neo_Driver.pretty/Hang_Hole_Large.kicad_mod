@@ -1,0 +1,9 @@
+(module Hang_Hole_Large (layer F.Cu) (tedit 5FE507CD)
+  (fp_text reference REF** (at 0 2.54) (layer F.SilkS) hide
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (fp_text value Hang_Hole_Large (at 0 -2.54) (layer F.Fab)
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (pad 1 thru_hole circle (at 0 0) (size 4.3 4.3) (drill 4) (layers *.Cu *.Mask))
+)

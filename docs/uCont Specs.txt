@@ -1,0 +1,9 @@
+2 Digital I/O's
+1 ADC input
+Easy to program in-circuit...Use 74HCT245 buffer?
+Very low power consumption...Power down mode
+3.3V minimum operating voltage
+
+Must switch a 400 nSec pulse...At least 2.5 MHz clock speed?
+Minimum external circuitry
+DIP Through-Hole package...DIP-8?

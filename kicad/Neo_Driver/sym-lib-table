@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name Neo_Driver)(type Legacy)(uri ${KIPRJMOD}/Neo_Driver.lib)(options "")(descr ""))
+  (lib (name Neo_Driver-rescue)(type Legacy)(uri ${KIPRJMOD}/Neo_Driver-rescue.lib)(options "")(descr ""))
+)

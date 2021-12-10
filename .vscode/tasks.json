@@ -1,0 +1,45 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		// neo_driver_app
+		{
+			"label": "build neo_driver_app",
+			"type": "shell",
+			"command": "cd Arduino/neo_driver_app/ ; ./build.bat",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"detail": "Build program for neo_driver_app",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		// eep_data_write
+		{
+			"label": "build eep_data_write",
+			"type": "shell",
+			"command": "cd Arduino/eep_data_write/ ; ./build.bat",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"detail": "Build program for eep_data_write",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+	]
+}
