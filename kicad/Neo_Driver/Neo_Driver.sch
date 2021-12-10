@@ -14,7 +14,7 @@ Comment3 "License: CC BY 4.0"
 Comment4 "Author: Garrett Carter"
 $EndDescr
 $Comp
-L power:VCC #PWR05
+L Neo_Driver-rescue:VCC-power #PWR05
 U 1 1 5EB7D3C7
 P 4000 3200
 F 0 "#PWR05" H 4000 3050 50  0001 C CNN
@@ -25,7 +25,7 @@ F 3 "" H 4000 3200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MCU_Microchip_ATtiny:ATtiny85-20PU U1
+L Neo_Driver-rescue:ATtiny85-20PU-MCU_Microchip_ATtiny U1
 U 1 1 5EB73D8D
 P 4000 3850
 F 0 "U1" H 3600 4400 50  0000 R CNN
@@ -36,7 +36,7 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microc
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR06
+L Neo_Driver-rescue:GND-power #PWR06
 U 1 1 5EB7C5F4
 P 4000 4500
 F 0 "#PWR06" H 4000 4250 50  0001 C CNN
@@ -47,7 +47,7 @@ F 3 "" H 4000 4500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:Battery_Cell BT1
+L Neo_Driver-rescue:Battery_Cell-Device BT1
 U 1 1 5EB7F7B1
 P 2500 3700
 F 0 "BT1" H 2618 3796 50  0000 L CNN
@@ -58,7 +58,7 @@ F 3 "~" V 2500 3760 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR01
+L Neo_Driver-rescue:VCC-power #PWR01
 U 1 1 5EB81E86
 P 2600 2400
 F 0 "#PWR01" H 2600 2250 50  0001 C CNN
@@ -69,7 +69,7 @@ F 3 "" H 2600 2400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR02
+L Neo_Driver-rescue:GND-power #PWR02
 U 1 1 5EB82B75
 P 2500 3950
 F 0 "#PWR02" H 2500 3700 50  0001 C CNN
@@ -84,7 +84,7 @@ Wire Wire Line
 Wire Wire Line
 	2500 3800 2500 3950
 $Comp
-L power:GND #PWR016
+L Neo_Driver-rescue:GND-power #PWR016
 U 1 1 5EB8CB53
 P 7200 2350
 F 0 "#PWR016" H 7200 2100 50  0001 C CNN
@@ -95,7 +95,7 @@ F 3 "" H 7200 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR017
+L Neo_Driver-rescue:VCC-power #PWR017
 U 1 1 5EB8D4C4
 P 8450 2150
 F 0 "#PWR017" H 8450 2000 50  0001 C CNN
@@ -106,7 +106,7 @@ F 3 "" H 8450 2150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR014
+L Neo_Driver-rescue:VCC-power #PWR014
 U 1 1 5EB9B20E
 P 7150 3600
 F 0 "#PWR014" H 7150 3450 50  0001 C CNN
@@ -117,7 +117,7 @@ F 3 "" H 7150 3600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR015
+L Neo_Driver-rescue:GND-power #PWR015
 U 1 1 5EB9B968
 P 7450 5450
 F 0 "#PWR015" H 7450 5200 50  0001 C CNN
@@ -136,7 +136,7 @@ Wire Wire Line
 Wire Wire Line
 	7650 2850 7650 2750
 $Comp
-L Connector:AVR-ISP-6 J2
+L Neo_Driver-rescue:AVR-ISP-6-Connector J2
 U 1 1 5EB839E3
 P 7750 2350
 F 0 "J2" V 7283 2400 50  0000 C CNN
@@ -147,7 +147,7 @@ F 3 " ~" H 6475 1800 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:VCC #PWR013
+L Neo_Driver-rescue:VCC-power #PWR013
 U 1 1 5EBA6EED
 P 6850 2150
 F 0 "#PWR013" H 6850 2000 50  0001 C CNN
@@ -162,7 +162,7 @@ Wire Wire Line
 Wire Wire Line
 	6850 2600 6850 2850
 $Comp
-L Device:R R1
+L Neo_Driver-rescue:R-Device R1
 U 1 1 5EBA5447
 P 6850 2450
 F 0 "R1" H 6920 2496 50  0000 L CNN
@@ -179,7 +179,7 @@ Wire Wire Line
 Wire Wire Line
 	7950 3150 7950 2750
 $Comp
-L power:GND #PWR010
+L Neo_Driver-rescue:GND-power #PWR010
 U 1 1 5EBCEFD2
 P 5950 3500
 F 0 "#PWR010" H 5950 3250 50  0001 C CNN
@@ -190,7 +190,7 @@ F 3 "" H 5950 3500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R_POT RV1
+L Neo_Driver-rescue:R_POT-Device RV1
 U 1 1 5EBD7279
 P 5250 5000
 F 0 "RV1" V 5135 5000 50  0000 C CNN
@@ -203,7 +203,7 @@ $EndComp
 Wire Wire Line
 	4700 5000 5100 5000
 $Comp
-L power:VCC #PWR09
+L Neo_Driver-rescue:VCC-power #PWR09
 U 1 1 5EBDBB06
 P 5600 4950
 F 0 "#PWR09" H 5600 4800 50  0001 C CNN
@@ -222,7 +222,7 @@ Wire Wire Line
 Wire Wire Line
 	5250 3950 5250 4200
 $Comp
-L Device:R R2
+L Neo_Driver-rescue:R-Device R2
 U 1 1 5EBDFE22
 P 6700 3850
 F 0 "R2" V 6493 3850 50  0000 C CNN
@@ -235,7 +235,7 @@ $EndComp
 Wire Wire Line
 	6850 3850 7300 3850
 $Comp
-L Device:CP C2
+L Neo_Driver-rescue:CP-Device C2
 U 1 1 5EBEAD1A
 P 8100 3850
 F 0 "C2" H 8218 3896 50  0000 L CNN
@@ -246,7 +246,7 @@ F 3 "~" H 8100 3850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR011
+L Neo_Driver-rescue:VCC-power #PWR011
 U 1 1 5EBECEBD
 P 8100 3600
 F 0 "#PWR011" H 8100 3450 50  0001 C CNN
@@ -257,7 +257,7 @@ F 3 "" H 8100 3600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR012
+L Neo_Driver-rescue:GND-power #PWR012
 U 1 1 5EBED4C6
 P 8100 4100
 F 0 "#PWR012" H 8100 3850 50  0001 C CNN
@@ -301,7 +301,7 @@ Wire Wire Line
 Wire Wire Line
 	6850 2850 7650 2850
 $Comp
-L Device:C C1
+L Neo_Driver-rescue:C-Device C1
 U 1 1 5FD88BDC
 P 3250 3800
 F 0 "C1" H 3050 3800 50  0000 L CNN
@@ -312,7 +312,7 @@ F 3 "~" H 3250 3800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR03
+L Neo_Driver-rescue:VCC-power #PWR03
 U 1 1 5FD9606F
 P 3250 3600
 F 0 "#PWR03" H 3250 3450 50  0001 C CNN
@@ -329,7 +329,7 @@ Wire Wire Line
 Wire Wire Line
 	4000 4450 4000 4500
 $Comp
-L power:GND #PWR04
+L Neo_Driver-rescue:GND-power #PWR04
 U 1 1 5FD995F5
 P 3250 4000
 F 0 "#PWR04" H 3250 3750 50  0001 C CNN
@@ -342,7 +342,7 @@ $EndComp
 Wire Wire Line
 	3250 3950 3250 4000
 $Comp
-L Switch:SW_SPDT SW1
+L Neo_Driver-rescue:SW_SPDT-Switch SW1
 U 1 1 5FD9C7D7
 P 2500 3150
 F 0 "SW1" V 2546 2962 50  0000 R CNN
@@ -357,7 +357,7 @@ Wire Wire Line
 Wire Wire Line
 	4600 3850 6550 3850
 $Comp
-L Connector_Generic:Conn_01x03 J1
+L Neo_Driver-rescue:Conn_01x03-Connector_Generic J1
 U 1 1 5FDAB95B
 P 7500 3850
 F 0 "J1" H 7580 3892 50  0000 L CNN
@@ -376,7 +376,7 @@ Wire Wire Line
 Wire Wire Line
 	8450 2250 8450 2150
 $Comp
-L Device:Jumper_NC_Small JP1
+L Neo_Driver-rescue:Jumper_NC_Small-Device JP1
 U 1 1 5FDB66C6
 P 2600 2650
 F 0 "JP1" V 2554 2725 50  0000 L CNN
@@ -389,7 +389,7 @@ $EndComp
 Wire Wire Line
 	2600 2750 2600 2950
 $Comp
-L Transistor_FET:IRLZ44N Q1
+L Neo_Driver-rescue:IRLZ44N-Transistor_FET Q1
 U 1 1 600F61E2
 P 7350 4950
 F 0 "Q1" H 7554 4996 50  0000 L CNN
@@ -400,7 +400,7 @@ F 3 "" H 7350 4950 50  0001 L CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R3
+L Neo_Driver-rescue:R-Device R3
 U 1 1 600FEC82
 P 6650 4950
 F 0 "R3" V 6443 4950 50  0000 C CNN
@@ -424,7 +424,7 @@ Wire Wire Line
 Wire Wire Line
 	7000 4950 7000 5050
 $Comp
-L Device:R R4
+L Neo_Driver-rescue:R-Device R4
 U 1 1 600FF297
 P 7000 5200
 F 0 "R4" V 6793 5200 50  0000 C CNN
@@ -450,7 +450,7 @@ Wire Wire Line
 Text Label 4700 5000 0    50   ~ 0
 SW_GND
 $Comp
-L Device:C C3
+L Neo_Driver-rescue:C-Device C3
 U 1 1 6049F9DA
 P 5600 4200
 F 0 "C3" V 5348 4200 50  0000 C CNN
@@ -465,7 +465,7 @@ Wire Wire Line
 Wire Wire Line
 	5250 4650 5250 4850
 $Comp
-L power:GND #PWR07
+L Neo_Driver-rescue:GND-power #PWR07
 U 1 1 604A14A3
 P 6000 4300
 F 0 "#PWR07" H 6000 4050 50  0001 C CNN
@@ -486,7 +486,7 @@ Buffer
 Text Notes 5800 4100 0    50   ~ 0
 Low-pass filter\nif needed
 $Comp
-L Device:R R5
+L Neo_Driver-rescue:R-Device R5
 U 1 1 604AFA70
 P 5250 4500
 F 0 "R5" H 5100 4450 50  0000 C CNN
@@ -508,7 +508,7 @@ Wire Wire Line
 Wire Wire Line
 	5350 2950 5350 3650
 $Comp
-L Switch:SW_Push SW2
+L Neo_Driver-rescue:SW_Push-Switch SW2
 U 1 1 5EBB89E5
 P 5650 3400
 F 0 "SW2" H 5650 3685 50  0000 C CNN
@@ -534,7 +534,7 @@ Brightness\nAdjust
 Text Notes 2500 2700 2    50   ~ 0
 Current\nMeasure
 $Comp
-L Switch:SW_Push SW3
+L Neo_Driver-rescue:SW_Push-Switch SW3
 U 1 1 5F2CC70B
 P 5650 2950
 F 0 "SW3" H 5650 3235 50  0000 C CNN
