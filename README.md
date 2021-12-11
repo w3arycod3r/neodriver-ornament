@@ -23,21 +23,40 @@ I wanted to be able to reprogram the microcontroller after the device was assemb
 # Schematic
 <img src="img/schem.png" width=900>  
 
-## Protoboard
-First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. You can see these efforts below:
+# Protoboard
+First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. You can see these efforts below:  
 <img src="img/proto2.jpg" width=300> <img src="img/proto1.jpg" width=300>  
 This wasn't very attractive, and it didn't hang very well on the tree, so I sought out to design a custom PCB. This was my first PCB design, so I learned a lot along the way. I decided to use KiCad, since it is FOSS and very beginner friendly. I watched and followed along with Digi-Key's YouTube tutorial on KiCad.
 
-## v1
-<img src="img/board8.jpg" width=300>
-<img src="img/board6.jpg" width=300>
-<img src="img/board1.jpg" width=300>
+# PCB Design
+The layout for v01 of the PCB design, shown below, was heavily based on the protoboard layout, for simplicity. I used JLCPCB to get the boards manufactured.  
 
-## v2
+<img src="img/board8.jpg" width=300>  <img src="img/board9.jpg" width=300>  <img src="img/board10.jpg" width=300>  
 
-## v3
+For v02, I made several improvements:
+1. Use a circular shape for smaller overall footprint and hopefully better balance on the tree
+2. Place the battery (heaviest component) for better balance.
+3. Replace the straight ISP header with a right angle one so that the port can be accessed even when the LEDs are hot-glued in place.
+4. Add the nMOS transistor to switch the NeoPixel GND when in a low-power state.
+5. Add a single hole at the top to attach a ribbon for hanging purposes.
+6. Add rubber feet on bottom so the board can sit on a table without scratching the table or shorting connections.
+7. Add some festive PCB art on the back! :D  
+
+<img src="img/board6.jpg" width=300>  <img src="img/board7.jpg" width=300>  <img src="img/board5.jpg" width=300>  
+
+I discovered that the potentiometer was burning some power as well. Since I didn't need to read the value of the pot while in a low-power state, I decided to switch the GND of the pot using the same nMOS for the NeoPixels. I cut the GND connection on the pot and added a bodge wire to fix this, shown below:
 
 
+
+<img src="img/bodge.jpg" width=300>
+
+For v03, I made a few minor improvements:
+1. Rewire the pot so that the GND is switched along with the NeoPixel GND.
+2. Rotate some components 45 degrees so that they are easier to access when the LEDs are fixed on top.
+3. Add RC low-pass filter on the analog pot line, to filter out switching noise from NeoPixel data signal.
+4. Enlargen pads on battery terminals for better connection
+
+<img src="img/board1.jpg" width=300> <img src="img/board3.jpg" width=300> <img src="img/board4.jpg" width=300> <img src="img/board13.jpg" width=300> <img src="img/board14.jpg" width=300>
 
 # Environment setup
 
