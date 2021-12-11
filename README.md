@@ -7,7 +7,9 @@ Animations should be colorful, interesting, and eye-catching. It is acceptable t
 # Hardware
 For the LEDs, I found various carrier boards of the WS2812B RGB LEDs on eBay. I found square matrices, rings, and circles of various sizes. Most of these boards simply had the LEDs soldered on one side with appropriate decoupling caps and traces connecting them all in a chain. The important connections (VDD, DIN, & GND) were exposed on the other side, to surface mount pads. I used small stranded wires from ribbon cables to fashion my own cables and connectors for each board. I soldered the wires to the pads, providing some strain relief with hot glue, then crimped a 3P JST-XH female connector to the other end. I would use a male 3P JST-XH on my driver board and connect the LED boards using this interface. This would make it easy to switch out and test different LED boards. Making these connectors was tedious and the solder connections are quite fragile.
 
-<img src="img/assorted_neo.jpg" width=400> <img src="img/fab1.jpg" width=400>  
+<p align="center">
+  <img src="img/assorted_neo.jpg" height=150> <img src="img/fab1.jpg" height=150>
+</p>
 
 I chose the ATtiny85 for the microcontroller, as it is small, inexpensive, has various low-power modes, is available in a DIP-8 package, has sufficient I/O, and has some Arduino IDE support with extensions. I wanted all my components to be through-hole for easy assembly. I planned to have a potentiometer for brightness control, two pushbuttons for changing animations, and a power switch.
 
@@ -21,18 +23,29 @@ I wanted to be able to reprogram the microcontroller after the device was assemb
 
 
 # Schematic
-<img src="img/schem.png" width=900>  
-
-# Protoboard
-First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. You can see these efforts below:  
-<img src="img/proto2.jpg" width=300> <img src="img/proto1.jpg" width=300>  
-This wasn't very attractive, and it didn't hang very well on the tree, so I sought out to design a custom PCB. This was my first PCB design, so I learned a lot along the way. I decided to use KiCad, since it is FOSS and very beginner friendly. I watched and followed along with Digi-Key's YouTube tutorial on KiCad.
+<p align="center">
+  <img src="img/schem.png" width=700>  
+</p>
 
 # PCB Design
-The layout for v01 of the PCB design, shown below, was heavily based on the protoboard layout, for simplicity. I used JLCPCB to get the boards manufactured.  
+## Protoboard
+First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. 
 
-<img src="img/board8.jpg" width=300>  <img src="img/board9.jpg" width=300>  <img src="img/board10.jpg" width=300>  
+<p align="center">
+  <img src="img/proto2.jpg" height=200> <img src="img/proto1.jpg" height=200>
+</p>
 
+This wasn't very attractive, and it didn't hang very well on the tree, so I sought out to design a custom PCB. This was my first PCB design, so I learned a lot along the way. I decided to use KiCad, since it is FOSS and very beginner friendly. I watched and followed along with Digi-Key's YouTube tutorial on KiCad.
+
+## v01
+The layout for v01 of the PCB design was heavily based on the protoboard layout, for simplicity. I used JLCPCB to get the boards manufactured.  
+
+<p align="center">
+  <img src="img/board8.jpg" height=200>  <img src="img/board9.jpg" height=200>  <img src="img/board10.jpg" height=200>
+</p>
+
+
+## v02
 For v02, I made several improvements:
 1. Use a circular shape for smaller overall footprint and hopefully better balance on the tree
 2. Place the battery (heaviest component) for better balance.
@@ -42,21 +55,25 @@ For v02, I made several improvements:
 6. Add rubber feet on bottom so the board can sit on a table without scratching the table or shorting connections.
 7. Add some festive PCB art on the back! :D  
 
-<img src="img/board6.jpg" width=300>  <img src="img/board7.jpg" width=300>  <img src="img/board5.jpg" width=300>  
+<p align="center">
+  <img src="img/board6.jpg" height=200>  <img src="img/board7.jpg" height=200>  <img src="img/board5.jpg" height=200> 
+</p>
+ 
 
 I discovered that the potentiometer was burning some power as well. Since I didn't need to read the value of the pot while in a low-power state, I decided to switch the GND of the pot using the same nMOS for the NeoPixels. I cut the GND connection on the pot and added a bodge wire to fix this, shown below:
 
+<img src="img/bodge.jpg" height=200>
 
-
-<img src="img/bodge.jpg" width=300>
-
+## v03
 For v03, I made a few minor improvements:
 1. Rewire the pot so that the GND is switched along with the NeoPixel GND.
 2. Rotate some components 45 degrees so that they are easier to access when the LEDs are fixed on top.
 3. Add RC low-pass filter on the analog pot line, to filter out switching noise from NeoPixel data signal.
 4. Enlargen pads on battery terminals for better connection
 
-<img src="img/board1.jpg" width=300> <img src="img/board3.jpg" width=300> <img src="img/board4.jpg" width=300> <img src="img/board13.jpg" width=300> <img src="img/board14.jpg" width=300>
+<p align="center">
+  <img src="img/board1.jpg" height=200> <img src="img/board3.jpg" height=200> <img src="img/board4.jpg" height=200> <img src="img/board13.jpg" height=200> <img src="img/board14.jpg" height=200>
+</p>
 
 # Environment setup
 
