@@ -7,7 +7,7 @@ Animations should be colorful, interesting, and eye-catching. It is acceptable t
 # Hardware
 For the LEDs, I found various carrier boards of the WS2812B RGB LEDs on eBay. I found square matrices, rings, and circles of various sizes. Most of these boards simply had the LEDs soldered on one side with appropriate decoupling caps and traces connecting them all in a chain. The important connections (VDD, DIN, & GND) were exposed on the other side, to surface mount pads. I used small stranded wires from ribbon cables to fashion my own cables and connectors for each board. I soldered the wires to the pads, providing some strain relief with hot glue, then crimped a 3P JST-XH female connector to the other end. I would use a male 3P JST-XH on my driver board and connect the LED boards using this interface. This would make it easy to switch out and test different LED boards. Making these connectors was tedious and the solder connections are quite fragile.
 
-<img src="img/assorted_neo.jpg" width=500>  <img src="img/fab1.jpg" width=500>  
+<img src="img/assorted_neo.jpg" width=400> <img src="img/fab1.jpg" width=400>  
 
 I chose the ATtiny85 for the microcontroller, as it is small, inexpensive, has various low-power modes, is available in a DIP-8 package, has sufficient I/O, and has some Arduino IDE support with extensions. I wanted all my components to be through-hole for easy assembly. I planned to have a potentiometer for brightness control, two pushbuttons for changing animations, and a power switch.
 
