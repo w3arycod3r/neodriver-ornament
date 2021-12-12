@@ -5,7 +5,11 @@
 </p>
 
 <p align="center">
-  <img src="img/hang2.jpg" height=150> <img src="img/hang5.jpg" height=150>
+  <img src="img/anim/5_5_ball_up.gif" height=150> <img src="img/anim/5_5_snow_up.gif" height=150> <img src="img/anim/5_5_sprites_up.gif" height=150>
+</p>
+
+<p align="center">
+  <img src="img/hang2.jpg" height=175> <img src="img/hang5.jpg" height=175> <img src="img/hang4.jpg" height=175>
 </p>
 
 # Goal
@@ -94,6 +98,23 @@ For v03, I made a few minor improvements:
   <img src="img/board1.jpg" height=200> <img src="img/board3.jpg" height=200> <img src="img/board4.jpg" height=200> <img src="img/board13.jpg" height=200> <img src="img/board14.jpg" height=200>
 </p>
 
-# Environment setup
+
 
 # Compile & Flash
+## Environment setup
+You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.
+For both options, you will need to install the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore/blob/master/Installation.md) to get Arduino support for the ATtiny85.
+
+## eep_data_write
+Font and animation data is stored in the EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
+
+If you are using the IDE:
+1. Open the .ino file inside the IDE.
+2. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
+3. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
+4. Upload using the "right arrow" upload button.
+
+This sketch will flash the required data into the EEPROM and verify it. The first NeoPixel flashes green to indicate success.
+
+## neo_driver_app
+The [neo_driver_app](arduino/neo_driver_app) sketch is the main program. Follow the same steps as above to flash this sketch to your hardware.
