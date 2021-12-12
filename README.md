@@ -105,14 +105,25 @@ For v03, I made a few minor improvements:
 You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.
 For both options, you will need to install the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) to get Arduino support for the ATtiny85.
 
+## Fuses
+The configuration fuses inside the ATtiny85 need to be properly set for the code to run as expected. This only needs to be done once. You can do this inside of the Arduino IDE:
+1. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
+2. Select Tools -> Chip -> ATtiny85
+3. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
+4. Select Tools -> Clock Source -> 8 MHz (internal)
+6. Select Tools -> Save EEPROM -> EEPROM retained
+7. Select Tools -> B.O.D Level -> B.O.D. Enabled (1.8v)
+8. With programmer and board plugged in, select Tools -> Burn Bootloader to set the hardware fuses
+
 ## eep_data_write
-Font and animation data is stored in the EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
+Font and animation data is stored in the EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. This only needs to be done once. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
 
 If you are using the IDE:
 1. Open the .ino file inside the IDE.
 2. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
-3. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
-4. Upload using the "right arrow" upload button.
+3. Select Tools -> Chip -> ATtiny85
+4. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
+5. With programmer and board plugged in, upload using the "right arrow" upload button.
 
 This sketch will flash the required data into the EEPROM and verify it. The first NeoPixel flashes green to indicate success.
 
