@@ -119,7 +119,7 @@ The configuration fuses inside the ATtiny85 need to be properly set for the code
 8. With programmer and board plugged in, select Tools -> Burn Bootloader to set the hardware fuses
 
 ## eep_data_write
-Font and animation data is stored in the EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. This only needs to be done once. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
+Font and animation data is stored in the 512B EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. This only needs to be done once. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
 
 If you are using the IDE:
 1. Open the .ino file inside the IDE.
