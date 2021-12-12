@@ -1,5 +1,9 @@
 # neodriver-ornament
 
+<p align="center">
+  <img src="img/hang2.jpg" height=150> <img src="img/fab1.jpg" height=150>
+</p>
+
 # Goal
 Create a rechargable, battery-powered christmas ornament using Adafruit's ["NeoPixels"](https://www.adafruit.com/category/168) (WS2812B RGB addressable LEDs). The ornament should contain a hole for a ribbon to hang on a tree. The ornament should be "small enough" as to not look out of place on a tree. It should be balanced and as symmetrical as possible so that it will hang straight. The weight should be comparable to other common ornaments. The battery should last for several days/weeks of continuous use.
 
@@ -26,6 +30,17 @@ I wanted to be able to reprogram the microcontroller after the device was assemb
 <p align="center">
   <img src="img/schem.png" width=700>  
 </p>
+
+A few notes about the schematic: 
+1. I added a jumper in series with the battery positive terminal so I could easily measure power consumption of the entire circuit. This was very useful later during my power optimization efforts.
+2. C1 is a decoupling cap for the micro, which will be placed close to the power pins during layout.
+3. The micro is at the heart of the circuit, reading the switches and pot inputs, driving the single data line for the NeoPixels, and controlling the nMOS power transistor. Internal pull-ups are used for the switches.
+4. R2 is in series with the NeoPixel DIN, based on advice from Adafruit. In theory, this resistor reduces the reflections (sharp over-voltage peaks) on this high-speed digital data line.
+5. The I/O lines are shared with the programming lines, with isolation resistors where necessary (R3). There is a pull-up (R1) on the reset line, so that the micro is only reset when the programmer brings the line low.
+6. R5 and C3 form a low-pass filter on the analog pot line, to remove any noise which may be on this line. The ADC inside the micro is configured to sample this pin.
+7. R4 is a pull-down resistor so that the nMOS is OFF by default. The micro will bring the gate of the nMOS high in order to turn on the transistor and allow the NeoPixels to be powered.
+8. There is a bulk cap (C2) close to the NeoPixel connector to buffer the power for the LEDs. These LEDs switch ON and OFF quickly and they require large spikes of current from the power rail. The cap will provide this current while smoothing out the voltage.
+9. I picked the IRLU8743PBF for Q1 based on the convenient through-hole package (I-PAK), low ON resistance (~3.1 mOhms), small size, and low threshold voltage (~1.9V). However, it is a bit pricy. Others could certainly work in its place.
 
 # PCB Design
 ## Protoboard
