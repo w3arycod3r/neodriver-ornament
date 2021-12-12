@@ -4,6 +4,10 @@
   <img src="img/demo1.gif" height=150> <img src="img/demo2.gif" height=150> <img src="img/demo3.gif" height=150> <img src="img/demo4.gif" height=150>
 </p>
 
+<p align="center">
+  <img src="img/hang2.jpg" height=150> <img src="img/hang5.jpg" height=150>
+</p>
+
 # Goal
 Create a rechargable, battery-powered christmas ornament using Adafruit's ["NeoPixels"](https://www.adafruit.com/category/168) (WS2812B RGB addressable LEDs). The ornament should contain a hole for a ribbon to hang on a tree. The ornament should be "small enough" as to not look out of place on a tree. It should be balanced and as symmetrical as possible so that it will hang straight. The weight should be comparable to other common ornaments. The battery should last for several days/weeks of continuous use.
 
