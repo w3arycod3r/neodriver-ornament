@@ -1,11 +1,26 @@
 // File:    multiButton.h
-// Author:  Garrett Carter
 // Purpose:	Class definition
 
 #ifndef MULTIBUTTON_H
 #define MULTIBUTTON_H
 
 #include <Arduino.h>
+
+/* 4-Way Button:  Click, Double-Click, Press+Hold, and Press+Long-Hold Test Sketch
+
+http://jmsarduino.blogspot.com/2009/10/4-way-button-click-double-click-hold.html
+
+By Jeff Saltzman
+Oct. 13, 2009
+
+To keep a physical interface as simple as possible, this sketch demonstrates generating
+four output events from a single push-button.
+
+1) Click:  rapid press and release
+2) Double-Click:  two clicks in quick succession
+3) Press and Hold:  holding the button down
+4) Long Press and Hold:  holding the button for a long time
+*/
 
 // -------- DEFINES --------
 #define MB_DEBOUNCE        20      // (Def 20) ms debounce period to prevent flickering when pressing or releasing the button
