@@ -13,7 +13,7 @@
 </p>
 
 # Goal
-Create a rechargable, battery-powered christmas ornament using Adafruit's ["NeoPixels"](https://www.adafruit.com/category/168) (WS2812B RGB addressable LEDs). The ornament should contain a hole for a ribbon to hang on a tree. The ornament should be "small enough" as to not look out of place on a tree. It should be balanced and as symmetrical as possible so that it will hang straight. The weight should be comparable to other common ornaments. The battery should last for several days/weeks of continuous use.
+Create a rechargeable, battery-powered Christmas ornament using Adafruit's ["NeoPixels"](https://www.adafruit.com/category/168) (WS2812B RGB addressable LEDs). The ornament should contain a hole for a ribbon to hang on a tree. The ornament should be "small enough" as to not look out of place on a tree. It should be balanced and as symmetrical as possible so that it will hang straight. The weight should be comparable to other common ornaments. The battery should last for several days/weeks of continuous use.
 
 Animations should be colorful, interesting, and eye-catching. It is acceptable to have a low duty cycle, i.e. the LEDs can have a short ON time playing an animation followed by a longer OFF time to save power. 
 # Hardware
@@ -92,7 +92,7 @@ For v03, I made a few minor improvements:
 1. Rewire the pot so that the GND is switched along with the NeoPixel GND.
 2. Rotate some components 45 degrees so that they are easier to access when the LEDs are fixed on top.
 3. Add RC low-pass filter on the analog pot line, to filter out switching noise from NeoPixel data signal.
-4. Enlargen pads on battery terminals for better connection
+4. Enlarge pads on battery terminals for better connection
 
 <p align="center">
   <img src="img/board1.jpg" height=200> <img src="img/board3.jpg" height=200> <img src="img/board4.jpg" height=200> <img src="img/board13.jpg" height=200> <img src="img/board14.jpg" height=200>
