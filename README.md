@@ -102,8 +102,11 @@ For v03, I made a few minor improvements:
 
 # Compile & Flash
 ## Environment setup
-You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.
-For both options, you will need to install the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) to get Arduino support for the ATtiny85.
+You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.  
+
+For both options, you will need to install:
+1. The [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) to get Arduino support for the ATtiny85.
+2. The Adafruit [NeoPixel Library](https://github.com/adafruit/Adafruit_NeoPixel).
 
 ## Fuses
 The configuration fuses inside the ATtiny85 need to be properly set for the code to run as expected. This only needs to be done once. You can do this inside of the Arduino IDE:
