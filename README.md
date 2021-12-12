@@ -103,7 +103,7 @@ For v03, I made a few minor improvements:
 # Compile & Flash
 ## Environment setup
 You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.
-For both options, you will need to install the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore/blob/master/Installation.md) to get Arduino support for the ATtiny85.
+For both options, you will need to install the [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) to get Arduino support for the ATtiny85.
 
 ## eep_data_write
 Font and animation data is stored in the EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
