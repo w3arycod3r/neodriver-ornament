@@ -98,7 +98,17 @@ For v03, I made a few minor improvements:
   <img src="img/board1.jpg" height=200> <img src="img/board3.jpg" height=200> <img src="img/board4.jpg" height=200> <img src="img/board13.jpg" height=200> <img src="img/board14.jpg" height=200>
 </p>
 
+# Software
+The main sketch [neo_driver_app](arduino/neo_driver_app) has several important functions:
+1. Process HMI inputs (left, right switches and potentiometer). The switches can scroll through all the animations and the pot can adjust the brightness of the LEDs.
+2. LED adjustment mode: Holding one of the switches will cause the device to enter a LED adjustment mode. In this mode, pressing the left or right switches will decrement or increment the number of LEDs controlled by the device. This allows different sizes of matrices or rings to be used. Holding one of the switches again will save your adjustment into EEPROM memory, so that it is retained between power cycles.
+3. Shuffle mode: Play the defined animations in a random sequence, without user intervention. After playing an animation, enter a low-power mode with micro in deep sleep, LEDs and pot OFF. The sleep time is variable, depending on the length of the last played animation. Wakeup from sleep is achieved using the watchdog timer. Also, pressing one of the switches will wake the device as well.
+4. Battery management: Monitor for a low battery condition by measuring VDD on the micro and checking it against a set threshold. When this condition occurs, a flashing red "low battery" icon is shown for a few seconds and the device enters the low-power mode without the watchdog timer set. Therefore, the device will remain in low-power mode until it is woken with a switch or a power cycle. If the battery is still low, the device will repeat the "low battery" animation and return to the low-power mode. The device will be "locked out" until the battery voltage rises to a reasonable level (as a result of the user charging the battery).
 
+I wrote the code with modularity in mind, so that it would be easy to add or remove animations. Also most parameters are pulled out into constants or data structures, so they can be easily tweaked.
+
+## Challenges
+The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](arduino/neo_driver_app/neo_pixel_slim.h) and [neo_pixel_slim.cpp](arduino/neo_driver_app/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
 
 # Compile & Flash
 ## Environment setup
