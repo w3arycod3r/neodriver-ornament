@@ -110,7 +110,7 @@ I wrote the code with modularity in mind, so that it would be easy to add or rem
 ## Challenges
 The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](arduino/neo_driver_app/neo_pixel_slim.h) and [neo_pixel_slim.cpp](arduino/neo_driver_app/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
 
-I used various commands from the AVR toolchain ([get_size_info.bat](arduino/neo_driver_app/get_size_info.bat)) to view the size and disassembly of each portion of my code. This was essential during my size optimization efforts, as it showed me where to focus my attention.
+I used various commands from the AVR toolchain (see [get_size_info.bat](arduino/neo_driver_app/get_size_info.bat)) to view the size and disassembly of each portion of my code. This was essential during my size optimization efforts, as it showed me where to focus my attention.
 
 # Compile & Flash
 ## Environment setup
