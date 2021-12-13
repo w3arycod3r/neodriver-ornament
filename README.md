@@ -99,7 +99,7 @@ For v03, I made a few minor improvements:
 </p>
 
 # Software
-The main sketch [neo_driver_app](arduino/neo_driver_app) has several important functions:
+The main sketch [neo_driver_app.ino](arduino/neo_driver_app/neo_driver_app.ino) has several important functions:
 1. Process HMI inputs (left, right switches and potentiometer). The switches can scroll through all the animations and the pot can adjust the brightness of the LEDs.
 2. LED adjustment mode: Holding one of the switches will cause the device to enter a LED adjustment mode. In this mode, pressing the left or right switches will decrement or increment the number of LEDs controlled by the device. This allows different sizes of matrices or rings to be used. Holding one of the switches again will save your adjustment into EEPROM memory, so that it is retained between power cycles.
 3. Shuffle mode: Play the defined animations in a random sequence, without user intervention. After playing an animation, enter a low-power mode with micro in deep sleep, LEDs and pot OFF. The sleep time is variable, depending on the length of the last played animation. Wakeup from sleep is achieved using the watchdog timer. Also, pressing one of the switches will wake the device as well.
@@ -109,6 +109,8 @@ I wrote the code with modularity in mind, so that it would be easy to add or rem
 
 ## Challenges
 The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](arduino/neo_driver_app/neo_pixel_slim.h) and [neo_pixel_slim.cpp](arduino/neo_driver_app/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
+
+I used various commands from the AVR toolchain ([get_size_info.bat](arduino/neo_driver_app/get_size_info.bat)) to view the size and disassembly of each portion of my code. This was essential during my size optimization efforts, as it showed me where to focus my attention.
 
 # Compile & Flash
 ## Environment setup
