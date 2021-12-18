@@ -107,6 +107,44 @@ The main sketch [neo_driver_app.ino](arduino/neo_driver_app/neo_driver_app.ino) 
 
 I wrote the code with modularity in mind, so that it would be easy to add or remove animations. Also most parameters are pulled out into constants or data structures, so they can be easily tweaked.
 
+## Animations
+### Scrolling Text
+In the EEPROM, I had space for 85 ASCII characters in a 5x5 bitmap font. The top 3 bits of each byte were unused. Most notably, I covered all the digits, capital letters, and some punctuation marks and symbols. In the program memory (flash), I store a few message strings in ASCII. This animation can select one of the messages and scroll it across the matrix in one color or in a flowing "rainbow" color effect.
+### SARS-CoV-2 Blink
+For this animation, I was inspired by PaulKlinger's [Virus Blinky](https://github.com/PaulKlinger/freeform-virus-blinky). I created two versions of this animation, one using a "quarter" pattern, suitable for rings, and one using letters, suitable for the 5x5 matrix.
+
+The quarter pattern blinks through the RNA sequence, lighting up one quarter of the LEDs in a specific color corresponding to the current base.
+The letter pattern instead blinks the letters corresponding to the base, again with a corresponding color.
+
+The animation blinks a few letters of the sequence, then goes to sleep. When this animation is chosen again, it will retain its place in the sequence and continue from there. Due to space constraints, I was only able to store the first 320 bases of the sequence. This is sufficient to create an interesting, random looking animation.
+### Frame Sequences
+Since many of the ASCII chars in the range I selected were unused in my message strings, I used these for frames of animation instead. First, I created the animations using [GIMP](https://www.gimp.org/) on my PC. Once I was happy with how they looked, I copied them bit by bit into the font memory. I created a struct in the main program that contains the parameters for each animation. Each animation could be defined as STATIC or SHIFT mode. STATIC is a non moving animation, fixed in place, stepping through a frame sequence. SHIFT is a moving animation, scrolling in some direction while also stepping through frames.
+
+As an example, below is the (annotated) animation data for the "Pacman" animation.
+```
+// Frame ASCII sequences
+const char PROGMEM sz_frames1[] = "gh";     // Pacman  ( 12   : gh  )  -- Which ASCII chars in the char set correspond to the animation frames in memory?
+
+// Frame sequence config data
+
+// Sequence 1 - Pacman
+FRAMES_CONFIG_T st_sequence1 = {
+    200,                         // uint16_t u16_frameStep_msec;  -- "on" time for each frame in the sequence.
+    COLOR_YELLOW,                // uint32_t u32_color;           -- Color. Set to 0 for dynamic effect.
+    sz_frames1,                  // uint8_t* pu8_frames;          -- Pointer to the frame sequence array stored in flash.
+    FRAMES_MODE_SHIFT,           // uint8_t  u8_mode;             -- Mode of operation. A value from _FRAMES_MODE_T.
+
+    // STATIC params
+    0,                           // uint8_t  u8_seqRepeatCnt;     -- Number of times to repeat the frame seq for each anim cycle in STATIC mode.
+
+    // SHIFT params
+    2,                           // uint8_t  u8_frameShiftSync;   -- Number of frames between shifts, in SHIFT mode.
+    -4,                          // int8_t   i8_startPosX;        -- Init X,Y position. Should start onscreen.
+    0,                           // int8_t   i8_startPosY;        -- 
+    1,                           // int8_t   i8_shiftStepX;       -- The X shift to perform on each shift step. Can be pos, neg, or zero.
+    0                            // int8_t   i8_shiftStepY;       -- The Y shift to perform on each shift step. Can be pos, neg, or zero.
+};
+```
 ## Challenges
 The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](arduino/neo_driver_app/neo_pixel_slim.h) and [neo_pixel_slim.cpp](arduino/neo_driver_app/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
 
@@ -147,5 +185,6 @@ The [neo_driver_app](arduino/neo_driver_app) sketch is the main program. Follow 
 
 # Useful Links
 https://github.com/PaulKlinger/freeform-virus-blinky  
+http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html  
 https://www.ebay.com/itm/224246288057  
 
