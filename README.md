@@ -110,6 +110,24 @@ I wrote the code with modularity in mind, so that it would be easy to add or rem
 ## Animations
 ### Scrolling Text
 In the EEPROM, I had space for 85 ASCII characters in a 5x5 bitmap font. The top 3 bits of each byte were unused. Most notably, I covered all the digits, capital letters, and some punctuation marks and symbols. In the program memory (flash), I store a few message strings in ASCII. This animation can select one of the messages and scroll it across the matrix in one color or in a flowing "rainbow" color effect.
+
+Rendering a 5x5 framebuffer containing a character onto the 5x5 matrix was tricky because the LEDs are indexed sequentially, in a zig-zag pattern chosen for convenient routing on the matrix PCB. After drawing out several sketches of the problem on paper, I came up with the following conversion equations for (row,col) to pixel index, depending on the orientation of the matrix (which determines location of first pixel and the pattern direction):
+```
+// Calculate pixel index from (row,col)
+    #if   ANIM_ROT_SEL == 1
+        if (u8_col % 2 == 0) { u8_pixIndex = u8_col*5     + 4-u8_row; }
+        else                 { u8_pixIndex = u8_col*5     +   u8_row; }
+    #elif ANIM_ROT_SEL == 2
+        if (u8_row % 2 == 0) { u8_pixIndex = (4-u8_row)*5 + 4-u8_col; }
+        else                 { u8_pixIndex = (4-u8_row)*5 +   u8_col; }
+    #elif ANIM_ROT_SEL == 3
+        if (u8_col % 2 == 0) { u8_pixIndex = (4-u8_col)*5 +   u8_row; }
+        else                 { u8_pixIndex = (4-u8_col)*5 + 4-u8_row; }
+    #elif ANIM_ROT_SEL == 4
+        if (u8_row % 2 == 0) { u8_pixIndex = u8_row*5     +   u8_col; }
+        else                 { u8_pixIndex = u8_row*5     + 4-u8_col; }
+    #endif
+```
 ### SARS-CoV-2 Blink
 For this animation, I was inspired by PaulKlinger's [Virus Blinky](https://github.com/PaulKlinger/freeform-virus-blinky). I created two versions of this animation, one using a "quarter" pattern, suitable for rings, and one using letters, suitable for the 5x5 matrix.
 
