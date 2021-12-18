@@ -111,7 +111,11 @@ I wrote the code with modularity in mind, so that it would be easy to add or rem
 ### Scrolling Text
 In the EEPROM, I had space for 85 ASCII characters in a 5x5 bitmap font. The top 3 bits of each byte were unused. Most notably, I covered all the digits, capital letters, and some punctuation marks and symbols. In the program memory (flash), I store a few message strings in ASCII. This animation can select one of the messages and scroll it across the matrix in one color or in a flowing "rainbow" color effect.
 
-Rendering a 5x5 framebuffer containing a character onto the 5x5 matrix was tricky because the LEDs are indexed sequentially, in a zig-zag pattern chosen for convenient routing on the matrix PCB. After drawing out several sketches of the problem on paper, I came up with the following conversion equations for (row,col) to pixel index, depending on the orientation of the matrix (which determines location of first pixel and the pattern direction):
+Rendering a 5x5 framebuffer containing a character onto the 5x5 matrix was tricky because the LEDs are indexed sequentially, in a zig-zag pattern chosen for convenient routing on the matrix PCB. Below is an illustration of the index problem, with my choice for numbering rows and columns:
+<p align="center">
+  <img src="img/matrix_idx.jpg" height=300>
+</p>
+I came up with the following conversion equations for (row,col) to pixel index, depending on the orientation of the matrix (which determines location of first pixel and the pattern direction):
 ```
 // Calculate pixel index from (row,col)
     #if   ANIM_ROT_SEL == 1
