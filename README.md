@@ -124,7 +124,7 @@ For both options, you will need to install:
 The configuration fuses inside the ATtiny85 need to be properly set for the code to run as expected. This only needs to be done once. You can do this inside of the Arduino IDE:
 1. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
 2. Select Tools -> Chip -> ATtiny85
-3. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
+3. Change your programmer with Tools -> Programmer -> Atmel-ICE   *or choose another programmer you intend to use*
 4. Select Tools -> Clock Source -> 8 MHz (internal)
 6. Select Tools -> Save EEPROM -> EEPROM retained
 7. Select Tools -> B.O.D Level -> B.O.D. Enabled (1.8v)
@@ -137,7 +137,7 @@ If you are using the IDE:
 1. Open the .ino file inside the IDE.
 2. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
 3. Select Tools -> Chip -> ATtiny85
-4. Change your programmer with Tools -> Programmer -> Atmel-ICE   **or choose another programmer you intend to use**
+4. Change your programmer with Tools -> Programmer -> Atmel-ICE   *or choose another programmer you intend to use*
 5. With programmer and board plugged in, upload using the "right arrow" upload button.
 
 This sketch will flash the required data into the EEPROM and verify it. The first NeoPixel flashes green to indicate success.
