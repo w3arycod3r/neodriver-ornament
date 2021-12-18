@@ -44,6 +44,8 @@ Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
 */
 
 /*
+    5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
+    
     Character Data (425B)
     EEPROM 7-431
     ASCII 32-116
