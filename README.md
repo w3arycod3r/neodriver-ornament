@@ -17,7 +17,7 @@ Create a rechargeable, battery-powered Christmas ornament using Adafruit's ["Neo
 
 Animations should be colorful, interesting, and eye-catching. It is acceptable to have a low duty cycle, i.e. the LEDs can have a short ON time playing an animation followed by a longer OFF time to save power. 
 # Hardware
-For the LEDs, I found various carrier boards of the [WS2812B](docs/WS2812B/WS2812B.pdf) RGB LEDs on eBay. I found square matrices, rings, and circles of various sizes. Most of these boards simply had the LEDs soldered on one side with appropriate decoupling caps and traces connecting them all in a chain. The important connections (VDD, DIN, & GND) were exposed on the other side, to surface mount pads. I used small stranded wires from ribbon cables to fashion my own cables and connectors for each board. I soldered the wires to the pads, providing some strain relief with hot glue, then crimped a 3P JST-XH female connector to the other end. I would use a male 3P JST-XH on my driver board and connect the LED boards using this interface. This would make it easy to switch out and test different LED boards. Making these connectors was tedious and the solder connections are quite fragile.
+For the LEDs, I found various carrier boards of the [WS2812B](docs/WS2812B/WS2812B.pdf) RGB LEDs on eBay. I found square matrices, rings, and circles of various sizes. Search for "WS2812B Ring" or "WS2812B 5X5". Most of these boards simply had the LEDs soldered on one side with appropriate decoupling caps and traces connecting them all in a chain. The important connections (VDD, DIN, & GND) were exposed on the other side, to surface mount pads. I used small stranded wires from ribbon cables to fashion my own cables and connectors for each board. I soldered the wires to the pads, providing some strain relief with hot glue, then crimped a 3P JST-XH female connector to the other end. I would use a male 3P JST-XH on my driver board and connect the LED boards using this interface. This would make it easy to switch out and test different LED boards. Making these connectors was tedious and the solder connections are quite fragile.
 
 <p align="center">
   <img src="img/assorted_neo.jpg" height=150> <img src="img/fab1.jpg" height=150>
@@ -144,3 +144,7 @@ This sketch will flash the required data into the EEPROM and verify it. The firs
 
 ## neo_driver_app
 The [neo_driver_app](arduino/neo_driver_app) sketch is the main program. Follow the same steps as above to flash this sketch to your hardware.
+
+# Useful Links
+https://www.ebay.com/itm/224246288057  
+
