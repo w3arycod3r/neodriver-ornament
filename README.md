@@ -51,11 +51,11 @@ A few notes about the schematic:
 9. I picked the IRLU8743PBF for Q1 based on the convenient through-hole package (I-PAK), low ON resistance (~3.1 mOhms), small size, and low threshold voltage (~1.9V). However, it is a bit pricy. Others could certainly work in its place.
 
 # PCB Design
-## Protoboard
-First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. 
+## Breadboard & Protoboard
+First, I soldered together a prototype on a piece of protoboard, based on my initial schematic. I also created a breadboard version for easy experimentation.
 
 <p align="center">
-  <img src="img/proto2.jpg" height=200> <img src="img/proto1.jpg" height=200>
+  <img src="img/proto2.jpg" height=200> <img src="img/proto1.jpg" height=200> <img src="img/bb_test2.jpg" height=200>
 </p>
 
 This wasn't very attractive, and it didn't hang very well on the tree, so I sought out to design a custom PCB. This was my first PCB design, so I learned a lot along the way. I decided to use KiCad, since it is FOSS and very beginner friendly. I watched and followed along with Digi-Key's [YouTube tutorial](https://www.youtube.com/playlist?list=PLEBQazB0HUyR24ckSZ5u05TZHV9khgA1O) on KiCad. Should you want to get a batch of these boards fabbed, you can find the [gerbers](kicad/export/gerbers) in the repo.
