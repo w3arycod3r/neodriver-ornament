@@ -137,7 +137,7 @@ I came up with the following conversion equations for (row,col) to pixel index, 
 ### SARS-CoV-2 Blink
 For this animation, I was inspired by PaulKlinger's [Virus Blinky](https://github.com/PaulKlinger/freeform-virus-blinky). I created two versions of this animation, one using a "quarter" pattern, suitable for rings, and one using letters, suitable for the 5x5 matrix.
 
-The quarter pattern blinks through the RNA sequence, lighting up one quarter of the LEDs in a specific color corresponding to the current base.
+The quarter pattern blinks through the [RNA](https://en.wikipedia.org/wiki/RNA) sequence of the [SARS-CoV-2](https://en.wikipedia.org/wiki/Severe_acute_respiratory_syndrome_coronavirus_2) virus, lighting up one quarter of the LEDs in a specific color corresponding to the current [base](https://en.wikipedia.org/wiki/Nucleobase).
 The letter pattern instead blinks the letters corresponding to the base, again with a corresponding color.
 
 The animation blinks a few letters of the sequence, then goes to sleep. When this animation is chosen again, it will retain its place in the sequence and continue from there. Due to space constraints, I was only able to store the first 320 bases of the sequence. This is sufficient to create an interesting, random looking animation.
