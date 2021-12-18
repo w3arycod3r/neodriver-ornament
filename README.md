@@ -146,5 +146,6 @@ This sketch will flash the required data into the EEPROM and verify it. The firs
 The [neo_driver_app](arduino/neo_driver_app) sketch is the main program. Follow the same steps as above to flash this sketch to your hardware.
 
 # Useful Links
+https://github.com/PaulKlinger/freeform-virus-blinky
 https://www.ebay.com/itm/224246288057  
 
