@@ -118,7 +118,7 @@ Rendering a 5x5 framebuffer containing a character onto the 5x5 matrix was trick
 </p>
 
 I came up with the following conversion equations for (row,col) to pixel index, depending on the orientation of the matrix (which determines location of first pixel and the pattern direction):
-```
+```C++
 // Calculate pixel index from (row,col)
     #if   ANIM_ROT_SEL == 1
         if (u8_col % 2 == 0) { u8_pixIndex = u8_col*5     + 4-u8_row; }
@@ -145,7 +145,7 @@ The animation blinks a few letters of the sequence, then goes to sleep. When thi
 Since many of the ASCII chars in the range I selected were unused in my message strings, I used these for frames of animation instead. First, I created the animations using [GIMP](https://www.gimp.org/) on my PC. Once I was happy with how they looked, I copied them bit by bit into the font memory. I created a struct in the main program that contains the parameters for each animation. Each animation could be defined as STATIC or SHIFT mode. STATIC is a non-moving animation, fixed in place, stepping through a frame sequence. SHIFT is a moving animation, scrolling in some direction while also stepping through frames.
 
 As an example, below is the (annotated) animation data for the "Pacman" animation.
-```
+```C++
 // Frame ASCII sequences
 const char PROGMEM sz_frames1[] = "gh";     // Pacman  ( 12   : gh  )  -- Which ASCII chars in the char set correspond to the animation frames in memory?
 
