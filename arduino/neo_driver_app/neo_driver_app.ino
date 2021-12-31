@@ -89,8 +89,9 @@ typedef struct {
 #define WDT_56S    15
 
 // Battery params
-#define LOW_BATT_TON_MSEC  2000    // "On" time for low battery timer
-#define LOW_BATT_THRESH_MV 2900    // (Cutoff volt. from datasheet = 2.0V)
+#define BATT_TON_MSEC         2000    // "On" time for low battery timer
+#define BATT_DISCHG_THRESH_MV 2500    // Discharge threshold (Cutoff volt. from datasheet = 2.0V)
+#define BATT_CHG_THRESH_MV    3000    // Charge threshold (Cutoff volt. from datasheet = 2.0V)
 
 #define BATT_LVL_THRESH_1_MV 2750
 #define BATT_LVL_THRESH_2_MV 3000
@@ -107,6 +108,7 @@ typedef struct {
 #define BATT_ICON_DEAD      '('
 
 // Pixel params
+#define BRIGHT_MIN   24
 #define BRIGHT_INIT  8
 #define PIX_CNT_MIN  1
 #define PIX_CNT_MAX  25
@@ -115,11 +117,15 @@ typedef struct {
 // EEPROM Addresses
 #define EEP_SETT_ANIM   0
 #define EEP_SETT_NPIX   1
-#define EEP_SETT_RSEED  2   // 4 bytes
+#define EEP_SETT_RSEED  2   // Addr 2-5, 4 bytes
+#define EEP_SETT_FLAGS  6   // 8 Status Flags
 #define EEP_CHAR_START  7
 #define EEP_CHAR_NUM_B  425
 #define EEP_COV_START   432
 #define EEP_COV_NUM_B   80
+
+// Status Flags
+#define STAT_FLG_BATT_DEAD  BIT0
 
 // ASCII char set limits
 #define ASCII_START 32
@@ -206,8 +212,8 @@ typedef struct {
 
 // Debug low battery
 #if DEBUG_LOW_BATT == 1
-    #define LOW_BATT_TON_MSEC  2000
-    #define LOW_BATT_THRESH_MV 1000
+    #define BATT_TON_MSEC  2000
+    #define BATT_DISCHG_THRESH_MV 1000
 #endif
 
 // Debug batt level animation
@@ -612,13 +618,13 @@ void setup() {
 /********************************* MAIN LOOP *********************************/
 void loop() {
 
-    // Monitor vcc for low batt condition
-    check_batt(read_vcc_mv());
-
     // Set brightness from potentiometer value
     uint16_t u16_potVal = analogRead(IO_POT_ADC);
-    uint8_t u8_bright = o_strip.get_gamma_8(map(u16_potVal, 0, 1023, 0, 255)); // Scale value
+    uint8_t u8_bright = o_strip.get_gamma_8(map(u16_potVal, 0, 1023, BRIGHT_MIN, 255)); // Scale value
     o_strip.set_brightness(u8_bright);
+
+    // Monitor vcc for low batt condition
+    check_batt(read_vcc_mv());
 
     // Update "random" counter based on human interface 
     if ( (!bitReadMask(PINB, IO_SW_LEFT)) || (!bitReadMask(PINB, IO_SW_RIGHT)) ) {
@@ -1541,9 +1547,27 @@ void check_batt(uint16_t u16_batt_mv) {
     static uint16_t u16_onTimeAcc = 0;
     static uint16_t u16_lastScan = 0;
     uint16_t u16_currTime = millis();
+    uint8_t u8_statusFlags;
+    bool b_shutdown = false;
 
+    u8_statusFlags = EEPROM.read(EEP_SETT_FLAGS);
+
+    // Has the low battery condition been previously detected?
+    if (bitReadMask(u8_statusFlags, STAT_FLG_BATT_DEAD))
+    {
+        // Has battery level risen above the charge threshold?
+        if (u16_batt_mv >= BATT_CHG_THRESH_MV)
+        {
+            // Clear Flag and continue
+            EEPROM.update(EEP_SETT_FLAGS, bitClearMask(u8_statusFlags, STAT_FLG_BATT_DEAD));
+        } else {
+            // Shutdown
+            b_shutdown = true;
+        }
+    }
+    
     // Timer Running
-    if (u16_batt_mv < LOW_BATT_THRESH_MV)
+    if (u16_batt_mv < BATT_DISCHG_THRESH_MV)
     {
         if (u16_lastScan)  u16_onTimeAcc += (u16_currTime - u16_lastScan);
 
@@ -1554,15 +1578,24 @@ void check_batt(uint16_t u16_batt_mv) {
     {
         u16_onTimeAcc = u16_lastScan = 0;
     }
-
     // Timer Done
-    if (u16_onTimeAcc > LOW_BATT_TON_MSEC)
+    if (u16_onTimeAcc > BATT_TON_MSEC)
     {
+        b_shutdown = true;
+    }
+
+    // Shutdown
+    if (b_shutdown)
+    {
+        // Set the battery dead flag in EEPROM
+        EEPROM.update(EEP_SETT_FLAGS, bitSetMask(u8_statusFlags, STAT_FLG_BATT_DEAD));
+
         anim_low_batt();
         shutdown();
 
         u16_onTimeAcc = u16_lastScan = 0; // Timer Reset
     }
+    
 
 }
 
@@ -1623,6 +1656,10 @@ void shutdown() {
                     |IO_NP_ENABLE);
     bitSetMask(PORTB, IO_NP_ENABLE);       // Enable power for NeoPixels
     ADCSRA |= _BV(ADEN);                   // Enable ADC
+
+    // Reset the button state machines
+    o_leftBtn.reset();
+    o_rightBtn.reset();
 }
 
 // Quickly flash red battery icon to indicate low battery condition
@@ -1633,11 +1670,11 @@ void anim_low_batt() {
     {
         draw_char(BATT_ICON_DEAD, COLOR_RED);
         o_strip.show();
-        delay(150);
+        delay(200);
 
         o_strip.clear();
         o_strip.show();
-        delay(150);
+        delay(200);
     }
 }
 

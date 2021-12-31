@@ -31,6 +31,7 @@ four output events from a single push-button.
 class multiButton {
 public:
     uint8_t check(bool b_btnRead);
+    void reset();
 
 protected:
     bool b_buttonVal = true;      // value read from button

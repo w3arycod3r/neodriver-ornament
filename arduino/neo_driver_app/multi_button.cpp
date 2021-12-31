@@ -89,3 +89,18 @@ uint8_t multiButton::check(bool b_btnRead)
     b_buttonLast = b_buttonVal;
     return u8_event;
 }
+
+void multiButton::reset()
+{
+    b_buttonVal = true;      
+    b_buttonLast = true;     
+    b_DCwaiting = false;     
+    b_DConUp = false;        
+    b_singleOK = true;       
+    u16_downTime = 0;
+    u16_upTime = 0;  
+    b_ignoreUp = false;      
+    b_waitForUp = false;     
+    b_holdEventPast = false; 
+    b_longHoldEventPast = false;
+}
