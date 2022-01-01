@@ -202,6 +202,7 @@ typedef struct {
 #define DEBUG_BATT_LVL  0
 #define DEBUG_ADC_VAL   0
 #define DEBUG_RAND_SEED 0
+#define DEBUG_BRIGHT    0
 
 // Debug CoV animation
 #if DEBUG_COV_ANIM == 1
@@ -219,6 +220,11 @@ typedef struct {
 // Debug batt level animation
 #if DEBUG_BATT_LVL == 1
     #define SPOOF_BATT_LVL 3200
+#endif
+
+// Debug brightness
+#if DEBUG_BRIGHT == 1
+    #define BRIGHT_MIN  0
 #endif
 
 /******************************** PROTOTYPES *********************************/
