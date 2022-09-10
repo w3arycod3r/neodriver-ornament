@@ -134,7 +134,7 @@ typedef struct {
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
-#define ANIM_MANUAL_CYCLES     1              // Number of cycles to play in "manual" mode before going to shuffle mode
+#define ANIM_MANUAL_CYCLES     20              // Number of cycles to play in "manual" mode before going to shuffle mode
 
 // Primaries
 #define PRIM_ON_TIME_MSEC      6000           // "on" time between sleeps
@@ -173,6 +173,12 @@ typedef struct {
 
 // Frames
 #define FRAMES_SLEEP_TIME      WDT_8S
+
+// Candle Flicker
+#define CAND_STEP_MSEC         72                    // Time for each "frame" of brightness modulation
+#define CAND_ON_TIME_MSEC      4000                  // Total time for one "play" of this animation
+#define CAND_RAND_ATT_CNT      4                     // Number of attempts to get valid random number
+#define CAND_SLEEP_TIME        WDT_4S                // Sleep time after playing this animation
 
 /*
  *   ANIM_ROT_SEL - Rotation select for 5x5 Matrix - Increasing #, Turning clockwise
@@ -261,6 +267,8 @@ void anim_frames_10();
 void anim_frames_11();
 void anim_frames(FRAMES_CONFIG_T* pst_f);
 void anim_batt_level();
+void anim_candle_flicker();
+void anim_blink_patt(uint8_t* psz_patt, uint32_t u32_color);
 
 ISR(PCINT0_vect);
 ISR(WDT_vect);
@@ -291,6 +299,7 @@ const char PROGMEM sz_msg1[] = "W3ARYCOD3R ";
 const char PROGMEM sz_msg2[] = "MERRY XMAS! ";
 const char PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
 const char PROGMEM sz_msg4[] = "2021 FTW! ";
+const char PROGMEM sz_msg5[] = "SPOOKY HALLOWEEN! ";
 
 // Frame ASCII sequences
 const char PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
@@ -306,6 +315,10 @@ const char PROGMEM sz_frames9[] = ":@=[=;";        // Field     ( 12345  :  :;=@
 const char PROGMEM sz_frames10[] = "]_cdcit";      // Ball      ( 123467 :  ]_cdit )
 const char PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
 const char PROGMEM sz_frames11[] = "rs";           // Pumpkin   ( 12   :  rs )
+
+// Blink patterns
+// 'a' = off, 'z' = max brightness
+const char PROGMEM sz_blink1[] = "mmamammmmammamamaaamammma";
 
 /******************************** GLOBAL VARS ********************************/
 
@@ -546,24 +559,25 @@ void (*apfn_renderFunc[])(void) {
     // anim_half,
     anim_sparkle,
     // anim_marquee, anim_sine_gamma,
-    // anim_cov_quar,
-    anim_cov_char,
-    anim_msg_1,
-    anim_msg_2,
-    anim_msg_3,
-    anim_msg_4,
-    anim_frames_1,
-    anim_frames_2,
-    anim_frames_3,
+    anim_cov_quar,
+    // anim_cov_char,
+    // anim_msg_1,
+    // anim_msg_2,
+    // anim_msg_3,
+    // anim_msg_4,
+    // anim_frames_1,
+    // anim_frames_2,
+    // anim_frames_3,
     //anim_frames_4,
-    anim_frames_5,
-    anim_frames_6,
-    anim_frames_7,
-    anim_frames_8,
-    anim_frames_9,
-    anim_frames_10,
-    anim_frames_11,
-    anim_batt_level,
+    // anim_frames_5,
+    // anim_frames_6,
+    // anim_frames_7,
+    // anim_frames_8,
+    // anim_frames_9,
+    // anim_frames_10,
+    // anim_frames_11,
+    // anim_batt_level,
+    anim_candle_flicker,
 };
 
 /****************************** GLOBAL OBJECTS *******************************/
@@ -1510,6 +1524,54 @@ void anim_batt_level() {
 
         u8_nextSleepTime = BATT_LVL_SLEEP_TIME;
     }
+}
+
+void anim_candle_flicker() {
+    static uint16_t u16_lastStepTime;
+    static uint16_t u16_startTime;
+    static uint8_t u8_bright_val;
+    uint8_t u8_attempts;
+    uint16_t u16_currTime = millis();
+
+    // Reset static vars to starting values
+    if (b_animReset) {
+        b_animReset = false;
+
+        u16_lastStepTime = u16_currTime;
+        u16_startTime = u16_currTime;
+        u8_bright_val = 0;
+    }
+
+    // Step the animation -- Get new brightness value every STEP_MSEC
+    if (u16_currTime - u16_lastStepTime > CAND_STEP_MSEC) {
+        u16_lastStepTime = u16_currTime;
+
+        // Make ATT_CNT number of attempts to get valid random number
+        u8_attempts = 0;
+        while (u8_attempts++ < CAND_RAND_ATT_CNT) {
+            u8_bright_val = random(32);          // 5-bit random number, uniform distribution
+            if (u8_bright_val >= 4) { break; }   // Eliminate low values
+        }
+
+        if (u8_bright_val > 15) { u8_bright_val = 15; }     // Clip the upper half of 0-31 range to max value of 15
+
+        u8_bright_val = map(u8_bright_val, 0, 15, 0, 255);  // Map to 8-bit brightness value for NP lib
+
+    }
+
+    // Render current frame
+    o_strip.fill(u8_bright_val * 0x010100L); // Yellow, with modulated brightness
+
+    // Signal mode logic of cycle completion -- Flicker for ON_TIME_MSEC
+    if (u16_currTime - u16_startTime > CAND_ON_TIME_MSEC) {
+        b_animCycleComplete = true;
+
+        u8_nextSleepTime = CAND_SLEEP_TIME;
+    }
+}
+
+void anim_blink_patt() {
+
 }
 
 /*********************************** ISR's ***********************************/
