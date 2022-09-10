@@ -16,9 +16,6 @@
 
 /********************************** DEFINES **********************************/
 
-// Animation Selection
-#define SEL_PUMP_FROG   0     // 0 to select "pumpkin", 1 to select "frog"
-
 // EEPROM Mapping
 #define EEP_CHAR_START 7
 #define EEP_CHAR_NUM_B 425
@@ -54,7 +51,7 @@ Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
     ASCII 32-116
 */
 const uint8_t PROGMEM charSet[] = {
-    // [ASCII (decimal): CHAR  animX]
+    // [ASCII: CHAR]
 
     // 32: Space
     0b00000000,
@@ -727,39 +724,19 @@ const uint8_t PROGMEM charSet[] = {
     0b00000,
     0b10001,
 
-    // 114: r
-    #if SEL_PUMP_FROG == 0
-    // pump1
-    0b00100,
-    0b01110,
-    0b10101,
-    0b11011,
-    0b01110,
-    #else
-    // frog1
+    // 114: r  frog1
     0b11011,
     0b01110,
     0b00100,
     0b01110,
     0b11011,
-    #endif
 
-    // 115: s  
-    #if SEL_PUMP_FROG == 0
-    // pump2
-    0b01010,
-    0b11011,
-    0b00000,
-    0b10001,
-    0b01110,
-    #else
-    // frog2
+    // 115: s  frog2
     0b00000,
     0b11011,
     0b01110,
     0b11011,
     0b00000,
-    #endif
 
     // 116: t  ball7
     0b00000,

@@ -57,7 +57,7 @@ typedef struct {
 
 /********************************** DEFINES **********************************/
 
-// Colors (RGB hex triplets)
+// Colors
 #define COLOR_TEAL   0x00FFFFL
 #define COLOR_YELLOW 0xFFFF00L
 #define COLOR_WHITE  0xFFFFFFL
@@ -65,7 +65,6 @@ typedef struct {
 #define COLOR_RED    0xFF0000L
 #define COLOR_GREEN  0x00FF00L
 #define COLOR_BLUE   0x0000FFL
-#define COLOR_ORANGE 0xFF7518L
 
 #define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
 
@@ -258,7 +257,6 @@ void anim_frames_7();
 void anim_frames_8();
 void anim_frames_9();
 void anim_frames_10();
-void anim_frames_11();
 void anim_frames(FRAMES_CONFIG_T* pst_f);
 void anim_batt_level();
 
@@ -305,7 +303,6 @@ const char PROGMEM sz_frames8[] = ")*+,.";         // Snowfall  ( 12345 :  )*+,.
 const char PROGMEM sz_frames9[] = ":@=[=;";        // Field     ( 12345  :  :;=@[  ) [143532]
 const char PROGMEM sz_frames10[] = "]_cdcit";      // Ball      ( 123467 :  ]_cdit )
 const char PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
-const char PROGMEM sz_frames11[] = "rs";           // Pumpkin   ( 12   :  rs )
 
 /******************************** GLOBAL VARS ********************************/
 
@@ -506,24 +503,6 @@ FRAMES_CONFIG_T st_sequence10 = {
     0
 };
 
-// Sequence 11 - Pumpkin
-FRAMES_CONFIG_T st_sequence11 = {
-    2000,
-    COLOR_ORANGE,
-    sz_frames11,
-    FRAMES_MODE_STATIC,
-
-    // STATIC params
-    3,
-
-    // SHIFT params
-    0,
-    0,
-    0,
-    0,
-    0
-};
-
 // Misc vars
 uint8_t u8_anim = 0;                   // Index of current anim in table
 uint8_t u8_mode = SYS_MODE_ANIM_SEL;   // Current mode
@@ -555,14 +534,13 @@ void (*apfn_renderFunc[])(void) {
     anim_frames_1,
     anim_frames_2,
     anim_frames_3,
-    //anim_frames_4,
+    anim_frames_4,
     anim_frames_5,
     anim_frames_6,
     anim_frames_7,
     anim_frames_8,
     anim_frames_9,
     anim_frames_10,
-    anim_frames_11,
     anim_batt_level,
 };
 
@@ -1344,11 +1322,6 @@ void anim_frames_9() {
 // Frames sequence 10
 void anim_frames_10() {
     anim_frames(&st_sequence10);
-}
-
-// Frames sequence 11
-void anim_frames_11() {
-    anim_frames(&st_sequence11);
 }
 
 /*!
