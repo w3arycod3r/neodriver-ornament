@@ -18,9 +18,9 @@
 
 // EEPROM Mapping
 #define EEP_CHAR_START 7
-#define EEP_CHAR_NUM_B 425
-#define EEP_COV_START 432
-#define EEP_COV_NUM_B 80
+#define EEP_CHAR_NUM_B 430
+#define EEP_COV_START 437
+#define EEP_COV_NUM_B 75
 
 // NeoPixel Config
 #define MAX_PIX 25
@@ -46,8 +46,8 @@ Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
 /*
     5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
     
-    Character Data (425B)
-    EEPROM 7-431
+    Character Data (430B)
+    EEPROM 7-436
     ASCII 32-116
 */
 const uint8_t PROGMEM charSet[] = {
@@ -745,12 +745,18 @@ const uint8_t PROGMEM charSet[] = {
     0b00000,
     0b00000,
     
+    // 117: u  `:` replacement, for the LOST numbers "cursor" >:
+    0b10000,
+    0b01001,
+    0b00100,
+    0b01001,
+    0b10000,
 };
 
 /* 
     *****************************************************************************
-    SARS-CoV-2 Data (80B)
-    EEPROM 432-511
+    SARS-CoV-2 Data (75B)
+    EEPROM 437-511
     2 bits per base, 00:A, 01:C, 10:G, 11:U
     4 bases per byte
     *****************************************************************************
@@ -784,7 +790,7 @@ const uint8_t PROGMEM charSet[] = {
     *****************************************************************************
 */
 const uint8_t PROGMEM covSeqData[] = {
- 60,  10, 252, 197, 245,  74, 193,   1,  65,  65, 253, 141, 223, 178,  55, 189,
+74, 193,   1,  65,  65, 253, 141, 223, 178,  55, 189,
 220,   6,   7, 240,  13, 238, 233, 237,  29, 167, 147, 159,  46,  71,  70,  75,
  48, 240, 193, 195, 199, 182, 248,  74,  17, 139,   7, 109, 205, 247, 146, 158,
 124, 107, 246, 214, 239, 146,  88, 211,  73,  19, 114, 191, 109, 106, 238,  22,

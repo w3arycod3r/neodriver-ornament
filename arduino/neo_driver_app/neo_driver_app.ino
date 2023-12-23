@@ -120,9 +120,9 @@ typedef struct {
 #define EEP_SETT_RSEED  2   // Addr 2-5, 4 bytes
 #define EEP_SETT_FLAGS  6   // 8 Status Flags
 #define EEP_CHAR_START  7
-#define EEP_CHAR_NUM_B  425
-#define EEP_COV_START   432
-#define EEP_COV_NUM_B   80
+#define EEP_CHAR_NUM_B  430
+#define EEP_COV_START   437
+#define EEP_COV_NUM_B   75
 
 // Status Flags
 #define STAT_FLG_BATT_DEAD  BIT0
@@ -288,7 +288,7 @@ void store_rand_seed();
 const char PROGMEM sz_msg1[] = "W3ARYCOD3R ";
 const char PROGMEM sz_msg2[] = "MERRY XMAS! ";
 const char PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
-const char PROGMEM sz_msg4[] = "2021 FTW! ";
+const char PROGMEM sz_msg4[] = "u 4 8 15 16 23 42 ";
 
 // Frame ASCII sequences
 const char PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
@@ -526,7 +526,7 @@ void (*apfn_renderFunc[])(void) {
     anim_sparkle,
     // anim_marquee, anim_sine_gamma,
     // anim_cov_quar,
-    anim_cov_char,
+    // anim_cov_char,
     anim_msg_1,
     anim_msg_2,
     anim_msg_3,
@@ -1199,7 +1199,7 @@ void anim_msg_3() {
 
 // Message string 4
 void anim_msg_4() {
-    anim_msg(sz_msg4);
+    anim_msg(sz_msg4, COLOR_GREEN);
 }
 
 /*!
