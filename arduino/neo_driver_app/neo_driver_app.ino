@@ -24,7 +24,6 @@
 #include <avr/wdt.h>
 #include "neo_pixel_slim.h"
 #include "multi_button.h"
-#include "ard_utility.h"
 #include <eep_common.h>
 
 /*********************************** ENUMS ***********************************/
@@ -115,12 +114,9 @@ typedef struct {
 #define PIX_CNT_MAX  25
 #define PIX_CNT_INIT 16
 
-// Status Flags
-#define STAT_FLG_BATT_DEAD  BIT0
-
 // ASCII char set limits
 #define ASCII_START 32
-#define ASCII_NUM_CHARS (EEP_CHAR_NUM_B / 5)       // 5 bytes per char for 5x5 font
+#define ASCII_NUM_CHARS (EEP_CHAR_DATA_NUM_BYTES / 5)       // 5 bytes per char for 5x5 font
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
@@ -154,7 +150,7 @@ typedef struct {
 // CoV
 #define COV_STEP_MSEC          1000                   // "On" time for each base
 #define COV_STEP_CNT           4                      // Number of steps (bases) per cycle
-#define COV_BASES_CNT         (EEP_COV_NUM_B * 4)     // 4 bases per byte
+#define COV_BASES_CNT         (EEP_COV_DATA_NUM_BYTES * 4)     // 4 bases per byte
 #define COV_SLEEP_TIME         WDT_8S
 
 // Message Scroll
@@ -1746,7 +1742,7 @@ uint8_t read_cov_base(uint16_t u16_baseNum) {
 
     // 0th base is encoded in the 2 most significant bits
     uint8_t u8_pos = 3 - u16_baseNum % 4;
-    uint8_t u8_data = EEPROM.read(EEP_COV_START + u16_baseNum/4);
+    uint8_t u8_data = EEPROM.read(EEP_COV_DATA_START_ADDR + u16_baseNum/4);
 
     return (u8_data >> (2 * u8_pos)) & 0b00000011;
 }
@@ -1768,7 +1764,7 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
     }
 
     uint8_t au8_buffer[5]; // 5x5 framebuffer
-    uint16_t u16_addr = EEP_CHAR_START + (c_char - ASCII_START) * 5; // Starting addr of the char in EEPROM
+    uint16_t u16_addr = EEP_CHAR_DATA_START_ADDR + (c_char - ASCII_START) * 5; // Starting addr of the char in EEPROM
 
     // Copy char data from EEPROM into framebuffer & perform X shift
     for (uint8_t u8_i = 0; u8_i < 5; u8_i++) {
