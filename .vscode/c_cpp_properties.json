@@ -13,7 +13,6 @@
                 "_UNICODE"
             ],
             "compilerPath": "C:\\Users\\w3ary\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\bin\\avr-g++",
-            "cStandard": "gnu17",
             "intelliSenseMode": "windows-gcc-x64"
         }
     ],
