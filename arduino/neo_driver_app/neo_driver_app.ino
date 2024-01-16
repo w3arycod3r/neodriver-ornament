@@ -25,6 +25,7 @@
 #include "neo_pixel_slim.h"
 #include "multi_button.h"
 #include "ard_utility.h"
+#include <eep_common.h>
 
 /*********************************** ENUMS ***********************************/
 typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
@@ -113,16 +114,6 @@ typedef struct {
 #define PIX_CNT_MIN  1
 #define PIX_CNT_MAX  25
 #define PIX_CNT_INIT 16
-
-// EEPROM Addresses
-#define EEP_SETT_ANIM   0
-#define EEP_SETT_NPIX   1
-#define EEP_SETT_RSEED  2   // Addr 2-5, 4 bytes
-#define EEP_SETT_FLAGS  6   // 8 Status Flags
-#define EEP_CHAR_START  7
-#define EEP_CHAR_NUM_B  425
-#define EEP_COV_START   432
-#define EEP_COV_NUM_B   80
 
 // Status Flags
 #define STAT_FLG_BATT_DEAD  BIT0

@@ -13,14 +13,9 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
+#include <eep_common.h>
 
 /********************************** DEFINES **********************************/
-
-// EEPROM Mapping
-#define EEP_CHAR_START 7
-#define EEP_CHAR_NUM_B 425
-#define EEP_COV_START 432
-#define EEP_COV_NUM_B 80
 
 // NeoPixel Config
 #define MAX_PIX 25
