@@ -24,7 +24,7 @@
 #include <avr/wdt.h>
 #include "neo_pixel_slim.h"
 #include "multi_button.h"
-#include <eep_common.h>
+#include <neo_common.h>
 
 /*********************************** ENUMS ***********************************/
 typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
@@ -56,17 +56,6 @@ typedef struct {
 } FRAMES_CONFIG_T;
 
 /********************************** DEFINES **********************************/
-
-// Colors
-#define COLOR_TEAL   0x00FFFFL
-#define COLOR_YELLOW 0xFFFF00L
-#define COLOR_WHITE  0xFFFFFFL
-#define COLOR_PURPLE 0xFF00FFL
-#define COLOR_RED    0xFF0000L
-#define COLOR_GREEN  0x00FF00L
-#define COLOR_BLUE   0x0000FFL
-
-#define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
 
 // Watchdog timeouts (Actual delays will be slightly longer at 3.3V)
 #define WDT_16MS   0
@@ -113,10 +102,6 @@ typedef struct {
 #define PIX_CNT_MIN  1
 #define PIX_CNT_MAX  25
 #define PIX_CNT_INIT 16
-
-// ASCII char set limits
-#define ASCII_START 32
-#define ASCII_NUM_CHARS (EEP_CHAR_DATA_NUM_BYTES / 5)       // 5 bytes per char for 5x5 font
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
@@ -1764,11 +1749,10 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
     }
 
     uint8_t au8_buffer[5]; // 5x5 framebuffer
-    uint16_t u16_addr = EEP_CHAR_DATA_START_ADDR + (c_char - ASCII_START) * 5; // Starting addr of the char in EEPROM
 
     // Copy char data from EEPROM into framebuffer & perform X shift
     for (uint8_t u8_i = 0; u8_i < 5; u8_i++) {
-        au8_buffer[u8_i] = EEPROM.read(u16_addr + u8_i);
+        au8_buffer[u8_i] = eep_char_read_line(c_char, u8_i);
 
         if      (i8_x < 0) { au8_buffer[u8_i] <<= -i8_x; }   // Shift left
         else if (i8_x > 0) { au8_buffer[u8_i] >>=  i8_x; }   // Shift right
@@ -1829,6 +1813,33 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
         }
     }
 }
+
+// Extract a line of a character from the compressed EEPROM char data
+// line: 0-4
+uint8_t eep_char_read_line(char c_char, uint8_t line)
+{
+    uint16_t char_index = (c_char - ASCII_START);
+    uint16_t bit_start_index = (char_index * MATRIX_NUM_PIX) + (MATRIX_WIDTH_PIX * line);
+    uint16_t byte_start_index = bit_start_index / BITS_IN_BYTE;
+
+    uint16_t byte_start_addr = EEP_CHAR_DATA_START_ADDR + byte_start_index;
+    uint16_t bit_within_byte_index = BITS_IN_BYTE - (bit_start_index % BITS_IN_BYTE) - 1;
+
+    uint8_t eep_B0 = EEPROM.read(byte_start_addr);
+    uint8_t eep_B1 = EEPROM.read(byte_start_addr+1);
+
+    // All within byte 0
+    if (bit_within_byte_index >= (MATRIX_WIDTH_PIX-1))
+    {
+        uint8_t shift_neeeded = bit_within_byte_index - (MATRIX_WIDTH_PIX-1);
+        return ((eep_B0 >> shift_neeeded) & 0b00011111);
+    }
+
+
+    return eep_B0;
+    
+}
+
 
 // External interface for WDT. Call with one of the WDT_XXX constants. Sets up WDT software and hardware.
 void wd_enable(uint8_t u8_timeout) {

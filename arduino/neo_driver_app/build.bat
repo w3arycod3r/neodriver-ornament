@@ -9,8 +9,10 @@ pushd "%~dp0"
 set board_name=ATTinyCore:avr:attinyx5:LTO=enable,TimerClockSource=default,chip=85,clock=8internal,eesave=aenable,bod=disable,millis=enabled
 set prog_name=atmel_ice
 
-arduino-cli compile --libraries ../libraries --fqbn %board_name% -e && ^
-get_size_info.bat && ^
-arduino-cli upload --fqbn %board_name% -v -P %prog_name%
+call arduino-cli compile --libraries ../libraries --fqbn %board_name% -e || goto :error
+call get_size_info.bat || goto :error
+call arduino-cli upload --fqbn %board_name% -v -P %prog_name% || goto :error
 
+:error
 popd
+if %errorlevel% neq 0 exit /b %errorlevel%

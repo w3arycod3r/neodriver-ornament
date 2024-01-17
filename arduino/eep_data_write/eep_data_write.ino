@@ -13,7 +13,8 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
-#include <eep_common.h>
+#include <neo_common.h>
+#include <ard_utility.h>
 
 /********************************** DEFINES **********************************/
 
@@ -37,710 +38,6 @@ Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
     Settings Data (7B)
     EEPROM 0-6
 */
-
-/*
-    5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
-    
-    Character Data (425B)
-    EEPROM 7-431
-    ASCII 32-116
-*/
-const uint8_t PROGMEM charSet[] = {
-    // [ASCII: CHAR]
-
-    // 32: Space
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-
-    // 33: !
-    0b00001000,
-    0b00001000,
-    0b00001000,
-    0b00000000,
-    0b00001000,
-
-    // 34: "  ghost1
-    // 0b00001010,
-    // 0b00001010,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    0b01110,
-    0b11111,
-    0b10101,
-    0b11111,
-    0b10101,
-
-    // 35: #  batt1
-    // 0b01010,
-    // 0b11111,
-    // 0b01010,
-    // 0b11111,
-    // 0b01010,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b10000,
-
-    // 36: $  batt2
-    // 0b00001111,
-    // 0b00010100,
-    // 0b00011111,
-    // 0b00000101,
-    // 0b00011110,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b01000,
-    0b11000,
-
-    // 37: %  batt3
-    // 0b00011001,
-    // 0b00010010,
-    // 0b00000100,
-    // 0b00001001,
-    // 0b00010011,
-    0b00000,
-    0b00000,
-    0b00100,
-    0b01100,
-    0b11100,
-
-    // 38: &  batt4
-    // 0b00001100,
-    // 0b00010010,
-    // 0b00001100,
-    // 0b00010011,
-    // 0b00001101,
-    0b00000,
-    0b00010,
-    0b00110,
-    0b01110,
-    0b11110,
-
-    // 39: '  batt5
-    // 0b00010000,
-    // 0b00010000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    0b00001,
-    0b00011,
-    0b00111,
-    0b01111,
-    0b11111,
-
-    // 40: (  batt6
-    // 0b00000110,
-    // 0b00001100,
-    // 0b00001000,
-    // 0b00001100,
-    // 0b00000110,
-    0b00100,
-    0b01110,
-    0b01010,
-    0b01010,
-    0b01110,
-
-    // 41: )  snow1
-    // 0b00001100,
-    // 0b00000110,
-    // 0b00000010,
-    // 0b00000110,
-    // 0b00001100,
-    0b10001,
-    0b00000,
-    0b00000,
-    0b00010,
-    0b00000,
-
-    // 42: *  snow2
-    // 0b00010101,
-    // 0b00001110,
-    // 0b00011111,
-    // 0b00001110,
-    // 0b00010101,
-    0b00000,
-    0b01010,
-    0b00000,
-    0b00000,
-    0b00100,
-
-    // 43: +  snow3
-    // 0b00000000,
-    // 0b00000100,
-    // 0b00001110,
-    // 0b00000100,
-    // 0b00000000,
-    0b00100,
-    0b00000,
-    0b10001,
-    0b00000,
-    0b00000,
-
-    // 44: ,  snow4
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000100,
-    // 0b00001000,
-    0b00000,
-    0b01000,
-    0b00000,
-    0b01010,
-    0b00000,
-
-    // 45: -
-    0b00000,
-    0b00000,
-    0b11111,
-    0b00000,
-    0b00000,
-
-    // 46: .  snow5
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00001000,
-    0b00000,
-    0b00000,
-    0b00100,
-    0b00000,
-    0b10001,
-
-    // 47: /
-    0b00000001,
-    0b00000011,
-    0b00000110,
-    0b00001100,
-    0b00001000,
-
-    // 48: 0
-    0b00001110,
-    0b00010001,
-    0b00010101,
-    0b00010001,
-    0b00001110,
-
-    // 49: 1
-    0b00001100,
-    0b00010100,
-    0b00000100,
-    0b00000100,
-    0b00011111,
-
-    // 50: 2
-    0b00001110,
-    0b00010001,
-    0b00000110,
-    0b00001000,
-    0b00011111,
-
-    // 51: 3
-    0b00011110,
-    0b00000001,
-    0b00000111,
-    0b00000001,
-    0b00011110,
-
-    // 52: 4
-    0b00000010,
-    0b00000110,
-    0b00001010,
-    0b00011111,
-    0b00000010,
-
-    // 53: 5
-    0b00011111,
-    0b00010000,
-    0b00011110,
-    0b00000001,
-    0b00011110,
-
-    // 54: 6
-    0b00001111,
-    0b00010000,
-    0b00011111,
-    0b00010001,
-    0b00001110,
-
-    // 55: 7
-    0b00011111,
-    0b00000001,
-    0b00000010,
-    0b00000100,
-    0b00000100,
-
-    // 56: 8
-    0b00001110,
-    0b00010001,
-    0b00001110,
-    0b00010001,
-    0b00001110,
-
-    // 57: 9
-    0b00001110,
-    0b00010001,
-    0b00011111,
-    0b00000001,
-    0b00011110,
-
-    // 58: :  field1
-    // 0b00000000,
-    // 0b00001000,
-    // 0b00000000,
-    // 0b00001000,
-    // 0b00000000,
-    0b10101,
-    0b00000,
-    0b10101,
-    0b00000,
-    0b10101,
-
-    // 59: ;  field2
-    // 0b00000000,
-    // 0b00000100,
-    // 0b00000000,
-    // 0b00000100,
-    // 0b00001000,
-    0b01010,
-    0b10101,
-    0b01010,
-    0b10101,
-    0b01010,
-
-    // 60: <
-    0b00000010,
-    0b00000100,
-    0b00001000,
-    0b00000100,
-    0b00000010,
-
-    // 61: =  field3
-    // 0b00000000,
-    // 0b00001110,
-    // 0b00000000,
-    // 0b00001110,
-    // 0b00000000,
-    0b10101,
-    0b01010,
-    0b10101,
-    0b01010,
-    0b10101,
-
-    // 62: >
-    0b00001000,
-    0b00000100,
-    0b00000010,
-    0b00000100,
-    0b00001000,
-
-    // 63: ?
-    0b00001110,
-    0b00010001,
-    0b00000110,
-    0b00000000,
-    0b00000100,
-
-    // 64: @  field4
-    // 0b00001110,
-    // 0b00011111,
-    // 0b00011001,
-    // 0b00011101,
-    // 0b00001110,
-    0b11011,
-    0b10001,
-    0b00000,
-    0b10001,
-    0b11011,
-
-    // 65: A
-    0b00001110,
-    0b00010001,
-    0b00011111,
-    0b00010001,
-    0b00010001,
-
-    // 66: B
-    0b00011110,
-    0b00010001,
-    0b00011110,
-    0b00010001,
-    0b00011110,
-
-    // 67: C
-    0b00001110,
-    0b00010001,
-    0b00010000,
-    0b00010001,
-    0b00001110,
-
-    // 68: D
-    0b00011110,
-    0b00010001,
-    0b00010001,
-    0b00010001,
-    0b00011110,
-
-    // 69: E
-    0b00001111,
-    0b00010000,
-    0b00011110,
-    0b00010000,
-    0b00001111,
-
-    // 70: F
-    0b00011110,
-    0b00010000,
-    0b00011100,
-    0b00010000,
-    0b00010000,
-
-    // 71: G
-    0b00001111,
-    0b00010000,
-    0b00010111,
-    0b00010001,
-    0b00001110,
-
-    // 72: H
-    0b00010001,
-    0b00010001,
-    0b00011111,
-    0b00010001,
-    0b00010001,
-
-    // 73: I
-    0b00011111,
-    0b00000100,
-    0b00000100,
-    0b00000100,
-    0b00011111,
-
-    // 74: J
-    0b00011111,
-    0b00000010,
-    0b00010010,
-    0b00010010,
-    0b00001100,
-
-    // 75: K
-    0b00010010,
-    0b00010100,
-    0b00011000,
-    0b00010100,
-    0b00010010,
-
-    // 76: L
-    0b00010000,
-    0b00010000,
-    0b00010000,
-    0b00010000,
-    0b00011110,
-
-    // 77: M
-    0b00001110,
-    0b00010101,
-    0b00010101,
-    0b00010001,
-    0b00010001,
-
-    // 78: N
-    0b00010001,
-    0b00011001,
-    0b00010101,
-    0b00010011,
-    0b00010001,
-
-    // 79: O
-    0b00001110,
-    0b00010001,
-    0b00010001,
-    0b00010001,
-    0b00001110,
-
-    // 80: P
-    0b00011110,
-    0b00010001,
-    0b00011110,
-    0b00010000,
-    0b00010000,
-
-    // 81: Q
-    0b00001110,
-    0b00010001,
-    0b00010101,
-    0b00010010,
-    0b00001101,
-
-    // 82: R
-    0b00011110,
-    0b00010001,
-    0b00011110,
-    0b00010001,
-    0b00010001,
-
-    // 83: S
-    0b00001111,
-    0b00010000,
-    0b00011111,
-    0b00000001,
-    0b00011110,
-
-    // 84: T
-    0b00011111,
-    0b00000100,
-    0b00000100,
-    0b00000100,
-    0b00000100,
-
-    // 85: U
-    0b00010001,
-    0b00010001,
-    0b00010001,
-    0b00010001,
-    0b00001110,
-
-    // 86: V
-    0b00010001,
-    0b00010001,
-    0b00010001,
-    0b00001010,
-    0b00000100,
-
-    // 87: W
-    0b00010001,
-    0b00010001,
-    0b00010101,
-    0b00010101,
-    0b00001110,
-
-    // 88: X
-    0b00010001,
-    0b00001010,
-    0b00000100,
-    0b00001010,
-    0b00010001,
-
-    // 89: Y
-    0b00010001,
-    0b00001010,
-    0b00000100,
-    0b00000100,
-    0b00000100,
-
-    // 90: Z
-    0b00011111,
-    0b00000010,
-    0b00000100,
-    0b00001000,
-    0b00011111,
-
-    // 91: [  field5
-    // 0b00001100,
-    // 0b00001000,
-    // 0b00001000,
-    // 0b00001000,
-    // 0b00001100,
-    0b11011,
-    0b10101,
-    0b01010,
-    0b10101,
-    0b11011,
-
-    // 92: '\'
-    0b00010000,
-    0b00011000,
-    0b00001100,
-    0b00000110,
-    0b00000010,
-
-    // 93: ]  ball1
-    // 0b00000110,
-    // 0b00000010,
-    // 0b00000010,
-    // 0b00000010,
-    // 0b00000110,
-    0b00000,
-    0b10000,
-    0b00000,
-    0b00000,
-    0b00000,
-
-    // 94: ^
-    0b00100,
-    0b01010,
-    0b10001,
-    0b00000,
-    0b00000,
-
-    // 95: _  ball2
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00000000,
-    // 0b00011111,
-    0b00000,
-    0b00000,
-    0b01000,
-    0b00000,
-    0b00000,
-
-    /***** Animation Frames *****/
-
-    // 96: `  spin1
-    0b10011,
-    0b11010,
-    0b00100,
-    0b01011,
-    0b11001,
-
-    // 97: a  spin2
-    0b11001,
-    0b01011,
-    0b00100,
-    0b11010,
-    0b10011,
-
-    // 98: b  vert_bar
-    0b00100,
-    0b00100,
-    0b00100,
-    0b00100,
-    0b00100,
-
-    // 99: c  ball3
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00100,
-    0b00000,
-
-    // 100: d  ball4
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b00100,
-
-    // 101: e  dna1
-    0b10001,
-    0b01010,
-    0b10001,
-    0b01010,
-    0b10001,
-
-    // 102: f  dna2
-    0b01010,
-    0b10001,
-    0b01010,
-    0b10001,
-    0b01010,
-
-    // 103: g  pac1
-    0b01110,
-    0b11100,
-    0b11000,
-    0b11100,
-    0b01110,
-
-    // 104: h  pac2
-    0b01110,
-    0b11111,
-    0b11111,
-    0b11111,
-    0b01110,
-
-    // 105: i  ball6
-    0b00000,
-    0b00000,
-    0b00010,
-    0b00000,
-    0b00000,
-
-    // 106: j  star1
-    0b00000,
-    0b00100,
-    0b01110,
-    0b00100,
-    0b00000,
-
-    // 107: k  star2
-    0b00000,
-    0b01010,
-    0b00100,
-    0b01010,
-    0b00000,
-
-    // 108: l  star3
-    0b00000,
-    0b00100,
-    0b01010,
-    0b00100,
-    0b00000,
-
-    // 109: m  star4
-    0b00100,
-    0b00100,
-    0b11011,
-    0b00100,
-    0b00100,
-
-    // 110: n  star5
-    0b00100,
-    0b01010,
-    0b10001,
-    0b01010,
-    0b00100,
-
-    // 111: o  star6
-    0b10001,
-    0b00100,
-    0b01110,
-    0b00100,
-    0b10001,
-
-    // 112: p  star7
-    0b10001,
-    0b01010,
-    0b00000,
-    0b01010,
-    0b10001,
-
-    // 113: q  star8
-    0b10001,
-    0b00000,
-    0b00000,
-    0b00000,
-    0b10001,
-
-    // 114: r  frog1
-    0b11011,
-    0b01110,
-    0b00100,
-    0b01110,
-    0b11011,
-
-    // 115: s  frog2
-    0b00000,
-    0b11011,
-    0b01110,
-    0b11011,
-    0b00000,
-
-    // 116: t  ball7
-    0b00000,
-    0b00001,
-    0b00000,
-    0b00000,
-    0b00000,
-    
-};
 
 /* 
     *****************************************************************************
@@ -804,9 +101,7 @@ void setup() {
     strip.setBrightness(INIT_BRIGHT);
 
     // Update EEPROM Data
-    for (uint16_t i = 0; i < EEP_CHAR_DATA_NUM_BYTES; i++) {
-        EEPROM.update(EEP_CHAR_DATA_START_ADDR+i, pgm_read_byte(&charSet[i]));
-    }
+    eep_compressed_chars(false);
 
     #ifdef EEP_COV_DATA_WRITE_ENABLE
     for (uint16_t i = 0; i < EEP_COV_DATA_NUM_BYTES; i++) {
@@ -816,9 +111,7 @@ void setup() {
 
     // Verify EEPROM Data
     bool dataOK = true;
-    for (uint16_t i = 0; i < EEP_CHAR_DATA_NUM_BYTES; i++) {
-        if (EEPROM.read(EEP_CHAR_DATA_START_ADDR+i) != pgm_read_byte(&charSet[i])) { dataOK = false; }
-    }
+    if (!eep_compressed_chars(true)) { dataOK = false; }
 
     #ifdef EEP_COV_DATA_WRITE_ENABLE
     for (uint16_t i = 0; i < EEP_COV_DATA_NUM_BYTES; i++) {
@@ -826,21 +119,28 @@ void setup() {
     }
     #endif
 
-
-    // Confirm success to user
+    uint32_t flash_color;
     if (dataOK)
     {
-        strip.clear();
-        for (int i=0; i<3; i++) {
-            strip.setPixelColor(0, 0, 255, 0);  // Green
-            strip.show();
-            delay(500);
-
-            strip.clear();
-            strip.show();
-            delay(500);
-        }
+        flash_color = COLOR_GREEN;
     }
+    else
+    {
+        flash_color = COLOR_RED;
+    }
+    
+    // Indicate verification status
+    strip.clear();
+    for (int i=0; i<3; i++) {
+        strip.setPixelColor(0, flash_color);
+        strip.show();
+        delay(500);
+
+        strip.clear();
+        strip.show();
+        delay(500);
+    }
+
 
 }
 
@@ -849,3 +149,91 @@ void loop() {
 
 }
 
+// Shift in upper num_bits from data_in, into data, from the right
+// num_bits should be <= 8
+void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits)
+{
+    if (num_bits == 0)
+    {
+        return;
+    }
+    
+    // A bit mask with num_bits of 1's in lower positions
+    uint8_t bitmask = (1 << num_bits) - 1;
+    // Handle 8 bits specially, overflows the above left shift..
+    if (num_bits == 8)
+    {
+        bitmask = 0xFF;
+    }
+    
+    *data <<= num_bits;
+    *data |= ((data_in >> (8-num_bits)) & bitmask);
+}
+
+/*
+    validate = false -> "Update" EEPROM with correct values, possibly performing writes
+    validate = true  -> Check EEPROM for correct values, performing no writes, returning status
+*/
+bool eep_compressed_chars(bool validate)
+{
+    uint16_t eep_addr = EEP_CHAR_DATA_START_ADDR;
+    uint8_t input_byte = 0;
+    uint16_t input_byte_cnt = 0;
+    uint8_t input_bits_rem = 0;
+    uint8_t output_byte = 0;
+    uint8_t output_bits_rem = 8;
+    uint8_t bits_to_copy = 0;
+    bool input_exhausted = false;
+    bool dataOK = true;
+
+    // Each iteration does a copy of some bits from input to output byte
+    do
+    {
+        // Read a new input byte
+        if (input_bits_rem == 0)
+        {
+            if (input_byte_cnt == FLASH_CHAR_SET_SIZE_BYTES)
+            {
+                // Copy zeros into remaining lower bits in output, flush, and terminate loop
+                input_exhausted = true;
+                input_byte = 0;
+                input_bits_rem = output_bits_rem;
+            }
+            else
+            {
+                input_byte = pgm_read_byte(&charSet[input_byte_cnt]);
+                input_byte <<= (8-MATRIX_WIDTH_PIX);
+                input_bits_rem = MATRIX_WIDTH_PIX;
+                input_byte_cnt++;
+            }
+        }
+        
+        // Copy bits
+        bits_to_copy = min(input_bits_rem, output_bits_rem);
+        shift_in_from_right(&output_byte, input_byte, bits_to_copy);
+
+        // Prepare for next copy
+        input_byte <<= bits_to_copy;
+        input_bits_rem -= bits_to_copy;
+        output_bits_rem -= bits_to_copy;
+
+        // Flush the output byte
+        if (output_bits_rem == 0)
+        {
+            if (validate)
+            {
+                if (EEPROM.read(eep_addr) != output_byte) { dataOK = false; }
+            }
+            else
+            {
+                EEPROM.update(eep_addr, output_byte);
+            }
+            output_byte = 0;
+            output_bits_rem = 8;
+            eep_addr++;
+        }
+
+    } while (!input_exhausted);
+    
+    return dataOK;
+}

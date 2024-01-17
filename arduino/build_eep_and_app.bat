@@ -9,7 +9,7 @@ pushd "%~dp0"
 echo.
 echo Building eep_data_write...
 echo.
-call eep_data_write\build.bat
+call eep_data_write\build.bat || goto :error
 
 :: Give time for eep flashing
 echo.
@@ -20,6 +20,7 @@ timeout /t 3 /nobreak > NUL
 echo.
 echo Building neo_driver_app...
 echo.
-call neo_driver_app\build.bat
+call neo_driver_app\build.bat || goto :error
 
+:error
 popd
