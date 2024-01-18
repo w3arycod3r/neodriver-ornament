@@ -1815,28 +1815,26 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
 }
 
 // Extract a line of a character from the compressed EEPROM char data
-// line: 0-4
+// line: 0-4, top-bottom
 uint8_t eep_char_read_line(char c_char, uint8_t line)
 {
     uint16_t char_index = (c_char - ASCII_START);
     uint16_t bit_start_index = (char_index * MATRIX_NUM_PIX) + (MATRIX_WIDTH_PIX * line);
+    // Byte index where beginning of line data is found
     uint16_t byte_start_index = bit_start_index / BITS_IN_BYTE;
 
     uint16_t byte_start_addr = EEP_CHAR_DATA_START_ADDR + byte_start_index;
+    // Bit which is the first bit of the line data (left-most)
     uint16_t bit_within_byte_index = BITS_IN_BYTE - (bit_start_index % BITS_IN_BYTE) - 1;
 
-    uint8_t eep_B0 = EEPROM.read(byte_start_addr);
-    uint8_t eep_B1 = EEPROM.read(byte_start_addr+1);
+    // Compose a u16 with first and second bytes, since the line data *may* span two bytes
+    uint16_t u16_eep_read = ((EEPROM.read(byte_start_addr) << 8) | EEPROM.read(byte_start_addr+1));
+    uint16_t bit_within_word_index = bit_within_byte_index + BITS_IN_BYTE;
 
-    // All within byte 0
-    if (bit_within_byte_index >= (MATRIX_WIDTH_PIX-1))
-    {
-        uint8_t shift_neeeded = bit_within_byte_index - (MATRIX_WIDTH_PIX-1);
-        return ((eep_B0 >> shift_neeeded) & 0b00011111);
-    }
+    // Extract the 5-bit line data, place in lower 5-bits of the byte to be returned
+    uint8_t line_data = (u16_eep_read >> (bit_within_word_index - MATRIX_WIDTH_PIX + 1)) & 0x1F;
 
-
-    return eep_B0;
+    return line_data;
     
 }
 
