@@ -260,7 +260,9 @@ void store_rand_seed();
 const char PROGMEM sz_msg1[] = "W3ARYCOD3R ";
 const char PROGMEM sz_msg2[] = "MERRY XMAS! ";
 const char PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
-const char PROGMEM sz_msg4[] = "2021 FTW! ";
+const char PROGMEM sz_msg4[] = "u 4 8 15 16 23 42 ";    // Lost "numbers"
+// const char PROGMEM sz_msg4[] = "2021 FTW! ";
+
 
 // Frame ASCII sequences
 const char PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
@@ -1171,7 +1173,7 @@ void anim_msg_3() {
 
 // Message string 4
 void anim_msg_4() {
-    anim_msg(sz_msg4);
+    anim_msg(sz_msg4, COLOR_GREEN);
 }
 
 /*!
