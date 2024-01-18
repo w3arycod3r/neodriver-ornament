@@ -101,7 +101,7 @@ typedef struct {
 #define BRIGHT_INIT  8
 #define PIX_CNT_MIN  1
 #define PIX_CNT_MAX  25
-#define PIX_CNT_INIT 16
+#define PIX_CNT_INIT 25
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
