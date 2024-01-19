@@ -24,7 +24,7 @@
 #include <avr/wdt.h>
 #include "neo_pixel_slim.h"
 #include "multi_button.h"
-#include "ard_utility.h"
+#include <neo_common.h>
 
 /*********************************** ENUMS ***********************************/
 typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
@@ -56,17 +56,6 @@ typedef struct {
 } FRAMES_CONFIG_T;
 
 /********************************** DEFINES **********************************/
-
-// Colors
-#define COLOR_TEAL   0x00FFFFL
-#define COLOR_YELLOW 0xFFFF00L
-#define COLOR_WHITE  0xFFFFFFL
-#define COLOR_PURPLE 0xFF00FFL
-#define COLOR_RED    0xFF0000L
-#define COLOR_GREEN  0x00FF00L
-#define COLOR_BLUE   0x0000FFL
-
-#define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
 
 // Watchdog timeouts (Actual delays will be slightly longer at 3.3V)
 #define WDT_16MS   0
@@ -112,24 +101,7 @@ typedef struct {
 #define BRIGHT_INIT  8
 #define PIX_CNT_MIN  1
 #define PIX_CNT_MAX  25
-#define PIX_CNT_INIT 16
-
-// EEPROM Addresses
-#define EEP_SETT_ANIM   0
-#define EEP_SETT_NPIX   1
-#define EEP_SETT_RSEED  2   // Addr 2-5, 4 bytes
-#define EEP_SETT_FLAGS  6   // 8 Status Flags
-#define EEP_CHAR_START  7
-#define EEP_CHAR_NUM_B  425
-#define EEP_COV_START   432
-#define EEP_COV_NUM_B   80
-
-// Status Flags
-#define STAT_FLG_BATT_DEAD  BIT0
-
-// ASCII char set limits
-#define ASCII_START 32
-#define ASCII_NUM_CHARS (EEP_CHAR_NUM_B / 5)       // 5 bytes per char for 5x5 font
+#define PIX_CNT_INIT 25
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
@@ -163,7 +135,7 @@ typedef struct {
 // CoV
 #define COV_STEP_MSEC          1000                   // "On" time for each base
 #define COV_STEP_CNT           4                      // Number of steps (bases) per cycle
-#define COV_BASES_CNT         (EEP_COV_NUM_B * 4)     // 4 bases per byte
+#define COV_BASES_CNT         (EEP_COV_DATA_NUM_BYTES * 4)     // 4 bases per byte
 #define COV_SLEEP_TIME         WDT_8S
 
 // Message Scroll
@@ -288,7 +260,9 @@ void store_rand_seed();
 const char PROGMEM sz_msg1[] = "W3ARYCOD3R ";
 const char PROGMEM sz_msg2[] = "MERRY XMAS! ";
 const char PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
-const char PROGMEM sz_msg4[] = "2021 FTW! ";
+const char PROGMEM sz_msg4[] = "u 4 8 15 16 23 42 ";    // Lost "numbers"
+// const char PROGMEM sz_msg4[] = "2021 FTW! ";
+
 
 // Frame ASCII sequences
 const char PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
@@ -1199,7 +1173,7 @@ void anim_msg_3() {
 
 // Message string 4
 void anim_msg_4() {
-    anim_msg(sz_msg4);
+    anim_msg(sz_msg4, COLOR_GREEN);
 }
 
 /*!
@@ -1755,7 +1729,7 @@ uint8_t read_cov_base(uint16_t u16_baseNum) {
 
     // 0th base is encoded in the 2 most significant bits
     uint8_t u8_pos = 3 - u16_baseNum % 4;
-    uint8_t u8_data = EEPROM.read(EEP_COV_START + u16_baseNum/4);
+    uint8_t u8_data = EEPROM.read(EEP_COV_DATA_START_ADDR + u16_baseNum/4);
 
     return (u8_data >> (2 * u8_pos)) & 0b00000011;
 }
@@ -1777,11 +1751,10 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
     }
 
     uint8_t au8_buffer[5]; // 5x5 framebuffer
-    uint16_t u16_addr = EEP_CHAR_START + (c_char - ASCII_START) * 5; // Starting addr of the char in EEPROM
 
     // Copy char data from EEPROM into framebuffer & perform X shift
     for (uint8_t u8_i = 0; u8_i < 5; u8_i++) {
-        au8_buffer[u8_i] = EEPROM.read(u16_addr + u8_i);
+        au8_buffer[u8_i] = eep_char_read_line(c_char, u8_i);
 
         if      (i8_x < 0) { au8_buffer[u8_i] <<= -i8_x; }   // Shift left
         else if (i8_x > 0) { au8_buffer[u8_i] >>=  i8_x; }   // Shift right
@@ -1842,6 +1815,31 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
         }
     }
 }
+
+// Extract a line of a character from the compressed EEPROM char data
+// line: 0-4, top-bottom
+uint8_t eep_char_read_line(char c_char, uint8_t line)
+{
+    uint16_t char_index = (c_char - ASCII_START);
+    uint16_t bit_start_index = (char_index * MATRIX_NUM_PIX) + (MATRIX_WIDTH_PIX * line);
+    // Byte index where beginning of line data is found
+    uint16_t byte_start_index = bit_start_index / BITS_IN_BYTE;
+
+    uint16_t byte_start_addr = EEP_CHAR_DATA_START_ADDR + byte_start_index;
+    // Bit which is the first bit of the line data (left-most)
+    uint16_t bit_within_byte_index = BITS_IN_BYTE - (bit_start_index % BITS_IN_BYTE) - 1;
+
+    // Compose a u16 with first and second bytes, since the line data *may* span two bytes
+    uint16_t u16_eep_read = ((EEPROM.read(byte_start_addr) << 8) | EEPROM.read(byte_start_addr+1));
+    uint16_t bit_within_word_index = bit_within_byte_index + BITS_IN_BYTE;
+
+    // Extract the 5-bit line data, place in lower 5-bits of the byte to be returned
+    uint8_t line_data = (u16_eep_read >> (bit_within_word_index - MATRIX_WIDTH_PIX + 1)) & 0x1F;
+
+    return line_data;
+    
+}
+
 
 // External interface for WDT. Call with one of the WDT_XXX constants. Sets up WDT software and hardware.
 void wd_enable(uint8_t u8_timeout) {

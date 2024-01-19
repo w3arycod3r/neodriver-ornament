@@ -5,7 +5,7 @@
 		{
 			"label": "build neo_driver_app",
 			"type": "shell",
-			"command": "cd arduino/neo_driver_app/ ; ./build.bat",
+			"command": "arduino/neo_driver_app/build.bat",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -25,7 +25,7 @@
 		{
 			"label": "build eep_data_write",
 			"type": "shell",
-			"command": "cd arduino/eep_data_write/ ; ./build.bat",
+			"command": "arduino/eep_data_write/build.bat",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -35,6 +35,26 @@
 				"clear": true
 			},
 			"detail": "Build program for eep_data_write",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		// build_eep_and_app.bat
+		{
+			"label": "build_eep_and_app",
+			"type": "shell",
+			"command": "arduino/build_eep_and_app.bat",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"detail": "Build and flash both eep_data_write and neo_driver_app",
 			"group": {
 				"kind": "build",
 				"isDefault": true
