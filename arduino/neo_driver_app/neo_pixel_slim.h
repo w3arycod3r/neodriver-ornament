@@ -38,7 +38,7 @@
 
 #include <Arduino.h>
 #include <stdint.h>
-#include "ard_utility.h"
+#include <ard_utility.h>
 
 // These two tables are declared outside the Adafruit_NeoPixel class
 // because some boards may require oldschool compilers that don't
