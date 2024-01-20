@@ -22,7 +22,7 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/wdt.h>
-#include "neo_pixel_slim.h"
+#include <neo_pixel_slim.h>
 #include "multi_button.h"
 #include <neo_common.h>
 
