@@ -226,34 +226,7 @@
     <Compile Include="include\core\binary.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="include\core\HardwareSerial.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\new.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\Print.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\Printable.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\Stream.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\TinySoftwareSerial.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\WCharacter.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="include\core\wiring_private.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\WProgram.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="include\core\WString.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="include\libraries\adafruit_neopixel\neo_pixel_slim.h">
@@ -271,31 +244,10 @@
     <Compile Include="include\variants\tinyX5\pins_arduino.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\core\abi.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\HardwareSerial.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\core\main.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\core\new.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\core\PreprocessingAssembly\wiring_pulse.S">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\Print.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\Stream.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\TinySoftwareSerial.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\Tone.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\core\WInterrupts.c">
@@ -313,13 +265,7 @@
     <Compile Include="src\core\wiring_pulse.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\core\wiring_shift.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\core\WMath.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\core\WString.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\libraries\adafruit_neopixel\neo_pixel_slim.cpp">

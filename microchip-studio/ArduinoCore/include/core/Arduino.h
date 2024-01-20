@@ -243,10 +243,6 @@ extern const uint8_t PROGMEM digital_pin_to_timer_PGM[];
 #endif
 
 #ifdef __cplusplus
-#include "WCharacter.h"
-#include "WString.h"
-#include "HardwareSerial.h"
-#include "TinySoftwareSerial.h"
 
 uint16_t makeWord(uint16_t w);
 uint16_t makeWord(byte h, byte l);
@@ -257,9 +253,6 @@ unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout = 100000
 #ifndef DISABLEMILLIS
 unsigned long pulseInLong(uint8_t pin, uint8_t state, unsigned long timeout = 1000000L);
 #endif
-
-void tone(uint8_t _pin, unsigned long frequency, unsigned long duration = 0);
-void noTone(uint8_t _pin = 255);
 
 // WMath prototypes
 long random(long);
