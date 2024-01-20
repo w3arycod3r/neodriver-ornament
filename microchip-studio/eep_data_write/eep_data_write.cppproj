@@ -232,7 +232,7 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Sketch.cpp">
+    <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Content Include="readme.html">

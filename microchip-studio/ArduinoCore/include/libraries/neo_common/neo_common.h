@@ -15,6 +15,24 @@
 #define MATRIX_HEIGHT_PIX   5
 #define MATRIX_NUM_PIX (MATRIX_WIDTH_PIX * MATRIX_HEIGHT_PIX)
 
+// I/O Mapping
+#define IO_SW_LEFT       BIT0 // PB0, AREF - Left switch
+#define IO_SW_RIGHT      BIT1 // PB1       - Right switch
+#define IO_NP_ENABLE     BIT2 // PB2, ADC1 - NeoPixel Enable
+#define IO_NP_ENABLE_ADC A1
+#define IO_NP_DATA       BIT3 // PB3, ADC3 - NeoPixel Data
+#define IO_NP_DATA_ADC   A3
+#define IO_POT_ADC       A2   // PB4, ADC2 - Brightness Potentiometer
+                              // PB5, ADC0 - Reset
+
+// Pixel params
+#define BRIGHT_MIN   24
+#define BRIGHT_INIT  8
+#define CONFIRM_BLINK_BRIGHT_LVL 50     // Brightness used for EEP program confirm blinking
+#define PIX_CNT_MIN  1
+#define PIX_CNT_MAX  25
+#define PIX_CNT_INIT 25                 // Cannot be greater than PIX_CNT_MAX
+
 // Colors
 #define COLOR_TEAL   0x00FFFFL
 #define COLOR_YELLOW 0xFFFF00L
@@ -784,6 +802,55 @@ const uint8_t PROGMEM charSet[] = {
 // ASCII char set limits
 #define ASCII_START 32
 #define ASCII_NUM_CHARS (EEP_CHAR_DATA_NUM_CHARS)
+
+/* 
+    *****************************************************************************
+    SARS-CoV-2 Data (80B)
+    EEPROM 432-511
+    2 bits per base, 00:A, 01:C, 10:G, 11:U
+    4 bases per byte
+    *****************************************************************************
+    Sequence encoding from
+    https://github.com/PaulKlinger/freeform-virus-blinky
+
+    MIT License
+
+    Copyright (c) 2020 Paul Klinger
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    Original sequence .fasta file from
+    https://www.ncbi.nlm.nih.gov/nuccore/NC_045512
+    *****************************************************************************
+*/
+const uint8_t PROGMEM covSeqData[] = {
+ 60,  10, 252, 197, 245,  74, 193,   1,  65,  65, 253, 141, 223, 178,  55, 189,
+220,   6,   7, 240,  13, 238, 233, 237,  29, 167, 147, 159,  46,  71,  70,  75,
+ 48, 240, 193, 195, 199, 182, 248,  74,  17, 139,   7, 109, 205, 247, 146, 158,
+124, 107, 246, 214, 239, 146,  88, 211,  73,  19, 114, 191, 109, 106, 238,  22,
+  2, 176, 142, 136, 151, 237,  94, 191,  65, 136,   1,  17, 181,   7,  75, 249,
+123, 252,  74, 246,  97, 185, 219,  27, 167, 250,  33, 214, 232, 162, 183, 205,
+ 34, 145, 180,  19, 124,   8, 233,  31, 186, 124, 178,  11, 224,   2, 155, 254,
+ 93,   7, 224,  73,  92, 238, 244, 208,  27, 218,  57, 216,  30,  69, 211, 173,
+ 59, 206, 190,  39, 172, 146,   7,  96, 164, 244, 177, 173, 178, 235, 136,  71,
+235, 181, 251,  87,  78, 234,  96,  49,  75, 167, 197, 144, 175, 125, 246, 194, };
+
 
 
 #endif

@@ -96,13 +96,6 @@ typedef struct {
 #define BATT_ICON_LVL_5     '\''
 #define BATT_ICON_DEAD      '('
 
-// Pixel params
-#define BRIGHT_MIN   24
-#define BRIGHT_INIT  8
-#define PIX_CNT_MIN  1
-#define PIX_CNT_MAX  25
-#define PIX_CNT_INIT 25
-
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
 #define ANIM_MANUAL_CYCLES     1              // Number of cycles to play in "manual" mode before going to shuffle mode
@@ -157,16 +150,6 @@ typedef struct {
  *   4     |  RIGHT
  */
 #define ANIM_ROT_SEL 3
-
-// I/O Mapping
-#define IO_SW_LEFT       BIT0 // PB0, AREF - Left switch
-#define IO_SW_RIGHT      BIT1 // PB1       - Right switch
-#define IO_NP_ENABLE     BIT2 // PB2, ADC1 - NeoPixel Enable
-#define IO_NP_ENABLE_ADC A1
-#define IO_NP_DATA       BIT3 // PB3, ADC3 - NeoPixel Data
-#define IO_NP_DATA_ADC   A3
-#define IO_POT_ADC       A2   // PB4, ADC2 - Brightness Potentiometer
-                              // PB5, ADC0 - Reset
 
 /******************************* DEBUG PARAMS ********************************/
 #define DEBUG_COV_ANIM  0

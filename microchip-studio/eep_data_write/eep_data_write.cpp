@@ -1,9 +1,4 @@
-﻿/*Begining of Auto generated code by Atmel studio */
-#include <Arduino.h>
-
-/*End of auto generated code by Atmel studio */
-
-/* File:      eep_data_write.ino
+﻿/* File:      eep_data_write.ino
  * Author:    Garrett Carter
  * Purpose:   Write the EEPROM data needed for the main NeoDriver program
  */
@@ -17,31 +12,21 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <Adafruit_NeoPixel.h>
+#include <neo_pixel_slim.h>
 #include <neo_common.h>
 #include <ard_utility.h>
-//Beginning of Auto generated function prototypes by Atmel Studio
+
+/******************************** PROTOTYPES *********************************/
 void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);
 bool eep_compressed_chars(bool validate);
-//End of Auto generated function prototypes by Atmel Studio
-
-
 
 /********************************** DEFINES **********************************/
 
-// NeoPixel Config
-#define MAX_PIX 25
-#define INIT_BRIGHT 50
-
-// I/O Mapping
-#define NP_EN      2    // PB2 - NeoPixel Enable
-#define LED_PIN    3    // PB3
+/******************************** GLOBAL VARS ********************************/
+uint8_t au8_pixelData[PIX_CNT_MAX*3];  // 3 bytes of color data per pixel
 
 /****************************** GLOBAL OBJECTS *******************************/
-Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
-
-/******************************** GLOBAL VARS ********************************/
-
+NeoPixel_Slim o_strip(au8_pixelData, PIX_CNT_MAX, PIX_CNT_INIT, IO_NP_DATA);
 
 
 /****************************** FLASH CONSTANTS ******************************/
@@ -50,66 +35,20 @@ Adafruit_NeoPixel strip(MAX_PIX, LED_PIN, NEO_GRB + NEO_KHZ800);
     EEPROM 0-6
 */
 
-/* 
-    *****************************************************************************
-    SARS-CoV-2 Data (80B)
-    EEPROM 432-511
-    2 bits per base, 00:A, 01:C, 10:G, 11:U
-    4 bases per byte
-    *****************************************************************************
-    Sequence encoding from
-    https://github.com/PaulKlinger/freeform-virus-blinky
-
-    MIT License
-
-    Copyright (c) 2020 Paul Klinger
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-
-    Original sequence .fasta file from
-    https://www.ncbi.nlm.nih.gov/nuccore/NC_045512
-    *****************************************************************************
-*/
-const uint8_t PROGMEM covSeqData[] = {
- 60,  10, 252, 197, 245,  74, 193,   1,  65,  65, 253, 141, 223, 178,  55, 189,
-220,   6,   7, 240,  13, 238, 233, 237,  29, 167, 147, 159,  46,  71,  70,  75,
- 48, 240, 193, 195, 199, 182, 248,  74,  17, 139,   7, 109, 205, 247, 146, 158,
-124, 107, 246, 214, 239, 146,  88, 211,  73,  19, 114, 191, 109, 106, 238,  22,
-  2, 176, 142, 136, 151, 237,  94, 191,  65, 136,   1,  17, 181,   7,  75, 249,
-123, 252,  74, 246,  97, 185, 219,  27, 167, 250,  33, 214, 232, 162, 183, 205,
- 34, 145, 180,  19, 124,   8, 233,  31, 186, 124, 178,  11, 224,   2, 155, 254,
- 93,   7, 224,  73,  92, 238, 244, 208,  27, 218,  57, 216,  30,  69, 211, 173,
- 59, 206, 190,  39, 172, 146,   7,  96, 164, 244, 177, 173, 178, 235, 136,  71,
-235, 181, 251,  87,  78, 234,  96,  49,  75, 167, 197, 144, 175, 125, 246, 194, };
-
-
 /****************************** SETUP FUNCTION *******************************/
 void setup() {
 
-    // Enable NeoPixel Power
-    pinMode(NP_EN, OUTPUT);
-    digitalWrite(NP_EN, HIGH);
+    // Setup I/O
+    bitSetMask(DDRB, IO_NP_ENABLE);               // Set as o/p
+    bitSetMask(PORTB, IO_NP_ENABLE);              // Enable MOSFET for NeoPixel power
+    delay(5);                                     // Time for MOSFET to switch on
+    bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p
+    bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
     // Init and clear NeoPixels
-    strip.begin();
-    strip.show();
-    strip.setBrightness(INIT_BRIGHT);
+    o_strip.begin();
+    o_strip.show();
+    o_strip.set_brightness(CONFIRM_BLINK_BRIGHT_LVL);
 
     // Update EEPROM Data
     eep_compressed_chars(false);
@@ -141,14 +80,14 @@ void setup() {
     }
     
     // Indicate verification status
-    strip.clear();
+    o_strip.clear();
     for (int i=0; i<3; i++) {
-        strip.setPixelColor(0, flash_color);
-        strip.show();
+        o_strip.set_pix_color(0, flash_color);
+        o_strip.show();
         delay(500);
 
-        strip.clear();
-        strip.show();
+        o_strip.clear();
+        o_strip.show();
         delay(500);
     }
 
