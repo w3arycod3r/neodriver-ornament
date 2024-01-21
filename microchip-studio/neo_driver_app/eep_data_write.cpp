@@ -10,6 +10,8 @@
     432-511: (80B)  SARS-CoV-2 Sequence Data (320 bases)
 */
 
+#ifdef COMPILE_EEP_DATA_WRITE
+
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <neo_pixel_slim.h>
@@ -187,3 +189,5 @@ bool eep_compressed_chars(bool validate)
     
     return dataOK;
 }
+
+#endif
