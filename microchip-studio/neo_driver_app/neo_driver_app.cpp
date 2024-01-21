@@ -40,7 +40,7 @@ typedef enum { FRAMES_MODE_STATIC,      // Sprite is stationary. Length determin
 typedef struct {
     uint16_t u16_frameStep_msec;  // "on" time for each frame in the sequence.
     uint32_t u32_color;           // Color. Set to 0 for dynamic effect.
-    const uint8_t* pu8_frames;          // Pointer to the frame sequence array stored in flash.
+    const uint8_t* pu8_frames;    // Pointer to the frame sequence array stored in flash. Pointers are 2 bytes on this arch.
     uint8_t  u8_mode;             // Mode of operation. A value from _FRAMES_MODE_T.
 
     // STATIC mode params
@@ -280,6 +280,7 @@ const uint8_t PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
 // int8_t   i8_shiftStepY;       // The Y shift to perform on each shift step. Can be pos, neg, or zero.
 
 // Frame sequence config data
+// These are currently stored in RAM, because we change some params at runtime, for "randomization"
 
 // Sequence 1 - Pacman
 FRAMES_CONFIG_T st_sequence1 = {

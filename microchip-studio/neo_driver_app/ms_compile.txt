@@ -1,12 +1,12 @@
 ------ Rebuild All started: Project: ArduinoCore, Configuration: Debug AVR ------
 Build started.
 Project "ArduinoCore.cppproj" (Clean target(s)):
-Target "Clean" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\ArduinoCore\ArduinoCore.cppproj" (entry point):
+Target "Clean" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\ArduinoCore\ArduinoCore.cppproj" (entry point):
 	Task "RunCompilerTask"
 		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
 		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe clean 
-		rm -rf  src/core/abi.o src/core/HardwareSerial.o src/core/main.o src/core/new.o src/core/PreprocessingAssembly/wiring_pulse.o src/core/Print.o src/core/Stream.o src/core/TinySoftwareSerial.o src/core/Tone.o src/core/WInterrupts.o src/core/wiring.o src/core/wiring_analog.o src/core/wiring_digital.o src/core/wiring_pulse.o src/core/wiring_shift.o src/core/WMath.o src/core/WString.o src/libraries/adafruit_neopixel/Adafruit_NeoPixel.o src/libraries/adafruit_neopixel/esp.o src/libraries/adafruit_neopixel/esp8266.o src/libraries/adafruit_neopixel/kendyte_k210.o   
-		rm -rf  src/core/abi.d src/core/HardwareSerial.d src/core/main.d src/core/new.d src/core/PreprocessingAssembly/wiring_pulse.d src/core/Print.d src/core/Stream.d src/core/TinySoftwareSerial.d src/core/Tone.d src/core/WInterrupts.d src/core/wiring.d src/core/wiring_analog.d src/core/wiring_digital.d src/core/wiring_pulse.d src/core/wiring_shift.d src/core/WMath.d src/core/WString.d src/libraries/adafruit_neopixel/Adafruit_NeoPixel.d src/libraries/adafruit_neopixel/esp.d src/libraries/adafruit_neopixel/esp8266.d src/libraries/adafruit_neopixel/kendyte_k210.d   
+		rm -rf  src/core/main.o src/core/PreprocessingAssembly/wiring_pulse.o src/core/WInterrupts.o src/core/wiring.o src/core/wiring_analog.o src/core/wiring_digital.o src/core/wiring_pulse.o src/core/WMath.o src/libraries/adafruit_neopixel/neo_pixel_slim.o   
+		rm -rf  src/core/main.d src/core/PreprocessingAssembly/wiring_pulse.d src/core/WInterrupts.d src/core/wiring.d src/core/wiring_analog.d src/core/wiring_digital.d src/core/wiring_pulse.d src/core/WMath.d src/libraries/adafruit_neopixel/neo_pixel_slim.d   
 		rm -rf "libArduinoCore.elf" "libArduinoCore.a" "libArduinoCore.hex" "libArduinoCore.lss" "libArduinoCore.eep" "libArduinoCore.map" "libArduinoCore.srec" "libArduinoCore.usersignatures"
 	Done executing task "RunCompilerTask".
 Done building target "Clean" in project "ArduinoCore.cppproj".
@@ -17,46 +17,26 @@ Build succeeded.
 Build started.
 Project "ArduinoCore.cppproj" (default targets):
 Target "PreBuildEvent" skipped, due to false condition; ('$(PreBuildEvent)'!='') was evaluated as (''!='').
-Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\ArduinoCore\ArduinoCore.cppproj" (target "Build" depends on it):
+Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\ArduinoCore\ArduinoCore.cppproj" (target "Build" depends on it):
 	Task "RunCompilerTask"
 		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
 		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe all --jobs 8 --output-sync 
-		Building file: ../src/core/abi.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/abi.d" -MT"src/core/abi.d" -MT"src/core/abi.o"   -o "src/core/abi.o" "../src/core/abi.cpp" 
-		Finished building: ../src/core/abi.cpp
-		Building file: ../src/core/HardwareSerial.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/HardwareSerial.d" -MT"src/core/HardwareSerial.d" -MT"src/core/HardwareSerial.o"   -o "src/core/HardwareSerial.o" "../src/core/HardwareSerial.cpp" 
-		Finished building: ../src/core/HardwareSerial.cpp
 		Building file: ../src/core/main.cpp
 		Invoking: AVR8/GNU C Compiler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/main.d" -MT"src/core/main.d" -MT"src/core/main.o"   -o "src/core/main.o" "../src/core/main.cpp" 
 		Finished building: ../src/core/main.cpp
-		Building file: ../src/core/new.cpp
+		Building file: ../src/core/WMath.cpp
 		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/new.d" -MT"src/core/new.d" -MT"src/core/new.o"   -o "src/core/new.o" "../src/core/new.cpp" 
-		Finished building: ../src/core/new.cpp
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/WMath.d" -MT"src/core/WMath.d" -MT"src/core/WMath.o"   -o "src/core/WMath.o" "../src/core/WMath.cpp" 
+		Finished building: ../src/core/WMath.cpp
+		Building file: ../src/libraries/adafruit_neopixel/neo_pixel_slim.cpp
+		Invoking: AVR8/GNU C Compiler : 5.4.0
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/libraries/adafruit_neopixel/neo_pixel_slim.d" -MT"src/libraries/adafruit_neopixel/neo_pixel_slim.d" -MT"src/libraries/adafruit_neopixel/neo_pixel_slim.o"   -o "src/libraries/adafruit_neopixel/neo_pixel_slim.o" "../src/libraries/adafruit_neopixel/neo_pixel_slim.cpp" 
+		Finished building: ../src/libraries/adafruit_neopixel/neo_pixel_slim.cpp
 		Building file: ../src/core/PreprocessingAssembly/wiring_pulse.S
 		Invoking: AVR8/GNU Assembler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -I "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include"  -MD -MP -MF "src/core/PreprocessingAssembly/wiring_pulse.d" -MT"src/core/PreprocessingAssembly/wiring_pulse.d" -MT"src/core/PreprocessingAssembly/wiring_pulse.o" -Wa,-g   -o "src/core/PreprocessingAssembly/wiring_pulse.o" "../src/core/PreprocessingAssembly/wiring_pulse.S" 
 		Finished building: ../src/core/PreprocessingAssembly/wiring_pulse.S
-		Building file: ../src/core/Print.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/Print.d" -MT"src/core/Print.d" -MT"src/core/Print.o"   -o "src/core/Print.o" "../src/core/Print.cpp" 
-		Finished building: ../src/core/Print.cpp
-		Building file: ../src/core/Stream.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/Stream.d" -MT"src/core/Stream.d" -MT"src/core/Stream.o"   -o "src/core/Stream.o" "../src/core/Stream.cpp" 
-		Finished building: ../src/core/Stream.cpp
-		Building file: ../src/core/TinySoftwareSerial.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/TinySoftwareSerial.d" -MT"src/core/TinySoftwareSerial.d" -MT"src/core/TinySoftwareSerial.o"   -o "src/core/TinySoftwareSerial.o" "../src/core/TinySoftwareSerial.cpp" 
-		Finished building: ../src/core/TinySoftwareSerial.cpp
-		Building file: ../src/core/Tone.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/Tone.d" -MT"src/core/Tone.d" -MT"src/core/Tone.o"   -o "src/core/Tone.o" "../src/core/Tone.cpp" 
-		Finished building: ../src/core/Tone.cpp
 		Building file: ../src/core/WInterrupts.c
 		Invoking: AVR8/GNU C Compiler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/core/WInterrupts.d" -MT"src/core/WInterrupts.d" -MT"src/core/WInterrupts.o"   -o "src/core/WInterrupts.o" "../src/core/WInterrupts.c" 
@@ -77,58 +57,81 @@ Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.
 		Invoking: AVR8/GNU C Compiler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/core/wiring_pulse.d" -MT"src/core/wiring_pulse.d" -MT"src/core/wiring_pulse.o"   -o "src/core/wiring_pulse.o" "../src/core/wiring_pulse.c" 
 		Finished building: ../src/core/wiring_pulse.c
-		Building file: ../src/core/wiring_shift.c
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/core/wiring_shift.d" -MT"src/core/wiring_shift.d" -MT"src/core/wiring_shift.o"   -o "src/core/wiring_shift.o" "../src/core/wiring_shift.c" 
-		Finished building: ../src/core/wiring_shift.c
-		Building file: ../src/core/WMath.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/WMath.d" -MT"src/core/WMath.d" -MT"src/core/WMath.o"   -o "src/core/WMath.o" "../src/core/WMath.cpp" 
-		Finished building: ../src/core/WMath.cpp
-		Building file: ../src/libraries/adafruit_neopixel/esp.c
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/libraries/adafruit_neopixel/esp.d" -MT"src/libraries/adafruit_neopixel/esp.d" -MT"src/libraries/adafruit_neopixel/esp.o"   -o "src/libraries/adafruit_neopixel/esp.o" "../src/libraries/adafruit_neopixel/esp.c" 
-		Finished building: ../src/libraries/adafruit_neopixel/esp.c
-		Building file: ../src/libraries/adafruit_neopixel/esp8266.c
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/libraries/adafruit_neopixel/esp8266.d" -MT"src/libraries/adafruit_neopixel/esp8266.d" -MT"src/libraries/adafruit_neopixel/esp8266.o"   -o "src/libraries/adafruit_neopixel/esp8266.o" "../src/libraries/adafruit_neopixel/esp8266.c" 
-		Finished building: ../src/libraries/adafruit_neopixel/esp8266.c
-		Building file: ../src/libraries/adafruit_neopixel/Adafruit_NeoPixel.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/libraries/adafruit_neopixel/Adafruit_NeoPixel.d" -MT"src/libraries/adafruit_neopixel/Adafruit_NeoPixel.d" -MT"src/libraries/adafruit_neopixel/Adafruit_NeoPixel.o"   -o "src/libraries/adafruit_neopixel/Adafruit_NeoPixel.o" "../src/libraries/adafruit_neopixel/Adafruit_NeoPixel.cpp" 
-		Finished building: ../src/libraries/adafruit_neopixel/Adafruit_NeoPixel.cpp
-		Building file: ../src/libraries/adafruit_neopixel/kendyte_k210.c
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe"  -x c -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu99 -std=gnu11 -MD -MP -MF "src/libraries/adafruit_neopixel/kendyte_k210.d" -MT"src/libraries/adafruit_neopixel/kendyte_k210.d" -MT"src/libraries/adafruit_neopixel/kendyte_k210.o"   -o "src/libraries/adafruit_neopixel/kendyte_k210.o" "../src/libraries/adafruit_neopixel/kendyte_k210.c" 
-		Finished building: ../src/libraries/adafruit_neopixel/kendyte_k210.c
-		Building file: ../src/core/WString.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\include\build\ATTinyCore.avr.attinyx5" -I"..\include\libraries\eeprom" -I"..\include\libraries\adafruit_neopixel" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\include\libraries\neo_common" -I"..\include\libraries\ard_utility" -I"..\include\core" -I"..\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "src/core/WString.d" -MT"src/core/WString.d" -MT"src/core/WString.o"   -o "src/core/WString.o" "../src/core/WString.cpp" 
-		Finished building: ../src/core/WString.cpp
 		Building target: libArduinoCore.a
 		Invoking: AVR8/GNU Archiver : 5.4.0
-		C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-ar.exe: creating libArduinoCore.a
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-ar.exe" -r  -o libArduinoCore.a  src/core/abi.o src/core/HardwareSerial.o src/core/main.o src/core/new.o src/core/PreprocessingAssembly/wiring_pulse.o src/core/Print.o src/core/Stream.o src/core/TinySoftwareSerial.o src/core/Tone.o src/core/WInterrupts.o src/core/wiring.o src/core/wiring_analog.o src/core/wiring_digital.o src/core/wiring_pulse.o src/core/wiring_shift.o src/core/WMath.o src/core/WString.o src/libraries/adafruit_neopixel/Adafruit_NeoPixel.o src/libraries/adafruit_neopixel/esp.o src/libraries/adafruit_neopixel/esp8266.o src/libraries/adafruit_neopixel/kendyte_k210.o   
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-ar.exe" -r  -o libArduinoCore.a  src/core/main.o src/core/PreprocessingAssembly/wiring_pulse.o src/core/WInterrupts.o src/core/wiring.o src/core/wiring_analog.o src/core/wiring_digital.o src/core/wiring_pulse.o src/core/WMath.o src/libraries/adafruit_neopixel/neo_pixel_slim.o   
 		Finished building target: libArduinoCore.a
+		C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-ar.exe: creating libArduinoCore.a
 	Done executing task "RunCompilerTask".
 	Task "RunOutputFileVerifyTask"
 	Done executing task "RunOutputFileVerifyTask".
 Done building target "CoreBuild" in project "ArduinoCore.cppproj".
 Target "PostBuildEvent" skipped, due to false condition; ('$(PostBuildEvent)' != '') was evaluated as ('' != '').
-Target "Build" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Avr.common.targets" from project "C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\ArduinoCore\ArduinoCore.cppproj" (entry point):
+Target "Build" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Avr.common.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\ArduinoCore\ArduinoCore.cppproj" (entry point):
 Done building target "Build" in project "ArduinoCore.cppproj".
 Done building project "ArduinoCore.cppproj".
+
+Build succeeded.
+------ Rebuild All started: Project: eep_data_write, Configuration: Debug AVR ------
+Build started.
+Project "eep_data_write.cppproj" (Clean target(s)):
+Target "Clean" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\eep_data_write\eep_data_write.cppproj" (entry point):
+	Task "RunCompilerTask"
+		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
+		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe clean 
+		rm -rf  eep_data_write.o   
+		rm -rf  eep_data_write.d   
+		rm -rf "eep_data_write.elf" "eep_data_write.a" "eep_data_write.hex" "eep_data_write.lss" "eep_data_write.eep" "eep_data_write.map" "eep_data_write.srec" "eep_data_write.usersignatures"
+	Done executing task "RunCompilerTask".
+Done building target "Clean" in project "eep_data_write.cppproj".
+Done building project "eep_data_write.cppproj".
+
+Build succeeded.
+------ Rebuild All started: Project: eep_data_write, Configuration: Debug AVR ------
+Build started.
+Project "eep_data_write.cppproj" (default targets):
+Target "PreBuildEvent" skipped, due to false condition; ('$(PreBuildEvent)'!='') was evaluated as (''!='').
+Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\eep_data_write\eep_data_write.cppproj" (target "Build" depends on it):
+	Task "RunCompilerTask"
+		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
+		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe all --jobs 8 --output-sync 
+		Building file: .././eep_data_write.cpp
+		Invoking: AVR8/GNU C Compiler : 5.4.0
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\\..\ArduinoCore\include\core" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel" -I"..\\..\ArduinoCore\include\libraries\ard_utility" -I"..\\..\ArduinoCore\include\libraries\eeprom" -I"..\\..\ArduinoCore\include\libraries\neo_common" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\\..\ArduinoCore\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "eep_data_write.d" -MT"eep_data_write.d" -MT"eep_data_write.o"   -o "eep_data_write.o" ".././eep_data_write.cpp" 
+		Finished building: .././eep_data_write.cpp
+		Building target: eep_data_write.elf
+		Invoking: AVR8/GNU Linker : 5.4.0
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -o eep_data_write.elf  eep_data_write.o   -Wl,-Map="eep_data_write.map" -Wl,--start-group -Wl,-lm -Wl,-lArduinoCore  -Wl,--end-group -Wl,-L"C:\code-projects\GitHub\neodriver-ornament\microchip-studio\ArduinoCore\Debug"  -Wl,--gc-sections -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -Os  
+		Finished building target: eep_data_write.elf
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "eep_data_write.elf" "eep_data_write.hex"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "eep_data_write.elf" "eep_data_write.eep" || exit 0
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "eep_data_write.elf" > "eep_data_write.lss"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "eep_data_write.elf" "eep_data_write.srec"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "eep_data_write.elf"
+		   text	   data	    bss	    dec	    hex	filename
+		   2038	      0	     99	   2137	    859	eep_data_write.elf
+	Done executing task "RunCompilerTask".
+	Task "RunOutputFileVerifyTask"
+				Program Memory Usage 	:	2038 bytes   24.9 % Full
+				Data Memory Usage 		:	99 bytes   19.3 % Full
+				Warning: Memory Usage estimation may not be accurate if there are sections other than .text sections in ELF file
+	Done executing task "RunOutputFileVerifyTask".
+Done building target "CoreBuild" in project "eep_data_write.cppproj".
+Target "PostBuildEvent" skipped, due to false condition; ('$(PostBuildEvent)' != '') was evaluated as ('' != '').
+Target "Build" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Avr.common.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\eep_data_write\eep_data_write.cppproj" (entry point):
+Done building target "Build" in project "eep_data_write.cppproj".
+Done building project "eep_data_write.cppproj".
 
 Build succeeded.
 ------ Rebuild All started: Project: neo_driver_app, Configuration: Debug AVR ------
 Build started.
 Project "neo_driver_app.cppproj" (Clean target(s)):
-Target "Clean" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\neo_driver_app\neo_driver_app.cppproj" (entry point):
+Target "Clean" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\neo_driver_app\neo_driver_app.cppproj" (entry point):
 	Task "RunCompilerTask"
 		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
 		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe clean 
-		rm -rf  multi_button.o neo_driver_app.o neo_pixel_slim.o   
-		rm -rf  multi_button.d neo_driver_app.d neo_pixel_slim.d   
+		rm -rf  multi_button.o neo_driver_app.o   
+		rm -rf  multi_button.d neo_driver_app.d   
 		rm -rf "neo_driver_app.elf" "neo_driver_app.a" "neo_driver_app.hex" "neo_driver_app.lss" "neo_driver_app.eep" "neo_driver_app.map" "neo_driver_app.srec" "neo_driver_app.usersignatures"
 	Done executing task "RunCompilerTask".
 Done building target "Clean" in project "neo_driver_app.cppproj".
@@ -139,7 +142,7 @@ Build succeeded.
 Build started.
 Project "neo_driver_app.cppproj" (default targets):
 Target "PreBuildEvent" skipped, due to false condition; ('$(PreBuildEvent)'!='') was evaluated as (''!='').
-Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\neo_driver_app\neo_driver_app.cppproj" (target "Build" depends on it):
+Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\neo_driver_app\neo_driver_app.cppproj" (target "Build" depends on it):
 	Task "RunCompilerTask"
 		Shell Utils Path C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils
 		C:\Program Files (x86)\Atmel\Studio\7.0\shellUtils\make.exe all --jobs 8 --output-sync 
@@ -147,24 +150,32 @@ Target "CoreBuild" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Compiler.
 		Invoking: AVR8/GNU C Compiler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\\..\ArduinoCore\include\core" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel" -I"..\\..\ArduinoCore\include\libraries\ard_utility" -I"..\\..\ArduinoCore\include\libraries\eeprom" -I"..\\..\ArduinoCore\include\libraries\neo_common" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\\..\ArduinoCore\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "multi_button.d" -MT"multi_button.d" -MT"multi_button.o"   -o "multi_button.o" ".././multi_button.cpp" 
 		Finished building: .././multi_button.cpp
-		Building file: .././neo_pixel_slim.cpp
-		Invoking: AVR8/GNU C Compiler : 5.4.0
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\\..\ArduinoCore\include\core" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel" -I"..\\..\ArduinoCore\include\libraries\ard_utility" -I"..\\..\ArduinoCore\include\libraries\eeprom" -I"..\\..\ArduinoCore\include\libraries\neo_common" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\\..\ArduinoCore\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "neo_pixel_slim.d" -MT"neo_pixel_slim.d" -MT"neo_pixel_slim.o"   -o "neo_pixel_slim.o" ".././neo_pixel_slim.cpp" 
-		Finished building: .././neo_pixel_slim.cpp
 		Building file: .././neo_driver_app.cpp
 		Invoking: AVR8/GNU C Compiler : 5.4.0
 		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -funsigned-char -funsigned-bitfields -DF_CPU=8000000UL -DARDUINO=108013 -DARDUINO_AVR_ATTINYX5 -DARDUINO_ARCH_AVR -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\include" -I"..\\..\ArduinoCore\include\core" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel" -I"..\\..\ArduinoCore\include\libraries\ard_utility" -I"..\\..\ArduinoCore\include\libraries\eeprom" -I"..\\..\ArduinoCore\include\libraries\neo_common" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE" -I"..\\..\ArduinoCore\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay" -I"..\\..\ArduinoCore\include\variants\tinyX5"  -Os -fno-threadsafe-statics -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -w -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -c -std=gnu++11 -MD -MP -MF "neo_driver_app.d" -MT"neo_driver_app.d" -MT"neo_driver_app.o"   -o "neo_driver_app.o" ".././neo_driver_app.cpp" 
 		Finished building: .././neo_driver_app.cpp
 		Building target: neo_driver_app.elf
 		Invoking: AVR8/GNU Linker : 5.4.0
-neo_driver_app.elf section `.text' will not fit in region `text'region `text' overflowed by 414 bytescollect2.exe(0,0): error: ld returned 1 exit status
-		make: *** [neo_driver_app.elf] Error 1
-		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -o neo_driver_app.elf  multi_button.o neo_driver_app.o neo_pixel_slim.o   -Wl,-Map="neo_driver_app.map" -Wl,--start-group -Wl,-lm -Wl,-lArduinoCore  -Wl,--end-group -Wl,-L"C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\ArduinoCore\Debug"  -Wl,--gc-sections -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -Os  
-C:\code-projects\NeoDriver-Import-MStudio\NeoDriver-Import-MStudio\neo_driver_app\Debug\Makefile(131,1): error: recipe for target 'neo_driver_app.elf' failed
-		The command exited with code 2.
-	Done executing task "RunCompilerTask" -- FAILED.
-Done building target "CoreBuild" in project "neo_driver_app.cppproj" -- FAILED.
-Done building project "neo_driver_app.cppproj" -- FAILED.
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe" -o neo_driver_app.elf  multi_button.o neo_driver_app.o   -Wl,-Map="neo_driver_app.map" -Wl,--start-group -Wl,-lm -Wl,-lArduinoCore  -Wl,--end-group -Wl,-L"C:\code-projects\GitHub\neodriver-ornament\microchip-studio\ArduinoCore\Debug"  -Wl,--gc-sections -mmcu=attiny85 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATtiny_DFP\1.10.348\gcc\dev\attiny85" -Os  
+		Finished building target: neo_driver_app.elf
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "neo_driver_app.elf" "neo_driver_app.hex"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "neo_driver_app.elf" "neo_driver_app.eep" || exit 0
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "neo_driver_app.elf" > "neo_driver_app.lss"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "neo_driver_app.elf" "neo_driver_app.srec"
+		"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "neo_driver_app.elf"
+		   text	   data	    bss	    dec	    hex	filename
+		   7590	    218	    151	   7959	   1f17	neo_driver_app.elf
+	Done executing task "RunCompilerTask".
+	Task "RunOutputFileVerifyTask"
+				Program Memory Usage 	:	7808 bytes   95.3 % Full
+				Data Memory Usage 		:	369 bytes   72.1 % Full
+				Warning: Memory Usage estimation may not be accurate if there are sections other than .text sections in ELF file
+	Done executing task "RunOutputFileVerifyTask".
+Done building target "CoreBuild" in project "neo_driver_app.cppproj".
+Target "PostBuildEvent" skipped, due to false condition; ('$(PostBuildEvent)' != '') was evaluated as ('' != '').
+Target "Build" in file "C:\Program Files (x86)\Atmel\Studio\7.0\Vs\Avr.common.targets" from project "C:\code-projects\GitHub\neodriver-ornament\microchip-studio\neo_driver_app\neo_driver_app.cppproj" (entry point):
+Done building target "Build" in project "neo_driver_app.cppproj".
+Done building project "neo_driver_app.cppproj".
 
-Build FAILED.
-========== Rebuild All: 1 succeeded, 1 failed, 0 skipped ==========
+Build succeeded.
+========== Rebuild All: 3 succeeded, 0 failed, 0 skipped ==========
