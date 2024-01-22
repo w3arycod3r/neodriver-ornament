@@ -6,13 +6,16 @@
 
 pushd "%~dp0"
 
-set PATH=C:\Program Files (x86)\Atmel\Studio\7.0\;C:\Program Files (x86)\Atmel\Studio\7.0\shellutils\;C:\Program Files (x86)\Atmel\Studio\7.0\atbackend;%PATH%
+set PATH=C:\Program Files (x86)\Atmel\Studio\7.0\;C:\Program Files (x86)\Atmel\Studio\7.0\shellutils\;C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\;C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\;%PATH%
 set config=%1
 set elf_filename=%2
+set clean_opt=%3
 set build_folder=..\microchip-studio\neo_driver_app\%config%
 
 pushd %build_folder%
-@REM make.exe clean || goto :error
+if "%clean_opt%" == "clean" (
+    make.exe clean || goto :error
+)
 make.exe all --jobs 8 --output-sync || goto :error
 atprogram.exe -v -t atmelice -i ISP -d attiny85 program --chiperase -f %elf_filename% --verify || goto :error
 
