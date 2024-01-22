@@ -1,4 +1,4 @@
-/* File:      neo_driver_app.ino
+/* File:      neo_driver_app.cpp
  * Author:    Garrett Carter
  * Purpose:   Main NeoPixel driver program.
  */
@@ -14,6 +14,10 @@
  *  HIGH      0xD6
  *  LOW       0xE2
  */
+
+// Define below symbol to compile the eep_data_write program
+// When not defined, compile the neo_driver_app
+#ifndef COMPILE_EEP_DATA_WRITE
 
 /********************************* INCLUDES **********************************/
 #include <Arduino.h>
@@ -1851,3 +1855,5 @@ void store_rand_seed() {
 
     EEPROM.put(EEP_SETT_RSEED, u32_randSeed);
 }
+
+#endif

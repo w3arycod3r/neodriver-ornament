@@ -1,4 +1,4 @@
-﻿/* File:      eep_data_write.ino
+﻿/* File:      eep_data_write.cpp
  * Author:    Garrett Carter
  * Purpose:   Write the EEPROM data needed for the main NeoDriver program
  */
@@ -10,6 +10,8 @@
     432-511: (80B)  SARS-CoV-2 Sequence Data (320 bases)
 */
 
+// Define below symbol to compile the eep_data_write program
+// When not defined, compile the neo_driver_app
 #ifdef COMPILE_EEP_DATA_WRITE
 
 #include <Arduino.h>

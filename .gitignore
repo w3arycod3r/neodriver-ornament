@@ -2,3 +2,4 @@
 *.lst
 **/.vs/
 **/Debug/
+**/eep_data_write/
