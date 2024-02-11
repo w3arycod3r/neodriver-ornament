@@ -6,21 +6,19 @@
 
 pushd "%~dp0"
 
-echo.
+echo **********************************************************
 echo Building eep_data_write...
-echo.
+echo **********************************************************
 call ms_build_flash_config.bat eep_data_write eep_data_write.elf clean || goto :error
 
-
-:: Give time for eep flashing
-echo.
-echo Flashing EEPROM...
-echo.
+echo **********************************************************
+echo Waiting for eep_data_write to execute...
+echo **********************************************************
 timeout /t 3 /nobreak > NUL
 
-echo.
+echo **********************************************************
 echo Building neo_driver_app...
-echo.
+echo **********************************************************
 call ms_build_flash_config.bat Release neo_driver_app.elf clean || goto :error
 
 :error
