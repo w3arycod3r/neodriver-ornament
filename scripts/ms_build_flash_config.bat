@@ -12,6 +12,14 @@ set elf_filename=%2
 set clean_opt=%3
 set build_folder=..\microchip-studio\neo_driver_app\%config%
 set script_dir=%~dp0
+:: Use verbose flag for atprogram commands? 1 for yes, 0 for no
+set atprog_use_verbose=0
+
+if %atprog_use_verbose% == 1 (
+    set atprog_verbose=-v
+) else (
+    set atprog_verbose=
+)
 
 pushd %build_folder%
 
@@ -21,16 +29,25 @@ if "%clean_opt%" == "clean" (
 )
 make.exe all --jobs 8 --output-sync || goto :error
 
-@REM atprogram.exe -v -t atmelice -i ISP -d attiny85 info
-@REM atprogram.exe -v -t atmelice -i ISP -d attiny85 info --voltage
+@REM atprogram.exe %atprog_verbose% -t atmelice -i ISP -d attiny85 info
 
-:: Disable debugWIRE interface
-atprogram.exe -v -t atmelice -i debugWIRE -d attiny85 dwdisable
+echo Issuing reset to atmelice...
+atprogram %atprog_verbose% --force -t atmelice reboot || goto :error
+
+echo Waiting for atmelice to reset...
+timeout /t 2 /nobreak > NUL
+
+echo Attempting to disable debugWIRE interface...
+echo (Failure is expected if the target was not in debugWIRE mode)
+atprogram.exe %atprog_verbose% --force -t atmelice -i debugWIRE -d attiny85 --externalreset dwdisable
 :: Clear DWEN fuse via ISP interface
 call %script_dir%\ms_update_fuses.bat || goto :error
 
-:: Program elf file
-atprogram.exe -v -t atmelice -i ISP -d attiny85 program --chiperase -f %elf_filename% --verify || goto :error
+echo Checking target voltage...
+atprogram.exe %atprog_verbose% --force -t atmelice -i ISP -d attiny85 --externalreset info --voltage
+
+echo Flashing %elf_filename%
+atprogram.exe %atprog_verbose% --force -t atmelice -i ISP -d attiny85 --externalreset program --chiperase -f %elf_filename% --verify || goto :error
 
 :error
 popd
