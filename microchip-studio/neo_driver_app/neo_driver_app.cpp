@@ -1,4 +1,4 @@
-/* File:      neo_driver_app.ino
+/* File:      neo_driver_app.cpp
  * Author:    Garrett Carter
  * Purpose:   Main NeoPixel driver program.
  */
@@ -10,10 +10,17 @@
  *  CKDIV8    DISABLE
  *  SUT_CKSEL INTRCOSC_8MHZ_6CK_14CK_64MS
  *
- *  EXTENDED  0xFF
- *  HIGH      0xD6
  *  LOW       0xE2
+ *  HIGH      0xD6
+ *  EXTENDED  0xFF
+ * 
+ *  fuses.txt = e2d6ff
  */
+
+// Define below symbol to compile the eep_data_write program
+// Defined by the "eep_data_write" config in Microchip Studio
+// When not defined, compile the neo_driver_app
+#ifndef COMPILE_EEP_DATA_WRITE
 
 /********************************* INCLUDES **********************************/
 #include <Arduino.h>
@@ -22,7 +29,7 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <avr/wdt.h>
-#include "neo_pixel_slim.h"
+#include <neo_pixel_slim.h>
 #include "multi_button.h"
 #include <neo_common.h>
 
@@ -40,7 +47,7 @@ typedef enum { FRAMES_MODE_STATIC,      // Sprite is stationary. Length determin
 typedef struct {
     uint16_t u16_frameStep_msec;  // "on" time for each frame in the sequence.
     uint32_t u32_color;           // Color. Set to 0 for dynamic effect.
-    uint8_t* pu8_frames;          // Pointer to the frame sequence array stored in flash.
+    const uint8_t* pu8_frames;    // Pointer to the frame sequence array stored in flash. Pointers are 2 bytes on this arch.
     uint8_t  u8_mode;             // Mode of operation. A value from _FRAMES_MODE_T.
 
     // STATIC mode params
@@ -95,13 +102,6 @@ typedef struct {
 #define BATT_ICON_LVL_4     '&'
 #define BATT_ICON_LVL_5     '\''
 #define BATT_ICON_DEAD      '('
-
-// Pixel params
-#define BRIGHT_MIN   24
-#define BRIGHT_INIT  8
-#define PIX_CNT_MIN  1
-#define PIX_CNT_MAX  25
-#define PIX_CNT_INIT 25
 
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
@@ -158,16 +158,6 @@ typedef struct {
  */
 #define ANIM_ROT_SEL 3
 
-// I/O Mapping
-#define IO_SW_LEFT       BIT0 // PB0, AREF - Left switch
-#define IO_SW_RIGHT      BIT1 // PB1       - Right switch
-#define IO_NP_ENABLE     BIT2 // PB2, ADC1 - NeoPixel Enable
-#define IO_NP_ENABLE_ADC A1
-#define IO_NP_DATA       BIT3 // PB3, ADC3 - NeoPixel Data
-#define IO_NP_DATA_ADC   A3
-#define IO_POT_ADC       A2   // PB4, ADC2 - Brightness Potentiometer
-                              // PB5, ADC0 - Reset
-
 /******************************* DEBUG PARAMS ********************************/
 #define DEBUG_COV_ANIM  0
 #define DEBUG_LOW_BATT  0
@@ -218,7 +208,7 @@ void anim_msg_1();
 void anim_msg_2();
 void anim_msg_3();
 void anim_msg_4();
-void anim_msg(uint8_t* pu8_msg, uint32_t u32_color=0);
+void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color=0);
 void anim_frames_1();
 void anim_frames_2();
 void anim_frames_3();
@@ -253,30 +243,31 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x=0, int8_t i8_y=0);
 void wd_enable(uint8_t u8_timeout);
 void _wd_hw_enable(uint8_t u8_timeout);
 void store_rand_seed();
+uint8_t eep_char_read_line(char c_char, uint8_t line);
 
 /****************************** FLASH CONSTANTS ******************************/
 
 // Message Strings
-const char PROGMEM sz_msg1[] = "W3ARYCOD3R ";
-const char PROGMEM sz_msg2[] = "MERRY XMAS! ";
-const char PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
-const char PROGMEM sz_msg4[] = "u 4 8 15 16 23 42 ";    // Lost "numbers"
-// const char PROGMEM sz_msg4[] = "2021 FTW! ";
+const uint8_t PROGMEM sz_msg1[] = "W3ARYCOD3R ";
+const uint8_t PROGMEM sz_msg2[] = "MERRY XMAS! ";
+const uint8_t PROGMEM sz_msg3[] = "HAPPY NEW YEAR! ";
+const uint8_t PROGMEM sz_msg4[] = "u 4 8 15 16 23 42 ";    // Lost "numbers"
+// const uint8_t PROGMEM sz_msg4[] = "2021 FTW! ";
 
 
 // Frame ASCII sequences
-const char PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
-const char PROGMEM sz_frames2[] = "\"";            // Ghost     ( 1    : "   )
-const char PROGMEM sz_frames3[] = "jklmnopq";      // Starburst ( 12345678 : jklmnopq)
-const char PROGMEM sz_frames4[] = "rs";            // Frog      ( 12   :  rs )
-const char PROGMEM sz_frames5[] = "`a";            // Turbine   ( 12   :  `a )
-const char PROGMEM sz_frames6[] = "b/-\\";         // Spinner
-const char PROGMEM sz_frames6_alt[] = "\\-/b";     // Spinner ALT
-const char PROGMEM sz_frames7[] = "ef";            // DNA       ( 12    :  ef    )
-const char PROGMEM sz_frames8[] = ")*+,.";         // Snowfall  ( 12345 :  )*+,. )
-const char PROGMEM sz_frames9[] = ":@=[=;";        // Field     ( 12345  :  :;=@[  ) [143532]
-const char PROGMEM sz_frames10[] = "]_cdcit";      // Ball      ( 123467 :  ]_cdit )
-const char PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
+const uint8_t PROGMEM sz_frames1[] = "gh";            // Pacman    ( 12   : gh  )
+const uint8_t PROGMEM sz_frames2[] = "\"";            // Ghost     ( 1    : "   )
+const uint8_t PROGMEM sz_frames3[] = "jklmnopq";      // Starburst ( 12345678 : jklmnopq)
+const uint8_t PROGMEM sz_frames4[] = "rs";            // Frog      ( 12   :  rs )
+const uint8_t PROGMEM sz_frames5[] = "`a";            // Turbine   ( 12   :  `a )
+const uint8_t PROGMEM sz_frames6[] = "b/-\\";         // Spinner
+const uint8_t PROGMEM sz_frames6_alt[] = "\\-/b";     // Spinner ALT
+const uint8_t PROGMEM sz_frames7[] = "ef";            // DNA       ( 12    :  ef    )
+const uint8_t PROGMEM sz_frames8[] = ")*+,.";         // Snowfall  ( 12345 :  )*+,. )
+const uint8_t PROGMEM sz_frames9[] = ":@=[=;";        // Field     ( 12345  :  :;=@[  ) [143532]
+const uint8_t PROGMEM sz_frames10[] = "]_cdcit";      // Ball      ( 123467 :  ]_cdit )
+const uint8_t PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
 
 /******************************** GLOBAL VARS ********************************/
 
@@ -296,12 +287,13 @@ const char PROGMEM sz_frames10_alt[] = "ticdc_]";  // Ball ALT
 // int8_t   i8_shiftStepY;       // The Y shift to perform on each shift step. Can be pos, neg, or zero.
 
 // Frame sequence config data
+// These are currently stored in RAM, because we change some params at runtime, for "randomization"
 
 // Sequence 1 - Pacman
 FRAMES_CONFIG_T st_sequence1 = {
     200,
     COLOR_YELLOW,
-    sz_frames1,
+    (uint8_t*)sz_frames1,
     FRAMES_MODE_SHIFT,
 
     // STATIC params
@@ -319,7 +311,7 @@ FRAMES_CONFIG_T st_sequence1 = {
 FRAMES_CONFIG_T st_sequence2 = {
     250,
     COLOR_TEAL,
-    sz_frames2,
+    (uint8_t*)sz_frames2,
     FRAMES_MODE_SHIFT,
 
     // STATIC params
@@ -337,7 +329,7 @@ FRAMES_CONFIG_T st_sequence2 = {
 FRAMES_CONFIG_T st_sequence3 = {
     100,
     COLOR_WHEEL,
-    sz_frames3,
+    (uint8_t*)sz_frames3,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -355,7 +347,7 @@ FRAMES_CONFIG_T st_sequence3 = {
 FRAMES_CONFIG_T st_sequence4 = {
     250,
     COLOR_GREEN,
-    sz_frames4,
+    (uint8_t*)sz_frames4,
     FRAMES_MODE_SHIFT,
 
     // STATIC params
@@ -373,7 +365,7 @@ FRAMES_CONFIG_T st_sequence4 = {
 FRAMES_CONFIG_T st_sequence5 = {
     250,
     COLOR_WHEEL,
-    sz_frames5,
+    (uint8_t*)sz_frames5,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -391,7 +383,7 @@ FRAMES_CONFIG_T st_sequence5 = {
 FRAMES_CONFIG_T st_sequence6 = {
     250,
     COLOR_WHEEL,
-    sz_frames6,
+    (uint8_t*)sz_frames6,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -409,7 +401,7 @@ FRAMES_CONFIG_T st_sequence6 = {
 FRAMES_CONFIG_T st_sequence7 = {
     250,
     COLOR_WHEEL,
-    sz_frames7,
+    (uint8_t*)sz_frames7,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -427,7 +419,7 @@ FRAMES_CONFIG_T st_sequence7 = {
 FRAMES_CONFIG_T st_sequence8 = {
     300,
     COLOR_TEAL,
-    sz_frames8,
+    (uint8_t*)sz_frames8,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -445,7 +437,7 @@ FRAMES_CONFIG_T st_sequence8 = {
 FRAMES_CONFIG_T st_sequence9 = {
     400,
     COLOR_WHEEL,
-    sz_frames9,
+    (uint8_t*)sz_frames9,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -463,7 +455,7 @@ FRAMES_CONFIG_T st_sequence9 = {
 FRAMES_CONFIG_T st_sequence10 = {
     150,
     COLOR_YELLOW,
-    sz_frames10,
+    (uint8_t*)sz_frames10,
     FRAMES_MODE_STATIC,
 
     // STATIC params
@@ -500,7 +492,7 @@ void (*apfn_renderFunc[])(void) {
     anim_sparkle,
     // anim_marquee, anim_sine_gamma,
     // anim_cov_quar,
-    anim_cov_char,
+    // anim_cov_char,
     anim_msg_1,
     anim_msg_2,
     anim_msg_3,
@@ -1181,7 +1173,7 @@ void anim_msg_4() {
  @param pu8_msg    Starting address for a null-terminated C-String with the message, stored in flash.
  @param u32_color  Solid color to use for the characters. Leave at default 0 for a smooth color cycling anim.
 */
-void anim_msg(uint8_t* pu8_msg, uint32_t u32_color) {
+void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color) {
     static uint8_t  u8_charCnt; // Counts 0 to LEN-1, index into char array
     static uint8_t  u8_cIn;     // Incoming char
     static uint8_t  u8_cOut;    // Outgoing char
@@ -1866,3 +1858,5 @@ void store_rand_seed() {
 
     EEPROM.put(EEP_SETT_RSEED, u32_randSeed);
 }
+
+#endif

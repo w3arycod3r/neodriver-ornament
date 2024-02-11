@@ -3,9 +3,9 @@
 	"tasks": [
 		// neo_driver_app
 		{
-			"label": "build neo_driver_app",
+			"label": "Build neo_driver_app",
 			"type": "shell",
-			"command": "arduino/neo_driver_app/build.bat",
+			"command": "scripts/ms_build_flash_config.bat Release neo_driver_app.elf",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -14,7 +14,6 @@
 				"showReuseMessage": true,
 				"clear": true
 			},
-			"detail": "Build program for neo_driver_app",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -23,9 +22,9 @@
 		},
 		// eep_data_write
 		{
-			"label": "build eep_data_write",
+			"label": "Build eep_data_write",
 			"type": "shell",
-			"command": "arduino/eep_data_write/build.bat",
+			"command": "scripts/ms_build_flash_config.bat eep_data_write eep_data_write.elf",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -34,7 +33,6 @@
 				"showReuseMessage": true,
 				"clear": true
 			},
-			"detail": "Build program for eep_data_write",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -43,9 +41,9 @@
 		},
 		// build_eep_and_app.bat
 		{
-			"label": "build_eep_and_app",
+			"label": "Build eep_data_write and neo_driver_app",
 			"type": "shell",
-			"command": "arduino/build_eep_and_app.bat",
+			"command": "scripts/ms_build_eep_and_app.bat",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -54,7 +52,6 @@
 				"showReuseMessage": true,
 				"clear": true
 			},
-			"detail": "Build and flash both eep_data_write and neo_driver_app",
 			"group": {
 				"kind": "build",
 				"isDefault": true

@@ -388,7 +388,7 @@ void NeoPixel_Slim::fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_c
                      one-size-fits-all operation of gamma32(). Diffusing the LEDs also
                      really seems to help when using low-saturation colors.
 */
-uint32_t NeoPixel_Slim::hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat=255, uint8_t u8_val=255) {
+uint32_t NeoPixel_Slim::hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat, uint8_t u8_val) {
 
     uint8_t u8_red;
     uint8_t u8_green;

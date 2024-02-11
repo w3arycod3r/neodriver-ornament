@@ -180,6 +180,7 @@ class NeoPixel_Slim {
     static uint32_t   rgb_to_pack(uint8_t u8_red, uint8_t u8_green, uint8_t u8_blue) {
         return ((uint32_t)u8_red << 16) | ((uint32_t)u8_green <<  8) | u8_blue;
     }
+    // Default values must be given *only* in the function prototype
     static uint32_t   hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat=255, uint8_t u8_val=255);
     static uint32_t   get_gamma_32(uint32_t u32_color);
 
@@ -196,7 +197,7 @@ class NeoPixel_Slim {
 
     // AVR Specific
     volatile uint8_t* pu8_port;      ///< Output PORT register address
-    uint8_t*          pu8_ddr;       ///< Output PORT data direction register
+    volatile uint8_t* pu8_ddr;       ///< Output PORT data direction register
     uint8_t           u8_pinMask;    ///< Output PORT bitmask
     
 
