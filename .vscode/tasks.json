@@ -5,7 +5,7 @@
 		{
 			"label": "Build neo_driver_app",
 			"type": "shell",
-			"command": "scripts/ms_build_flash_config.bat Debug neo_driver_app.elf",
+			"command": "scripts/ms_build_flash_config.bat Release neo_driver_app.elf",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
