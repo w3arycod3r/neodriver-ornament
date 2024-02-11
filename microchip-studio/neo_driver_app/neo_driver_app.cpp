@@ -10,12 +10,15 @@
  *  CKDIV8    DISABLE
  *  SUT_CKSEL INTRCOSC_8MHZ_6CK_14CK_64MS
  *
- *  EXTENDED  0xFF
- *  HIGH      0xD6
  *  LOW       0xE2
+ *  HIGH      0xD6
+ *  EXTENDED  0xFF
+ * 
+ *  fuses.txt = e2d6ff
  */
 
 // Define below symbol to compile the eep_data_write program
+// Defined by the "eep_data_write" config in Microchip Studio
 // When not defined, compile the neo_driver_app
 #ifndef COMPILE_EEP_DATA_WRITE
 
@@ -489,7 +492,7 @@ void (*apfn_renderFunc[])(void) {
     anim_sparkle,
     // anim_marquee, anim_sine_gamma,
     // anim_cov_quar,
-    anim_cov_char,
+    // anim_cov_char,
     anim_msg_1,
     anim_msg_2,
     anim_msg_3,

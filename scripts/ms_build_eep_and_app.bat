@@ -21,7 +21,7 @@ timeout /t 3 /nobreak > NUL
 echo.
 echo Building neo_driver_app...
 echo.
-call ms_build_flash_config.bat Debug neo_driver_app.elf clean || goto :error
+call ms_build_flash_config.bat Release neo_driver_app.elf clean || goto :error
 
 :error
 popd
