@@ -99,7 +99,7 @@ For v03, I made a few minor improvements:
 </p>
 
 # Software
-The main sketch [neo_driver_app.ino](arduino/neo_driver_app/neo_driver_app.ino) has several important functions:
+The main app [neo_driver_app.cpp](microchip-studio/neo_driver_app/neo_driver_app.cpp) has several important functions:
 1. Process HMI inputs (left, right switches and potentiometer). The switches can scroll through all the animations and the pot can adjust the brightness of the LEDs.
 2. LED adjustment mode: Holding one of the switches will cause the device to enter a LED adjustment mode. In this mode, pressing the left or right switches will decrement or increment the number of LEDs controlled by the device. This allows different sizes of matrices or rings to be used. Holding one of the switches again will save your adjustment into EEPROM memory, so that it is retained between power cycles.
 3. Shuffle mode: Play the defined animations in a random sequence, without user intervention. After playing an animation, enter a low-power mode with micro in deep sleep, LEDs and pot OFF. The sleep time is variable, depending on the length of the last played animation. Wakeup from sleep is achieved using the watchdog timer. Also, pressing one of the switches will wake the device as well.
@@ -170,42 +170,27 @@ FRAMES_CONFIG_T st_sequence1 = {
 };
 ```
 ## Challenges
-The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unnecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](arduino/neo_driver_app/neo_pixel_slim.h) and [neo_pixel_slim.cpp](arduino/neo_driver_app/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
+The biggest challenge was space. The ATtiny85 only has 8KB of code space and 512B of EEPROM. I used EEPROM to store bitmap font data used for the scrolling messages, as well as the SARS-CoV-2 base data for the associated animation. I stored message strings and other animation sequence data in flash. To get all of this to fit, I had to carefully optimize the code for size. I had to trim down the Adafruit NeoPixel library, removing unnecessary features and sizing all of the variables as small as possible. You can see the modifications I made in [neo_pixel_slim.h](microchip-studio/neo_driver_app/libs/neo_pixel_slim.h) and [neo_pixel_slim.cpp](microchip-studio/neo_driver_app/libs/neo_pixel_slim.cpp). Also, I had to avoid some bloated Arduino functions and replace them with direct AVR register manipulations.
 
-I used various commands from the AVR toolchain (see [get_size_info.bat](arduino/neo_driver_app/get_size_info.bat)) to view the size and disassembly of each portion of my code. This was essential during my size optimization efforts, as it showed me where to focus my attention.
+I used various commands from the AVR toolchain (see [ard_get_size_info.bat](scripts/ard_get_size_info.bat)) to view the size and disassembly of each portion of my code. This was essential during my size optimization efforts, as it showed me where to focus my attention.
 
 # Compile & Flash
 ## Environment setup
-You can use either the [Arduino IDE](https://www.arduino.cc/en/software) or the [arduino-cli](https://arduino.github.io/arduino-cli/latest/installation) (command line interface) to compile and flash the [code](arduino) in this repo. My build scripts use arduino-cli.  
-
-For both options, you will need to install:
-1. The [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) to get Arduino support for the ATtiny85.
-2. The Adafruit [NeoPixel Library](https://github.com/adafruit/Adafruit_NeoPixel).
-
-## Fuses
-The configuration fuses inside the ATtiny85 need to be properly set for the code to run as expected. This only needs to be done once. You can do this inside of the Arduino IDE:
-1. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
-2. Select Tools -> Chip -> ATtiny85
-3. Change your programmer with Tools -> Programmer -> Atmel-ICE   *or choose another programmer you intend to use*
-4. Select Tools -> Clock Source -> 8 MHz (internal)
-6. Select Tools -> Save EEPROM -> EEPROM retained
-7. Select Tools -> B.O.D Level -> B.O.D. Enabled (1.8v)
-8. With programmer and board plugged in, select Tools -> Burn Bootloader to set the hardware fuses
+1. Install [Microchip Studio](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio) (MS) Version 7.0.2594
+2. Open the Atmel [Solution](microchip-studio/neodriver-ornament-ms.atsln) within the IDE
 
 ## eep_data_write
-Font and animation data is stored in the 512B EEPROM of the ATtiny85. So first, the [eep_data_write](arduino/eep_data_write) sketch should be flashed and ran on the hardware. This only needs to be done once. If you are using arduino-cli and the Atmel-ICE programmer, simply run build.bat in the sketch folder.
+Font and animation data is stored in the 512B EEPROM of the ATtiny85. So first, the [eep_data_write.cpp](microchip-studio/neo_driver_app/eep_data_write.cpp) app should be flashed and ran on the hardware. There is a config in MS with the same name which compiles this app via a `#define`.
 
-If you are using the IDE:
-1. Open the .ino file inside the IDE.
-2. Change your board with Tools -> Board -> ATTinyCore -> ATtiny25/45/85 (No bootloader)
-3. Select Tools -> Chip -> ATtiny85
-4. Change your programmer with Tools -> Programmer -> Atmel-ICE   *or choose another programmer you intend to use*
-5. With programmer and board plugged in, upload using the "right arrow" upload button.
-
-This sketch will flash the required data into the EEPROM and verify it. The first NeoPixel flashes green to indicate success.
+This app will flash the required data into the EEPROM and verify it. The first NeoPixel flashes green to indicate success, red to indicate verification failure.
 
 ## neo_driver_app
-The [neo_driver_app](arduino/neo_driver_app) sketch is the main program. Follow the same steps as above to flash this sketch to your hardware.
+The [neo_driver_app.cpp](microchip-studio/neo_driver_app/neo_driver_app.cpp) file is the main program. The "Release" and "Debug" configs in MS will compile this.
+
+## VS Code
+1. Compile all 3 configs within MS at least once.
+1. Open repo folder within VS Code.
+1. Invoke the desired build task within VS Code which will build, flash, and set fuses to required values.
 
 # Useful Links
 https://github.com/PaulKlinger/freeform-virus-blinky  
