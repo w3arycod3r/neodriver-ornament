@@ -1,11 +1,10 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		// neo_driver_app
 		{
-			"label": "Build neo_driver_app",
+			"label": "Test eep_data_write",
 			"type": "shell",
-			"command": "scripts/ms_build_flash_config.bat Release neo_driver_app.elf",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -20,11 +19,10 @@
 			},
 			"problemMatcher": []
 		},
-		// eep_data_write
 		{
-			"label": "Build eep_data_write",
+			"label": "Test neo_driver_app",
 			"type": "shell",
-			"command": "scripts/ms_build_flash_config.bat eep_data_write eep_data_write.elf",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -39,11 +37,10 @@
 			},
 			"problemMatcher": []
 		},
-		// build_eep_and_app.bat
 		{
-			"label": "Build eep_data_write and neo_driver_app",
+			"label": "Test eep_data_write and neo_driver_app",
 			"type": "shell",
-			"command": "scripts/ms_build_eep_and_app.bat",
+			"command": "${workspaceFolder}/scripts/ms-dev-sequence.ps1",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
