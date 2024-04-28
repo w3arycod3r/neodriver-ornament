@@ -2,6 +2,7 @@
 # Author:  Garrett Carter
 # Purpose: Package hex files, fuse settings, and scripts into a zip for release
 
+$ErrorActionPreference = 'Stop'
 $releases_dir = "$PSScriptRoot\..\releases"
 if (-Not (Test-Path $releases_dir)) {
     New-Item -Path $releases_dir -ItemType Directory | Out-Null
@@ -28,3 +29,5 @@ $params = @{
 }
 
 Compress-Archive @params
+
+Invoke-Item $releases_dir
