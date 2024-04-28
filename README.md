@@ -176,8 +176,10 @@ I used various commands from the AVR toolchain (see [ard_get_size_info.bat](scri
 
 # Compile & Flash
 ## Environment setup
+1. Install PowerShell Core (7+)
+1. Run `Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine` in admin pwsh window, to allow scripts from downloaded release zips to run.
 1. Install [Microchip Studio](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio) (MS) Version 7.0.2594
-2. Open the Atmel [Solution](microchip-studio/neodriver-ornament-ms.atsln) within the IDE
+1. Open the Atmel [Solution](microchip-studio/neodriver-ornament-ms.atsln) within the IDE
 
 ## eep_data_write
 Font and animation data is stored in the 512B EEPROM of the ATtiny85. So first, the [eep_data_write.cpp](microchip-studio/neo_driver_app/eep_data_write.cpp) app should be flashed and ran on the hardware. There is a config in MS with the same name which compiles this app via a `#define`.
