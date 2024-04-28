@@ -1,0 +1,1 @@
+& $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $PSScriptRoot\..\microchip-studio\fuses.txt -hex_to_flash $PSScriptRoot\..\microchip-studio\neo_driver_app\eep_data_write\eep_data_write.hex

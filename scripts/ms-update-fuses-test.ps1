@@ -1,0 +1,1 @@
+& $PSScriptRoot\ms-update-fuses.ps1 $PSScriptRoot\..\microchip-studio\fuses.txt
