@@ -7,6 +7,7 @@ if (-Not (Test-Path $releases_dir)) {
     New-Item -Path $releases_dir -ItemType Directory | Out-Null
 }
 
+# Take the tag name (if one exists on current commit) or take a short SHA
 $release_git_rev = $(git describe --exact-match --tags 2>$null || git rev-parse --short HEAD)
 $release_zip_name = "neodriver-ornament-$release_git_rev.zip"
 $release_zip_file = "$releases_dir\$release_zip_name"
