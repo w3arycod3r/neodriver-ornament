@@ -8,7 +8,10 @@ param (
 )
 
 $ErrorActionPreference = 'Stop'
-$Env:PATH = "C:\Program Files (x86)\Atmel\Studio\7.0\;C:\Program Files (x86)\Atmel\Studio\7.0\shellutils\;C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\;C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\;$Env:PATH"
+if (-Not (Get-Command atprogram.exe -ErrorAction SilentlyContinue)) {
+    Write-Host "Adding Atmel Studio dirs to process PATH variable..."
+    $Env:PATH = "C:\Program Files (x86)\Atmel\Studio\7.0\;C:\Program Files (x86)\Atmel\Studio\7.0\shellutils\;C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\;C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\;$Env:PATH"
+}
 $curr_fuses_file = [System.IO.Path]::GetFullPath("$PSScriptRoot\curr_fuses.txt")
 $desired_fuses_file = [System.IO.Path]::GetFullPath($desired_fuses_file)
 $desired_fuses_settings = Get-Content $desired_fuses_file
