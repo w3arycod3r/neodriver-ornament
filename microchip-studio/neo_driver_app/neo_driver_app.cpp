@@ -1666,6 +1666,36 @@ void anim_flash_chars(char* msg) {
         
 }
 
+#define MAX_DEC_DIGITS_IN_U32 10
+#define U32_DEC_STR_BUFF_SIZE (MAX_DEC_DIGITS_IN_U32+1)
+// "Print" a u32 integer to the display, in decimal.
+// Flash each decimal digit in sequence. Useful for debugging or printing statistics.
+// Blocking animation.
+void anim_print_dec_u32(uint32_t u32_val) {
+
+    // Reference code: https://github.com/mpaland/printf/blob/master/printf.c
+
+    char ac_buf[U32_DEC_STR_BUFF_SIZE];
+
+    uint8_t u8_idx = 0;
+
+    // Convert binary to decimal
+    do {
+        char c_digit = (char)(u32_val % 10);
+        ac_buf[u8_idx++] = '0' + c_digit;
+        u32_val /= 10;
+    } while (u32_val && (u8_idx < U32_DEC_STR_BUFF_SIZE-1));
+
+    // Add null terminator
+    ac_buf[u8_idx] = '\0';
+
+    // reverse string
+    // while (len) {
+    //     out(buf[--len], buffer, idx++, maxlen);
+    // }
+
+}
+
 // dig = 0 is LS digit
 uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig) {
     return u16_val / au16_pow10[u8_dig] % 10 ;
