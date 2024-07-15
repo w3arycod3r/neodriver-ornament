@@ -233,6 +233,7 @@ void enable_pc_ints();
 void disable_pc_ints();
 void shutdown();
 void anim_low_batt();
+void anim_flash_chars(char* msg);
 uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig);
 void anim_voltage(uint16_t u16_mv);
 void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait);
@@ -244,6 +245,7 @@ void wd_enable(uint8_t u8_timeout);
 void _wd_hw_enable(uint8_t u8_timeout);
 void store_rand_seed();
 uint8_t eep_char_read_line(char c_char, uint8_t line);
+void inc_sat_eep_cntr_u16(uint8_t eep_addr);
 
 /****************************** FLASH CONSTANTS ******************************/
 
@@ -546,6 +548,9 @@ void setup() {
         EEPROM.write(EEP_SETT_ANIM, u8_rAnim);
     }
 
+    // Update power-on counter
+    inc_sat_eep_cntr_u16(EEP_SETT_NUM_POWER_ON);
+
     // Seed PRNG with a number derived from a source of entropy (human input)
     randomSeed(u32_randSeed ^ read_vcc_mv());
     
@@ -661,6 +666,9 @@ void mode_logic() {
         b_animCycleComplete = false;
         u8_animCycleCount++;
 
+        // We have completed an anim cycle, update the cycle counter in EEPROM
+        inc_sat_eep_cntr_u16(EEP_SETT_NUM_CYCLES);
+
         wd_enable(u8_nextSleepTime); // Value set by the terminating animation
         shutdown();
 
@@ -684,7 +692,7 @@ void mode_logic() {
     // Respond to left button events
     switch (u8_lEvent)
     {
-    // Click
+    // Left Click
     case 1:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF)
@@ -714,36 +722,34 @@ void mode_logic() {
         }
 
         break;
-    // Double Click
+    // Left Double Click
     case 2:
 
-        if (u8_mode == SYS_MODE_PIX_ADJ)
-        {
-            // Reduce numPixels by 4
-            uint8_t u8_numPix = o_strip.get_length();
-            if (u8_numPix >= PIX_CNT_MIN + 4)  { u8_numPix -= 4; }
-            else                               { u8_numPix = PIX_CNT_MIN; }
-
-            o_strip.clear();
-            o_strip.show();
-            o_strip.update_length(u8_numPix);
-        }
-
         break;
-    // Hold
+    // Left Hold
     case 3:
 
         break;
-    // Long Hold
+    // Left Long Hold
     case 4:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF) {
             u8_mode = SYS_MODE_PIX_ADJ;
         }
         else if (u8_mode == SYS_MODE_PIX_ADJ) {
+            
+            // Update number of pixels
             EEPROM.update(EEP_SETT_NPIX, o_strip.get_length());
+            
+            // Reset statistics
+            EEPROM.put(EEP_SETT_NUM_CYCLES, (const uint16_t)(0));
+            EEPROM.put(EEP_SETT_NUM_POWER_ON, (const uint16_t)(0));
+            anim_flash_chars("SR");
+
+            // Return to usual mode
             u8_mode = SYS_MODE_ANIM_SEL;
         }
+
 
         break;
     }
@@ -751,7 +757,7 @@ void mode_logic() {
     // Respond to right button events
     switch (u8_rEvent)
     {
-    // Click
+    // Right Click
     case 1:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF)
@@ -780,25 +786,15 @@ void mode_logic() {
 
 
         break;
-    // Double Click
+    // Right Double Click
     case 2:
 
-        if (u8_mode == SYS_MODE_PIX_ADJ)
-        {
-            // Increase numPixels by 4
-            uint8_t u8_numPix = o_strip.get_length();
-            if (u8_numPix <= PIX_CNT_MAX - 4)  { u8_numPix += 4; }
-            else                               { u8_numPix = PIX_CNT_MAX; }
-
-            o_strip.update_length(u8_numPix);
-        }
-
         break;
-    // Hold
+    // Right Hold
     case 3:
 
         break;
-    // Long Hold
+    // Right Long Hold
     case 4:
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF) {
             u8_mode = SYS_MODE_PIX_ADJ;
@@ -1650,6 +1646,26 @@ void anim_low_batt() {
     }
 }
 
+// Quickly flash a short char sequence, without scrolling. Blocking animation.
+void anim_flash_chars(char* msg) {
+
+    o_strip.clear();
+    uint8_t i = 0;
+    char c;
+    while (c = msg[i++]) {
+
+        draw_char(c, COLOR_BLUE);
+        o_strip.show();
+        delay(300);
+
+        o_strip.clear();
+        o_strip.show();
+        delay(300);
+
+    }
+        
+}
+
 // dig = 0 is LS digit
 uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig) {
     return u16_val / au16_pow10[u8_dig] % 10 ;
@@ -1857,6 +1873,19 @@ void _wd_hw_enable(uint8_t u8_timeout) {
 void store_rand_seed() {
 
     EEPROM.put(EEP_SETT_RSEED, u32_randSeed);
+}
+
+// Increment a u16 counter in EEPROM with "saturate"
+// Saturate the counter at max value, don't wrap around
+void inc_sat_eep_cntr_u16(uint8_t eep_addr) {
+    uint16_t u16_eepCounter;
+    // Must use "get" and "put" functions for data in EEPROM larger than 1 byte
+    EEPROM.get(eep_addr, u16_eepCounter);
+
+    if (u16_eepCounter != 0xFFFF) {
+        u16_eepCounter++;
+        EEPROM.put(eep_addr, u16_eepCounter);        
+    }
 }
 
 #endif

@@ -47,10 +47,18 @@
 // EEPROM Addresses
 
 // First 16 bytes reserved for settings storage
-#define EEP_SETT_ANIM   0
-#define EEP_SETT_NPIX   1
-#define EEP_SETT_RSEED  2   // Addr 2-5, 4 bytes
-#define EEP_SETT_FLAGS  6   // 8 Status Flags
+#define EEP_SETT_FIRST_ADDR     0
+#define EEP_SETT_ANIM           0
+#define EEP_SETT_NPIX           1
+#define EEP_SETT_RSEED          2   // Addr 2-5, 4 bytes
+#define EEP_SETT_FLAGS          6   // 8 Status Flags
+// Runtime since last charge in minutes. Includes "on" and "off" time. Stops counting once battery is "dead".
+#define EEP_SETT_RUNTIME_MIN    7   // 2 bytes
+// Number of animation cycles since stat reset.
+#define EEP_SETT_NUM_CYCLES     9   // 2 bytes
+// Number of power-on's since stat reset.
+#define EEP_SETT_NUM_POWER_ON   11   // 2 bytes
+#define EEP_SETT_LAST_ADDR      15
 
 // Status Flags (bits in EEP_SETT_FLAGS)
 #define STAT_FLG_BATT_DEAD  BIT0
@@ -60,12 +68,13 @@
 #define EEP_SIZE_BYTES 512
 
 
-
 // Comment out below line to skip writing the cov virus data, if you don't intend to use the animation
 // #define EEP_COV_DATA_WRITE_ENABLE
 #define EEP_COV_DATA_START_ADDR   432
 // 160 Bytes of sequence are available
 #define EEP_COV_DATA_NUM_BYTES   80
+
+#define EEP_CHAR_DATA_START_ADDR 16
 
 /*
     5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
@@ -796,7 +805,6 @@ const uint8_t PROGMEM charSet[] = {
 
 #define FLASH_CHAR_SET_SIZE_BYTES (sizeof(charSet) / sizeof(charSet[0]))
 #define EEP_CHAR_DATA_NUM_CHARS  (FLASH_CHAR_SET_SIZE_BYTES / MATRIX_HEIGHT_PIX)
-#define EEP_CHAR_DATA_START_ADDR 16
 #define EEP_CHAR_DATA_NUM_BYTES  (DIV_CEILING((EEP_CHAR_DATA_NUM_CHARS * MATRIX_NUM_PIX) , 8))
 
 // ASCII char set limits
