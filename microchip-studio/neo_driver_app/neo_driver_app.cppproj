@@ -321,6 +321,9 @@
     <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="libs\ard_utility.cpp">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="libs\ard_utility.h">
       <SubType>compile</SubType>
     </Compile>
@@ -348,7 +351,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="arduino_core" />
-    <Folder Include="libs" />
+    <Folder Include="libs\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

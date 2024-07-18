@@ -32,6 +32,7 @@
 #include <neo_pixel_slim.h>
 #include "multi_button.h"
 #include <neo_common.h>
+#include "ard_utility.h"
 
 /*********************************** ENUMS ***********************************/
 typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
@@ -246,6 +247,7 @@ void _wd_hw_enable(uint8_t u8_timeout);
 void store_rand_seed();
 uint8_t eep_char_read_line(char c_char, uint8_t line);
 void inc_sat_eep_cntr_u16(uint8_t eep_addr);
+void anim_print_dec_u32(uint32_t u32_val);
 
 /****************************** FLASH CONSTANTS ******************************/
 
@@ -709,18 +711,6 @@ void mode_logic() {
             store_rand_seed();
         }
 
-        if (u8_mode == SYS_MODE_PIX_ADJ)
-        {
-            // Reduce numPixels by 1
-            uint8_t u8_numPix = o_strip.get_length();
-            if (u8_numPix >= PIX_CNT_MIN + 1)  { u8_numPix -= 1; }
-            else                               { u8_numPix = PIX_CNT_MIN; }
-
-            o_strip.clear();
-            o_strip.show();
-            o_strip.update_length(u8_numPix);
-        }
-
         break;
     // Left Double Click
     case 2:
@@ -738,13 +728,21 @@ void mode_logic() {
         }
         else if (u8_mode == SYS_MODE_PIX_ADJ) {
             
-            // Update number of pixels
-            EEPROM.update(EEP_SETT_NPIX, o_strip.get_length());
-            
             // Reset statistics
-            EEPROM.put(EEP_SETT_NUM_CYCLES, (const uint16_t)(0));
-            EEPROM.put(EEP_SETT_NUM_POWER_ON, (const uint16_t)(0));
-            anim_flash_chars("SR");
+            // EEPROM.put(EEP_SETT_NUM_CYCLES, (const uint16_t)(0));
+            // EEPROM.put(EEP_SETT_NUM_POWER_ON, (const uint16_t)(0));
+            // anim_flash_chars("SR");
+
+            // Print statistics
+            uint32_t u16_val;
+            
+            EEPROM.get(EEP_SETT_NUM_CYCLES, u16_val);
+            anim_flash_chars("CYCL-CNT");
+            anim_print_dec_u32((uint32_t)(u16_val));
+
+            EEPROM.get(EEP_SETT_NUM_POWER_ON, u16_val);
+            anim_flash_chars("PWR-CNT");
+            anim_print_dec_u32((uint32_t)(u16_val));
 
             // Return to usual mode
             u8_mode = SYS_MODE_ANIM_SEL;
@@ -774,17 +772,6 @@ void mode_logic() {
             store_rand_seed();
         }
 
-        if (u8_mode == SYS_MODE_PIX_ADJ)
-        {
-            // Increase numPixels by 1
-            uint8_t u8_numPix = o_strip.get_length();
-            if (u8_numPix <= PIX_CNT_MAX - 1)  { u8_numPix += 1; }
-            else                               { u8_numPix = PIX_CNT_MAX; }
-
-            o_strip.update_length(u8_numPix);
-        }
-
-
         break;
     // Right Double Click
     case 2:
@@ -800,7 +787,6 @@ void mode_logic() {
             u8_mode = SYS_MODE_PIX_ADJ;
         }
         else if (u8_mode == SYS_MODE_PIX_ADJ) {
-            EEPROM.update(EEP_SETT_NPIX, o_strip.get_length());
             u8_mode = SYS_MODE_ANIM_SEL;
         }
 
@@ -1663,36 +1649,17 @@ void anim_flash_chars(char* msg) {
         delay(300);
 
     }
-        
+    
 }
 
-#define MAX_DEC_DIGITS_IN_U32 10
-#define U32_DEC_STR_BUFF_SIZE (MAX_DEC_DIGITS_IN_U32+1)
 // "Print" a u32 integer to the display, in decimal.
 // Flash each decimal digit in sequence. Useful for debugging or printing statistics.
 // Blocking animation.
 void anim_print_dec_u32(uint32_t u32_val) {
 
-    // Reference code: https://github.com/mpaland/printf/blob/master/printf.c
-
-    char ac_buf[U32_DEC_STR_BUFF_SIZE];
-
-    uint8_t u8_idx = 0;
-
-    // Convert binary to decimal
-    do {
-        char c_digit = (char)(u32_val % 10);
-        ac_buf[u8_idx++] = '0' + c_digit;
-        u32_val /= 10;
-    } while (u32_val && (u8_idx < U32_DEC_STR_BUFF_SIZE-1));
-
-    // Add null terminator
-    ac_buf[u8_idx] = '\0';
-
-    // reverse string
-    // while (len) {
-    //     out(buf[--len], buffer, idx++, maxlen);
-    // }
+    char ac_str[U32_DEC_STR_MAX_BUFF_SIZE];
+    u32_to_dec_string(u32_val, ac_str);
+    anim_flash_chars(ac_str);
 
 }
 
@@ -1877,7 +1844,6 @@ uint8_t eep_char_read_line(char c_char, uint8_t line)
     return line_data;
     
 }
-
 
 // External interface for WDT. Call with one of the WDT_XXX constants. Sets up WDT software and hardware.
 void wd_enable(uint8_t u8_timeout) {

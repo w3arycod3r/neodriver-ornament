@@ -6,6 +6,8 @@
 #ifndef ARD_UTILITY_H
 #define ARD_UTILITY_H
 
+#include <stdint.h>
+
 /********************************** DEFINES **********************************/
 /* definition to expand macro then apply to pragma message */
 // Usage example below
@@ -32,5 +34,13 @@
 
 // Perform ceil(x/y) in integer math
 #define DIV_CEILING(x,y) (((x) + (y) - 1) / (y))
+
+#define U32_DEC_MAX_DIGITS 10
+#define U32_DEC_STR_MAX_BUFF_SIZE (U32_DEC_MAX_DIGITS+1)
+
+/********************************** PROTOTYPES **********************************/
+void u32_to_dec_string(uint32_t u32_val, char* ac_str);
+uint8_t strlen(char* ac_str);
+void rev_string(char* ac_str);
 
 #endif
