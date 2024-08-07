@@ -11,6 +11,20 @@
 
 /********************************** DEFINES **********************************/
 
+/*
+ *  FUSE SETTINGS:
+ *  EESAVE    ENABLE
+ *  BODLEVEL  ENABLE at VCC = 1.8V
+ *  CKDIV8    DISABLE
+ *  SUT_CKSEL INTRCOSC_8MHZ_6CK_14CK_64MS
+ *
+ *  LOW       0xE2
+ *  HIGH      0xD6
+ *  EXTENDED  0xFF
+ * 
+ *  fuses.txt = e2d6ff
+ */
+
 #define MATRIX_WIDTH_PIX    5
 #define MATRIX_HEIGHT_PIX   5
 #define MATRIX_NUM_PIX (MATRIX_WIDTH_PIX * MATRIX_HEIGHT_PIX)
@@ -86,7 +100,7 @@
     25 bits per glyph
     With compression, we have space for up to 158 glyphs, if cov animation not used.
 */
-const uint8_t PROGMEM charSet[] = {
+static const uint8_t PROGMEM charSet[] = {
     // [ASCII: CHAR]
 
     // 32: Space
@@ -847,7 +861,7 @@ const uint8_t PROGMEM charSet[] = {
     https://www.ncbi.nlm.nih.gov/nuccore/NC_045512
     *****************************************************************************
 */
-const uint8_t PROGMEM covSeqData[] = {
+static const uint8_t PROGMEM covSeqData[] = {
  60,  10, 252, 197, 245,  74, 193,   1,  65,  65, 253, 141, 223, 178,  55, 189,
 220,   6,   7, 240,  13, 238, 233, 237,  29, 167, 147, 159,  46,  71,  70,  75,
  48, 240, 193, 195, 199, 182, 248,  74,  17, 139,   7, 109, 205, 247, 146, 158,
