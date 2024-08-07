@@ -206,6 +206,7 @@
         <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
       </AvrGccCpp>
     </ToolchainSettings>
+    <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse $(OutputDirectory)/neo_driver_app.elf -output_text_file $(OutputDirectory)/neo_driver_app_syms.txt</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'eep_data_write' ">
     <ToolchainSettings>
@@ -346,6 +347,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="neo_driver_app.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="neo_driver_app.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

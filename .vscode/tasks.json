@@ -73,5 +73,29 @@
 			},
 			"problemMatcher": []
 		},
+		{
+			"label": "Test ms-get-size-info.ps1",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-get-size-info.ps1",
+			"args": [
+				"-elf_to_parse",
+				"${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app.elf",
+				"-output_text_file",
+				"${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app_syms.txt"
+			],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
 	]
 }
