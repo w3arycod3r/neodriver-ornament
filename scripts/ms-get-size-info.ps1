@@ -31,6 +31,10 @@ Write-Host "Writing code size analysis info to $output_text_file ..."
     Write-Host "Last generated: $(Get-Date)"
     Write-Host "From file: $elf_to_parse"
     Write-Host
+    avr-size -C --mcu=attiny85 $elf_to_parse
+    avr-size -B --mcu=attiny85 $elf_to_parse
+    Write-Host
+    Write-Host
     Write-Host "********************************"
     Write-Host "SYMBOL SIZE LISTING"
     Write-Host "Size (Decimal) | Sym Type | Sym Name"
