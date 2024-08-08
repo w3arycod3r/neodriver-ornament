@@ -4,7 +4,7 @@
 		{
 			"label": "Test eep_data_write",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -exec_name eep_data_write -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -22,7 +22,7 @@
 		{
 			"label": "Test neo_driver_app",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -exec_name neo_driver_app -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -59,30 +59,6 @@
 			"label": "Create Release",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/create-release.ps1",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared",
-				"showReuseMessage": true,
-				"clear": true
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": []
-		},
-		{
-			"label": "Test ms-get-size-info.ps1",
-			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-get-size-info.ps1",
-			"args": [
-				"-elf_to_parse",
-				"${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app.elf",
-				"-output_text_file",
-				"${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app_syms.txt"
-			],
 			"presentation": {
 				"echo": true,
 				"reveal": "always",

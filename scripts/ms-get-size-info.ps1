@@ -29,6 +29,7 @@ Write-Host "Writing code size analysis info to $output_text_file ..."
 
 &{
     Write-Host "Last generated: $(Get-Date)"
+    Write-Host "From file: $elf_to_parse"
     Write-Host
     Write-Host "********************************"
     Write-Host "SYMBOL SIZE LISTING"

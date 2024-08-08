@@ -132,6 +132,7 @@
         <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
       </AvrGccCpp>
     </ToolchainSettings>
+    <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse $(OutputDirectory)/$(OutputFileName)$(OutputFileExtension) -output_text_file $(OutputDirectory)/$(OutputFileName)_syms.txt</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -206,7 +207,7 @@
         <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
       </AvrGccCpp>
     </ToolchainSettings>
-    <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse $(OutputDirectory)/neo_driver_app.elf -output_text_file $(OutputDirectory)/neo_driver_app_syms.txt</PostBuildEvent>
+    <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse $(OutputDirectory)/$(OutputFileName)$(OutputFileExtension) -output_text_file $(OutputDirectory)/$(OutputFileName)_syms.txt</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'eep_data_write' ">
     <ToolchainSettings>
@@ -286,6 +287,7 @@
     <OutputPath>bin\eep_data_write\</OutputPath>
     <OutputFileName>eep_data_write</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
+    <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse $(OutputDirectory)/$(OutputFileName)$(OutputFileExtension) -output_text_file $(OutputDirectory)/$(OutputFileName)_syms.txt</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="readme.html">

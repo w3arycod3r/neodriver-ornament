@@ -1,2 +1,2 @@
-& $PSScriptRoot\ms-build-config.ps1 -config_folder $PSScriptRoot\..\microchip-studio\neo_driver_app\eep_data_write -clean_build "true"
-& $PSScriptRoot\ms-build-config.ps1 -config_folder $PSScriptRoot\..\microchip-studio\neo_driver_app\Release -clean_build "true"
+& $PSScriptRoot\ms-build-config.ps1 -config_folder $PSScriptRoot\..\microchip-studio\neo_driver_app\eep_data_write -exec_name eep_data_write -clean_build "true"
+& $PSScriptRoot\ms-build-config.ps1 -config_folder $PSScriptRoot\..\microchip-studio\neo_driver_app\Release -exec_name neo_driver_app -clean_build "true"

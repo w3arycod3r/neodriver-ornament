@@ -11,6 +11,9 @@ Write-Host "Flashing eep_data_write..."
 Write-Host "**********************************************************"
 & $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $PSScriptRoot\fuses.txt -hex_to_flash $PSScriptRoot\eep_data_write.hex
 if ($LASTEXITCODE -ne 0) {
+    Write-Host
+    Write-Host "FAILURE! Did you remember to unzip?"
+    Read-Host -Prompt "Press enter to exit" | Out-Null
     Exit $LASTEXITCODE
 }
 
@@ -24,6 +27,9 @@ Write-Host "Flashing neo_driver_app..."
 Write-Host "**********************************************************"
 & $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $PSScriptRoot\fuses.txt -hex_to_flash $PSScriptRoot\neo_driver_app.hex
 if ($LASTEXITCODE -ne 0) {
+    Write-Host
+    Write-Host "FAILURE! Did you remember to unzip?"
+    Read-Host -Prompt "Press enter to exit" | Out-Null
     Exit $LASTEXITCODE
 }
 
