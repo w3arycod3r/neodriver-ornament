@@ -222,19 +222,19 @@ FRAMES_CONFIG_T st_sequence10 = {
 };
 
 // Misc vars
-uint8_t u8_anim = 0;                   // Index of current anim in table
-uint8_t u8_mode = SYS_MODE_ANIM_SEL;   // Current mode
-uint16_t au16_pow10[] = { 1, 10, 100, 1000, 10000 }; // Powers of 10 used for B2D
-bool b_animReset = true;               // Used to inform animations to reset
-bool b_animCycleComplete = false;      // Signal from animations to mode logic
-uint8_t au8_pixelData[PIX_CNT_MAX*3];  // 3 bytes of color data per pixel
-uint32_t u32_randSeed;
-volatile uint8_t u8_wdtCounter = 0;    // Used in WDT ISR
-uint8_t u8_nextSleepTime = WDT_16MS;
-volatile bool b_pinChangeWake = false; // Signal from pin change ISR to mode logic
+static uint8_t u8_anim = 0;                   // Index of current anim in table
+static uint8_t u8_mode = SYS_MODE_ANIM_SEL;   // Current mode
+static uint16_t au16_pow10[] = { 1, 10, 100, 1000, 10000 }; // Powers of 10 used for B2D
+static bool b_animReset = true;               // Used to inform animations to reset
+static bool b_animCycleComplete = false;      // Signal from animations to mode logic
+static uint8_t au8_pixelData[PIX_CNT_MAX*3];  // 3 bytes of color data per pixel
+static uint32_t u32_randSeed;
+static volatile uint8_t u8_wdtCounter = 0;    // Used in WDT ISR
+static uint8_t u8_nextSleepTime = WDT_16MS;
+static volatile bool b_pinChangeWake = false; // Signal from pin change ISR to mode logic
 
 // Array of function pointers, in order of cycle
-void (*apfn_renderFunc[])(void) {
+static void (*apfn_renderFunc[])(void) {
     //anim_off,
     //anim_white,
     anim_primaries, anim_colorwheel_gamma,
@@ -261,8 +261,8 @@ void (*apfn_renderFunc[])(void) {
 };
 
 /****************************** GLOBAL OBJECTS *******************************/
-NeoPixel_Slim o_strip(au8_pixelData, PIX_CNT_MAX, PIX_CNT_INIT, IO_NP_DATA);
-multiButton o_leftBtn, o_rightBtn;
+static NeoPixel_Slim o_strip(au8_pixelData, PIX_CNT_MAX, PIX_CNT_INIT, IO_NP_DATA);
+static multiButton o_leftBtn, o_rightBtn;
 
 /****************************** SETUP FUNCTION *******************************/
 void setup() {
@@ -369,7 +369,7 @@ void loop() {
 
 }
 
-void randomize_anim() {
+static void randomize_anim() {
     uint8_t u8_newAnim;
 
     // Pick a new random animation, different from the current one
@@ -406,7 +406,7 @@ void randomize_anim() {
     }
 }
 
-void mode_logic() {
+static void mode_logic() {
     static uint8_t u8_animCycleCount = 0;
 
     // Handle power down after an animation cycle
@@ -543,16 +543,16 @@ void mode_logic() {
 /***************************** RENDER FUNCTIONS ******************************/
 
 // All NeoPixels off
-void anim_off() {
+static void anim_off() {
     o_strip.clear();
 }
 
-void anim_white() {
+static void anim_white() {
     o_strip.fill(0xFFFFFF);
 }
 
 // Cycle through primary colors (red, green, blue), full brightness.
-void anim_primaries() {
+static void anim_primaries() {
     static uint16_t u16_startTime;
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint32_t u32_color;
@@ -597,7 +597,7 @@ void anim_primaries() {
 }
 
 // Color wheel using gamma-corrected values.
-void anim_colorwheel_gamma() {
+static void anim_colorwheel_gamma() {
     static uint16_t u16_startTime;
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
@@ -631,7 +631,7 @@ void anim_colorwheel_gamma() {
 }
 
 // Cycle with half the pixels on, half off at any given time.
-void anim_half() {
+static void anim_half() {
     static uint16_t u16_startTime;
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
@@ -669,7 +669,7 @@ void anim_half() {
 }
 
 // Sparkles. Randomly turns on ONE pixel at a time.
-void anim_sparkle() {
+static void anim_sparkle() {
     static uint16_t u16_startTime;
     static uint16_t u16_lastTime;
     static uint8_t  u8_pixIdx;
@@ -718,7 +718,7 @@ void anim_sparkle() {
 }
 
 // Simple on-or-off "marquee" animation w/ about 50% of pixels lit at once.
-void anim_marquee() {
+static void anim_marquee() {
     static uint16_t u16_startTime;
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
@@ -756,7 +756,7 @@ void anim_marquee() {
 }
 
 // Sine wave with gamma correction.
-void anim_sine_gamma() {
+static void anim_sine_gamma() {
     static uint16_t u16_startTime;
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
@@ -795,12 +795,12 @@ void anim_sine_gamma() {
 
 
 // Blink out the SARS-CoV-2 RNA sequence in a "quarter" pattern
-void anim_cov_quar() {
+static void anim_cov_quar() {
     anim_cov(0);
 }
 
 // Blink out the SARS-CoV-2 RNA sequence using the charset
-void anim_cov_char() {
+static void anim_cov_char() {
     anim_cov(1);
 }
 
@@ -809,7 +809,7 @@ void anim_cov_char() {
  @param u8_pattType 0 = Use "quarter" pattern,
                     1 = Use the charset to represent sequence letters
 */
-void anim_cov(uint8_t u8_pattType) {
+static void anim_cov(uint8_t u8_pattType) {
     static uint16_t u16_baseCnt = 0;
     static uint16_t u16_lastTime;
     static uint8_t  u8_stepCount;
@@ -877,22 +877,22 @@ void anim_cov(uint8_t u8_pattType) {
 }
 
 // Message string 1
-void anim_msg_1() {
+static void anim_msg_1() {
     anim_msg(sz_msg1, 0xFF00FF);
 }
 
 // Message string 2
-void anim_msg_2() {
+static void anim_msg_2() {
     anim_msg(sz_msg2);
 }
 
 // Message string 3
-void anim_msg_3() {
+static void anim_msg_3() {
     anim_msg(sz_msg3);
 }
 
 // Message string 4
-void anim_msg_4() {
+static void anim_msg_4() {
     anim_msg(sz_msg4, COLOR_GREEN);
 }
 
@@ -901,7 +901,7 @@ void anim_msg_4() {
  @param pu8_msg    Starting address for a null-terminated C-String with the message, stored in flash.
  @param u32_color  Solid color to use for the characters. Leave at default 0 for a smooth color cycling anim.
 */
-void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color) {
+static void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color) {
     static uint8_t  u8_charCnt; // Counts 0 to LEN-1, index into char array
     static uint8_t  u8_cIn;     // Incoming char
     static uint8_t  u8_cOut;    // Outgoing char
@@ -969,52 +969,52 @@ void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color) {
 }
 
 // Frames sequence 1
-void anim_frames_1() {
+static void anim_frames_1() {
     anim_frames(&st_sequence1);
 }
 
 // Frames sequence 2
-void anim_frames_2() {
+static void anim_frames_2() {
     anim_frames(&st_sequence2);
 }
 
 // Frames sequence 3
-void anim_frames_3() {
+static void anim_frames_3() {
     anim_frames(&st_sequence3);
 }
 
 // Frames sequence 4
-void anim_frames_4() {
+static void anim_frames_4() {
     anim_frames(&st_sequence4);
 }
 
 // Frames sequence 5
-void anim_frames_5() {
+static void anim_frames_5() {
     anim_frames(&st_sequence5);
 }
 
 // Frames sequence 6
-void anim_frames_6() {
+static void anim_frames_6() {
     anim_frames(&st_sequence6);
 }
 
 // Frames sequence 7
-void anim_frames_7() {
+static void anim_frames_7() {
     anim_frames(&st_sequence7);
 }
 
 // Frames sequence 8
-void anim_frames_8() {
+static void anim_frames_8() {
     anim_frames(&st_sequence8);
 }
 
 // Frames sequence 9
-void anim_frames_9() {
+static void anim_frames_9() {
     anim_frames(&st_sequence9);
 }
 
 // Frames sequence 10
-void anim_frames_10() {
+static void anim_frames_10() {
     anim_frames(&st_sequence10);
 }
 
@@ -1022,7 +1022,7 @@ void anim_frames_10() {
  @brief         Supporting function for the frames scroll animations.
  @param pst_f   Pointer to the structure containing frames configuration data.
 */
-void anim_frames(FRAMES_CONFIG_T* pst_f) {
+static void anim_frames(FRAMES_CONFIG_T* pst_f) {
     static bool     b_readyToShutdown;
     static uint8_t  u8_frameIdx;     // Counts 0 to LEN-1, index into frames array
     static uint8_t  u8_frameShiftSync;
@@ -1117,7 +1117,7 @@ void anim_frames(FRAMES_CONFIG_T* pst_f) {
     }
 }
 
-void anim_batt_level() {
+static void anim_batt_level() {
     static uint16_t u16_lastStepTime;
     static uint8_t u8_battLevel;
     static uint8_t u8_stepLevel;
@@ -1201,7 +1201,7 @@ ISR(WDT_vect) {
 /***************************** SUPPORT FUNCTIONS *****************************/
 
 // Return 1 to 5 corresponding to current battery level: 1 => empty, 5 => full.
-uint8_t get_batt_level() {
+static uint8_t get_batt_level() {
     uint16_t u16_batt_mv = read_vcc_mv();
 
     // Determine battery level based on voltage ranges
@@ -1219,7 +1219,7 @@ uint8_t get_batt_level() {
 }
 
 // Display an integer value (0-maxVal) on the LEDs
-void draw_value(uint32_t u32_val, uint32_t u32_maxVal) {
+static void draw_value(uint32_t u32_val, uint32_t u32_maxVal) {
 
     // Linearly scale the value -> number of pixels to fill
     uint8_t u8_scaledVal = map(u32_val, 0, u32_maxVal, 0, o_strip.get_length());
@@ -1229,7 +1229,7 @@ void draw_value(uint32_t u32_val, uint32_t u32_maxVal) {
 
 }
 
-void draw_value_binary(uint32_t u32_val) {
+static void draw_value_binary(uint32_t u32_val) {
     o_strip.clear();
 
     // Represent each bit with an ON or OFF pixel, LSB first
@@ -1243,7 +1243,7 @@ void draw_value_binary(uint32_t u32_val) {
 }
 
 // Check battery level and respond to a low battery condition persisting for some time.
-void check_batt(uint16_t u16_batt_mv) {
+static void check_batt(uint16_t u16_batt_mv) {
     static uint16_t u16_onTimeAcc = 0;
     static uint16_t u16_lastScan = 0;
     uint16_t u16_currTime = millis();
@@ -1299,20 +1299,20 @@ void check_batt(uint16_t u16_batt_mv) {
 
 }
 
-void enable_pc_ints() {
+static void enable_pc_ints() {
 
     GIMSK |= _BV(PCIE);                 // Enable Pin Change Interrupts
     PCMSK |= _BV(PCINT0) | _BV(PCINT1); // Enable Specific Pins
 }
 
-void disable_pc_ints() {
+static void disable_pc_ints() {
 
     PCMSK = 0x00;                       // Disable All Pins
     GIMSK &= ~(_BV(PCIE));              // Disable Pin Change Interrupts
 }
 
 // Turn off LEDs and send ATtiny to sleep, waiting for interrupt (WDT or pin change) to wake
-void shutdown() {
+static void shutdown() {
 
     o_strip.clear();
     o_strip.show();
@@ -1363,7 +1363,7 @@ void shutdown() {
 }
 
 // Quickly flash red battery icon to indicate low battery condition
-void anim_low_batt() {
+static void anim_low_batt() {
 
     o_strip.clear();
     for (uint8_t u8_i = 0; u8_i < 4; u8_i++)
@@ -1379,7 +1379,7 @@ void anim_low_batt() {
 }
 
 // Quickly flash a short char sequence, without scrolling. Blocking animation.
-void anim_flash_chars(char* msg) {
+static void anim_flash_chars(char* msg) {
 
     o_strip.clear();
     uint8_t i = 0;
@@ -1401,7 +1401,7 @@ void anim_flash_chars(char* msg) {
 // "Print" a u32 integer to the display, in decimal.
 // Flash each decimal digit in sequence. Useful for debugging or printing statistics.
 // Blocking animation.
-void anim_print_dec_u32(uint32_t u32_val) {
+static void anim_print_dec_u32(uint32_t u32_val) {
 
     char ac_str[U32_DEC_STR_MAX_BUFF_SIZE];
     u32_to_dec_string(u32_val, ac_str);
@@ -1410,12 +1410,12 @@ void anim_print_dec_u32(uint32_t u32_val) {
 }
 
 // dig = 0 is LS digit
-uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig) {
+static uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig) {
     return u16_val / au16_pow10[u8_dig] % 10 ;
 }
 
 // Flash the voltage with 3 digits of precision
-void anim_voltage(uint16_t u16_mv) {
+static void anim_voltage(uint16_t u16_mv) {
 
     for (uint8_t u8_dig = 3; u8_dig >= 1; u8_dig--) // Digits 3 to 1
     {
@@ -1431,7 +1431,7 @@ void anim_voltage(uint16_t u16_mv) {
 
 
 // Fill o_strip pixels one after another with a color, with a wait in between frames.
-void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait) {
+static void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait) {
     uint8_t u8_numPixels = o_strip.get_length();
 
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) { // For each pixel in o_strip... 
@@ -1442,7 +1442,7 @@ void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait) {
 }
 
 // Fill o_strip pixels with a color, from 0 to count, with a wait in between frames.
-void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count) {
+static void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count) {
 
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u16_count; u8_pixIdx++) { //  For count # of pixels          
         o_strip.set_pix_color(u8_pixIdx, u32_color); //  Set pixel's color (in RAM)
@@ -1453,7 +1453,7 @@ void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count)
 
 
 // Read 1.1V reference against AVcc
-uint16_t read_vcc_mv() {
+static uint16_t read_vcc_mv() {
 
     #if DEBUG_BATT_LVL == 1
         return SPOOF_BATT_LVL;
@@ -1476,7 +1476,7 @@ uint16_t read_vcc_mv() {
 }
 
 // Extract base data from sequence table stored in EEPROM
-uint8_t read_cov_base(uint16_t u16_baseNum) {
+static uint8_t read_cov_base(uint16_t u16_baseNum) {
 
     // 0th base is encoded in the 2 most significant bits
     uint8_t u8_pos = 3 - u16_baseNum % 4;
@@ -1494,7 +1494,7 @@ uint8_t read_cov_base(uint16_t u16_baseNum) {
  @param i8_x       X shift to perform. +X is right, -X is left. X <= -5 or X >= 5 is out of frame.
  @param i8_y       Y shift to perform. +Y is down, -Y is up. Y <= -5 or Y >= 5 is out of frame.
 */
-void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
+static void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
 
     // Enforce bounds of our ASCII char set
     if ((c_char < ASCII_START) || (c_char > ASCII_START + ASCII_NUM_CHARS - 1)) {
@@ -1569,7 +1569,7 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
 
 // Extract a line of a character from the compressed EEPROM char data
 // line: 0-4, top-bottom
-uint8_t eep_char_read_line(char c_char, uint8_t line)
+static uint8_t eep_char_read_line(char c_char, uint8_t line)
 {
     uint16_t char_index = (c_char - ASCII_START);
     uint16_t bit_start_index = (char_index * MATRIX_NUM_PIX) + (MATRIX_WIDTH_PIX * line);
@@ -1592,7 +1592,7 @@ uint8_t eep_char_read_line(char c_char, uint8_t line)
 }
 
 // External interface for WDT. Call with one of the WDT_XXX constants. Sets up WDT software and hardware.
-void wd_enable(uint8_t u8_timeout) {
+static void wd_enable(uint8_t u8_timeout) {
 
     // Setup our software counter.
     if (u8_timeout > WDT_8S) {
@@ -1606,20 +1606,20 @@ void wd_enable(uint8_t u8_timeout) {
 }
 
 // Sets up WDT hardware. Enable WDT interrupt and set prescale value.
-void _wd_hw_enable(uint8_t u8_timeout) {
+static void _wd_hw_enable(uint8_t u8_timeout) {
 
     wdt_reset();
     WDTCR = ((1 << WDIE) | ((u8_timeout & 0x8) << 2) | (u8_timeout & 0x7));
 }
 
-void store_rand_seed() {
+static void store_rand_seed() {
 
     EEPROM.put(EEP_SETT_RSEED, u32_randSeed);
 }
 
 // Increment a u16 counter in EEPROM with "saturate"
 // Saturate the counter at max value, don't wrap around
-void inc_sat_eep_cntr_u16(uint8_t eep_addr) {
+static void inc_sat_eep_cntr_u16(uint8_t eep_addr) {
     uint16_t u16_eepCounter;
     // Must use "get" and "put" functions for data in EEPROM larger than 1 byte
     EEPROM.get(eep_addr, u16_eepCounter);

@@ -27,6 +27,11 @@ if (Test-Path $output_text_file) {
 
 Write-Host "Writing code size analysis info to $output_text_file ..."
 
+# Print some basic info to terminal as well.
+avr-size -C --mcu=attiny85 $elf_to_parse
+avr-size -B --mcu=attiny85 $elf_to_parse
+Write-Host
+
 &{
     Write-Host "Last generated: $(Get-Date)"
     Write-Host "From file: $elf_to_parse"

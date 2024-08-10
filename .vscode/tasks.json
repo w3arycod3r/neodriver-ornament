@@ -20,9 +20,10 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "Test neo_driver_app",
+			"label": "Build neo_driver_app (Debug Config)",
+			"detail": "Link Time Optimization (LTO) OFF",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -exec_name neo_driver_app -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Debug -exec_name neo_driver_app -clean_build true",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -36,6 +37,71 @@
 				"isDefault": true
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Test neo_driver_app (Debug Config)",
+			"detail": "Link Time Optimization (LTO) OFF",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app.hex",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build neo_driver_app (Debug Config)"
+			],
+			"dependsOrder": "sequence"
+		},
+		{
+			"label": "Build neo_driver_app (Release Config)",
+			"detail": "Link Time Optimization (LTO) ON",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -exec_name neo_driver_app -clean_build true",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Test neo_driver_app (Release Config)",
+			"detail": "Link Time Optimization (LTO) ON",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build neo_driver_app (Release Config)"
+			],
+			"dependsOrder": "sequence"
 		},
 		{
 			"label": "Test eep_data_write and neo_driver_app",
