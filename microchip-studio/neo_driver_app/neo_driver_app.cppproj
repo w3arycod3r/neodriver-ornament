@@ -339,6 +339,9 @@
     <Compile Include="libs\multi_button.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="libs\neo_common.cpp">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="libs\neo_common.h">
       <SubType>compile</SubType>
     </Compile>

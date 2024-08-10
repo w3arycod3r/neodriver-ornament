@@ -8,6 +8,7 @@
 
 // This lib depends on another
 #include <ard_utility.h>
+#include <avr/pgmspace.h>
 
 /********************************** DEFINES **********************************/
 
@@ -90,6 +91,8 @@
 
 #define EEP_CHAR_DATA_START_ADDR 16
 
+// These below progmem arrays are OK to define in .h file, as they're only used by the eep_data_write program.
+// Double allocation in flash wouldn't be an issue there.
 /*
     5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
     
