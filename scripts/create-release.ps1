@@ -22,7 +22,8 @@ $params = @{
            "$PSScriptRoot\..\microchip-studio\fuses.txt",
            "$PSScriptRoot\..\scripts\ms-update-fuses.ps1",
            "$PSScriptRoot\..\scripts\ms-flash-hex.ps1",
-           "$PSScriptRoot\..\scripts\ms-release-sequence.ps1"
+           "$PSScriptRoot\..\scripts\ms-release-sequence.ps1",
+           "$PSScriptRoot\..\scripts\run-me.ps1"
     CompressionLevel = "Fastest"
     DestinationPath = "$release_zip_file"
     Force = $true

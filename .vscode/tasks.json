@@ -105,6 +105,7 @@
 		},
 		{
 			"label": "Test eep_data_write and neo_driver_app",
+			"detail": "Run complete dev sequence",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-dev-sequence.ps1",
 			"presentation": {

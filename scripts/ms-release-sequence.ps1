@@ -2,6 +2,8 @@
 # Author:  Garrett Carter
 # Purpose: Execute release flashing sequence
 
+$ErrorActionPreference = 'Stop'
+
 # Allow the other scripts (downloaded from web, unsigned) to run
 # Running this script initially will likely trigger a security pop-up.
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process

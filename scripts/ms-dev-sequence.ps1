@@ -2,6 +2,8 @@
 # Author:  Garrett Carter
 # Purpose: Execute development test sequence
 
+$ErrorActionPreference = 'Stop'
+
 Write-Host "**********************************************************"
 Write-Host "Building eep_data_write..."
 Write-Host "**********************************************************"
