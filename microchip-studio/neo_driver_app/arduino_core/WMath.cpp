@@ -23,6 +23,8 @@
   $Id$
 */
 
+#include <Arduino.h>
+
 extern "C" {
   #include "stdlib.h"
 }
@@ -51,7 +53,7 @@ long random(long howsmall, long howbig)
   return random(diff) + howsmall;
 }
 
-long map(long x, long in_min, long in_max, long out_min, long out_max)
+uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max)
 {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }

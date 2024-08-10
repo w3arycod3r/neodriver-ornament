@@ -26,55 +26,41 @@
   Corrected 17-05-2010 for ATtiny84 B.Cook
 */
 
-#include "wiring_private.h"
-#include "pins_arduino.h"
+#include <Arduino.h>
+#include <stdint.h>
 
-#ifndef DEFAULT
-//For those with no ADC, need to define default.
-#define DEFAULT (0)
-#endif
+/****************************** DEFINES ******************************/
+// VCC used as Voltage Reference, disconnected from PB0 (AREF).
+#define ADMUX_REFS_VCC_AS_REF   (0b000)
+#define ADMUX_REFS_MASK         (0x03)
 
-uint8_t analog_reference = DEFAULT;
+#define ADMUX_MUX_MASK          (0x0f)
 
-#if defined(REFS1)
-#define ADMUX_REFS_MASK (0x03)
-#else
-#define ADMUX_REFS_MASK (0x01)
-#endif
 
-#if defined(MUX5)
-#define ADMUX_MUX_MASK (0x3f)
-#elif defined(MUX4)
-#define ADMUX_MUX_MASK (0x1f)
-#elif defined(MUX3)
-#define ADMUX_MUX_MASK (0x0f)
-#else
-#define ADMUX_MUX_MASK (0x07)
-#endif
-
-int analogRead(uint8_t pin)
+// Pass in the channel (ADMUX selection)
+// Maybe add reference as a param later.
+// Could we get "random" read by using PB0 (AREF) as external ref to ADC?
+// PB0 goes to left switch, with no hardware pullup.
+uint16_t analogRead(uint8_t ch)
 {
-  pin &=127; //strip off the high bit of the A# constants
-  #ifndef ADCSRA
-  return digitalRead(analogInputToDigitalPin(pin)) ? 1023 : 0; //No ADC, so read as a digital pin instead.
-  #endif
+    uint8_t analog_reference = ADMUX_REFS_VCC_AS_REF;
 
-  #if defined(ADMUX)
-  ADMUX = ((analog_reference & ADMUX_REFS_MASK) << REFS0) | ((pin & ADMUX_MUX_MASK) << MUX0); //select the channel and reference
-  #if defined(REFS2)
-  ADMUX |= (((analog_reference & 0x04) >> 2) << REFS2); //some have an extra reference bit in a weird position.
-  #endif
-  #endif
+    // select the channel and reference
+    ADMUX = ((analog_reference & ADMUX_REFS_MASK) << REFS0) | ((ch & ADMUX_MUX_MASK) << MUX0);
+    // some have an extra reference bit in a weird position.
+    ADMUX |= (((analog_reference & 0x04) >> 2) << REFS2);
 
-  #if defined(HAVE_ADC) && HAVE_ADC
-  sbi(ADCSRA, ADSC); //Start conversion
+    // Start conversion
+    sbi(ADCSRA, ADSC);
 
-  while(ADCSRA & (1<<ADSC)); //Wait for conversion to complete.
+    // Wait for conversion to complete.
+    while(ADCSRA & (1<<ADSC))
+    {
+        // Do nothing
+    }
 
-  uint8_t low = ADCL;
-  uint8_t high = ADCH;
-  return (high << 8) | low;
-  #else
-  return LOW;
-  #endif
+    // Assemble the 10-bit reading
+    uint8_t low = ADCL;
+    uint8_t high = ADCH;
+    return ((high << 8) | low);
 }

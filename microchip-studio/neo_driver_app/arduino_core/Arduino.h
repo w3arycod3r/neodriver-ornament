@@ -1,5 +1,5 @@
-#ifndef Arduino_h
-#define Arduino_h
+#ifndef ARDUINO_H
+#define ARDUINO_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -15,11 +15,11 @@
 extern "C"{
 #endif
 
+/****************************** DEFINES ******************************/
 #ifndef _NOPNOP
   #define _NOPNOP() do { __asm__ volatile ("rjmp .+0"); } while (0)
 #endif
 
-void yield(void);
 
 #define HIGH 0x1
 #define LOW  0x0
@@ -29,8 +29,6 @@ void yield(void);
 #define TWO_PI 6.283185307179586476925286766559
 #define DEG_TO_RAD 0.017453292519943295769236907684886
 #define RAD_TO_DEG 57.295779513082320876798154814105
-
-
 
 // undefine stdlib's abs if encountered
 #ifdef abs
@@ -50,13 +48,11 @@ void yield(void);
 #define noInterrupts() cli()
 
 // We are using F_CPU = 8,000,000 (8 MHz)
+// Computes to 8.
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000UL )
 
 #define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )
 #define microsecondsToClockCycles(a) ( (a) * clockCyclesPerMicrosecond() )
-
-#define lowByte(w) ((uint8_t) ((w) & 0xff))
-#define highByte(w) ((uint8_t) ((w) >> 8))
 
 #define bitRead(value, bit) (((value) >> (bit)) & 0x01)
 #define bitSet(value, bit) ((value) |= (1UL << (bit)))
@@ -66,35 +62,40 @@ void yield(void);
 
 #define bit(b) (1UL << (b))
 
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
+
+typedef void (*voidFuncPtr)(void);
+
+//                  ATMEL ATTINY85
+//
+//                      +-\/-+
+//  ADC0  !RESET  PB5  1|    |8  VCC
+//  ADC3  PCINT3  PB3  2|    |7  PB2  PCINT2  ADC1
+//  ADC2          PB4  3|    |6  PB1  PCINT1     
+//                GND  4|    |5  PB0  PCINT0  AREF
+//                      +----+
+#define ADMUX_MUX_SE_ADC2_PB4 (0b0010)
+
+
+/****************************** PROTOTYPES ******************************/
 void init(void);
 
-int analogRead(uint8_t);
+uint16_t analogRead(uint8_t);
 
-unsigned long millis(void);
-unsigned long micros(void);
-void delay(unsigned long);
-void delayMicroseconds(unsigned int us);
-
+uint32_t millis(void);
+uint32_t micros(void);
+void delay(uint32_t);
+void delayMicroseconds(uint16_t us);
 
 void setup(void);
 void loop(void);
 
-// Get the bit location within the hardware port of the given virtual pin.
-// This comes from the pins_*.c file for the active board configuration.
-
-#define analogInPinToBit(P) (P)
-
-
-
-#define NOT_ON_TIMER 0
-#define TIMER0A 1
-#define TIMER0B 2
-
-#include "pins_arduino.h"
-
-
-#define HAVE_ADC                  1
-
+void yield(void);
 
 #ifdef __cplusplus
 } // extern "C"
@@ -107,19 +108,9 @@ void loop(void);
 long random(long);
 long random(long, long);
 void randomSeed(unsigned int);
-long map(long, long, long, long, long);
+uint32_t map(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 #endif
 
-/*=============================================================================
-  Aliases for the interrupt service routine vector numbers so the code
-  doesn't have to be riddled with #ifdefs.
-=============================================================================*/
 
-#ifndef SIGRD
-#define SIGRD 5
-#endif
-
-
-
-#endif /* Arduino_h */
+#endif /* ARDUINO_H */
