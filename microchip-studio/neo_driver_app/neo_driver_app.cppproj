@@ -297,9 +297,6 @@
     <Compile Include="arduino_core\Arduino.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="arduino_core\binary.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="arduino_core\main.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -310,9 +307,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="arduino_core\wiring_analog.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="arduino_core\wiring_digital.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="arduino_core\wiring_private.h">

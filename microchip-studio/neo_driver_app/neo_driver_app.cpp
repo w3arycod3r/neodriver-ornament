@@ -415,7 +415,6 @@ void setup() {
     #if DEBUG_ADC_VAL == 1
         while(1) {
             delay(250);
-            analogReference(DEFAULT);
             //draw_value(analogRead(IO_POT_ADC), 1023);
             draw_value(read_vcc_mv(), 3500);
             o_strip.show();
