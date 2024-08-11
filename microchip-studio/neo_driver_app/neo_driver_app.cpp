@@ -20,6 +20,7 @@
 #include <neo_common.h>
 #include <ard_utility.h>
 #include "neo_driver_app.h"
+#include <prng.h>
 
 /******************************** PROTOTYPES *********************************/
 // Utility functions
@@ -391,7 +392,7 @@ void setup() {
     inc_sat_eep_cntr_u16(EEP_SETT_NUM_POWER_ON);
 
     // Seed PRNG with a number derived from a source of entropy (human input)
-    randomSeed(u32_randSeed ^ read_vcc_mv());
+    prng_seed(u32_randSeed ^ read_vcc_mv());
     
     // Update state using EEPROM data
     o_strip.update_length(u8_rPix);
@@ -463,12 +464,12 @@ static void randomize_anim() {
     uint8_t u8_newAnim;
 
     // Pick a new random animation, different from the current one
-    do { u8_newAnim = random(ANIM_CNT); } while (u8_newAnim == u8_anim);
+    do { u8_newAnim = prng_upper(ANIM_CNT); } while (u8_newAnim == u8_anim);
 
     u8_anim = u8_newAnim;
     
     // Randomly shuffle animation parameters
-    uint8_t u8_direction = random(2); // 0 or 1
+    uint8_t u8_direction = prng_upper(2); // 0 or 1
 
     if (u8_direction) {
 
@@ -655,7 +656,7 @@ static void anim_primaries() {
         b_animReset = false;
 
         u16_startTime = u16_currTime;
-        u8_direction = random(2); // 0 or 1
+        u8_direction = prng_upper(2); // 0 or 1
     }
 
     // For unsigned n-bit int i: -(i) = (2^n - i)
@@ -699,7 +700,7 @@ static void anim_colorwheel_gamma() {
         b_animReset = false;
 
         u16_startTime = u16_currTime;
-        u8_direction = random(2); // 0 or 1
+        u8_direction = prng_upper(2); // 0 or 1
     }
 
     // For unsigned n-bit int i: -(i) = (2^n - i)
@@ -733,7 +734,7 @@ static void anim_half() {
         b_animReset = false;
 
         u16_startTime = u16_currTime;
-        u8_direction = random(2); // 0 or 1
+        u8_direction = prng_upper(2); // 0 or 1
     }
 
     // For unsigned n-bit int i: -(i) = (2^n - i)
@@ -779,9 +780,9 @@ static void anim_sparkle() {
 
         // Pick a bright enough random color
         do {
-            u8_red = random(256);
-            u8_green = random(256);
-            u8_blue = random(256);
+            u8_red = prng_upper(256);
+            u8_green = prng_upper(256);
+            u8_blue = prng_upper(256);
         } while ((u8_red < 130) && (u8_green < 130) && (u8_blue < 130));
     }
     
@@ -792,7 +793,7 @@ static void anim_sparkle() {
         o_strip.clear();                             // Clear pixels
 
         uint8_t u8_newPixIdx;
-        do { u8_newPixIdx = random(u8_numPixels); }  // Pick a new random pixel
+        do { u8_newPixIdx = prng_upper(u8_numPixels); }  // Pick a new random pixel
         while (u8_newPixIdx == u8_pixIdx);           // but not the same as last time
 
         u8_pixIdx = u8_newPixIdx;                    // Save new random pixel index
@@ -820,7 +821,7 @@ static void anim_marquee() {
         b_animReset = false;
 
         u16_startTime = u16_currTime;
-        u8_direction = random(2); // 0 or 1
+        u8_direction = prng_upper(2); // 0 or 1
     }
 
     // For unsigned n-bit int i: -(i) = (2^n - i)
@@ -858,7 +859,7 @@ static void anim_sine_gamma() {
         b_animReset = false;
 
         u16_startTime = u16_currTime;
-        u8_direction = random(2); // 0 or 1
+        u8_direction = prng_upper(2); // 0 or 1
     }
 
     // For unsigned n-bit int i: -(i) = (2^n - i)

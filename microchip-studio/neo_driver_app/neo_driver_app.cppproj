@@ -288,9 +288,6 @@
     <Compile Include="arduino_core\wiring_analog.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="arduino_core\WMath.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -319,6 +316,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\neo_pixel_slim.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="libs\prng.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="libs\prng.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="neo_driver_app.cpp">

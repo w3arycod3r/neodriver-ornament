@@ -1,10 +1,7 @@
 #ifndef ARDUINO_H
 #define ARDUINO_H
 
-#include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-#include <math.h>
 
 #include <avr/pgmspace.h>
 #include <avr/io.h>
@@ -99,17 +96,6 @@ void yield(void);
 
 #ifdef __cplusplus
 } // extern "C"
-#endif
-
-#ifdef __cplusplus
-
-
-// WMath prototypes
-long random(long);
-long random(long, long);
-void randomSeed(unsigned int);
-uint32_t map(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
-
 #endif
 
 

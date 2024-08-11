@@ -44,6 +44,8 @@
  */
 
 #include "neo_pixel_slim.h"
+// For memset
+#include <string.h>
 
 // These two tables are declared outside the Adafruit_NeoPixel class
 // because some boards may require oldschool compilers that don't
