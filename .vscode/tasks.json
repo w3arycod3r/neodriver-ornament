@@ -140,5 +140,23 @@
 			},
 			"problemMatcher": []
 		},
+		{
+			"label": "Check Target Voltage",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-check-voltage.ps1",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
 	]
 }
