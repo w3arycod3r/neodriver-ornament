@@ -7,8 +7,6 @@
 #include <stdint.h>
 #include <Arduino.h>
 
-#define LEFT
-
 static uint32_t state = 0xDEADBEEF;
 
 void prng_seed(uint32_t seed)
@@ -21,12 +19,12 @@ void prng_seed(uint32_t seed)
 }
 
 // Galois LFSR. See https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Galois_LFSRs for more info.
+// Right shift version was 2 bytes smaller :)
 uint32_t prng_next()
 {
     // Local var to optimize into registers
     uint32_t lfsr = state;
 
-#ifndef LEFT
     // Get LSB (i.e., the output bit).
     uint8_t lsb = lfsr & 1u;
     // Shift register
@@ -36,19 +34,7 @@ uint32_t prng_next()
     {
         // apply toggle mask.
         lfsr ^= LFSR_TOGGLE_MASK_32BITS_RIGHT;
-    }                   
-#else
-    // Get MSB (i.e., the output bit).
-    uint8_t msb = bitRead(lfsr, 31);
-    // Shift register
-    lfsr <<= 1;
-    // If the output bit is 1,
-    if (msb)
-    {
-        // apply toggle mask.
-        lfsr ^= LFSR_TOGGLE_MASK_32BITS_LEFT;
     }
-#endif
 
     state = lfsr;
     return lfsr;
