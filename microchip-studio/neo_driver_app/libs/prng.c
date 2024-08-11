@@ -20,6 +20,7 @@ void prng_seed(uint32_t seed)
 
 // Galois LFSR. See https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Galois_LFSRs for more info.
 // Right shift version was 2 bytes smaller :)
+// Branchless xor was much larger on AVR...
 uint32_t prng_next()
 {
     // Local var to optimize into registers
@@ -29,6 +30,7 @@ uint32_t prng_next()
     uint8_t lsb = lfsr & 1u;
     // Shift register
     lfsr >>= 1;
+
     // If the output bit is 1,
     if (lsb)
     {
