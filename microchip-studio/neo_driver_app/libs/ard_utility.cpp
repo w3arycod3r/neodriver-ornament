@@ -54,3 +54,13 @@ void rev_string(char* ac_str) {
         ac_str[u8_j] = c_tmp;
     }
 }
+
+void memset(uint8_t* ptr, uint8_t val, uint8_t num_bytes) {
+    
+    // Decrement loop index gives a smaller code size, according to Atmel app note.
+    do {
+        *ptr = val;
+        ptr++;
+        num_bytes--;
+    } while (num_bytes);
+}
