@@ -2,22 +2,44 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Test eep_data_write",
+			"label": "Build eep_data_write",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -exec_name eep_data_write -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -exec_name eep_data_write -clean_build true",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared",
 				"showReuseMessage": true,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Test eep_data_write",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build eep_data_write",
+			],
+			"dependsOrder": "sequence"
 		},
 		{
 			"label": "Build neo_driver_app (Debug Config)",
@@ -30,11 +52,11 @@
 				"focus": true,
 				"panel": "shared",
 				"showReuseMessage": true,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
@@ -53,7 +75,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": [],
 			"dependsOn": [
@@ -72,11 +94,11 @@
 				"focus": true,
 				"panel": "shared",
 				"showReuseMessage": true,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
@@ -95,7 +117,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": [],
 			"dependsOn": [
@@ -118,7 +140,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
@@ -136,7 +158,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
@@ -154,9 +176,34 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Build All",
+			"detail": "Build all configs in Microchip Studio",
+			"type": "shell",
+			// "command": "Write-Host \"Build All Successful\"",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn":[
+				"Build eep_data_write",
+				"Build neo_driver_app (Debug Config)",
+				"Build neo_driver_app (Release Config)",
+			],
+			"dependsOrder": "sequence"
 		},
 	]
 }

@@ -2,5 +2,5 @@
     "files.associations": {
         "wiring_private.h": "c"
     },
-    "terminal.integrated.defaultProfile.windows": "Windows PowerShell"
+    "terminal.integrated.defaultProfile.windows": "Windows PowerShell",
 }

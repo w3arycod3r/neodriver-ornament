@@ -40,6 +40,8 @@
 #include <stdint.h>
 #include <ard_utility.h>
 
+/****************************** DEFINES ******************************/
+
 /*! 
         @brief  Class that stores state and functions for interacting with
                         Adafruit NeoPixels and compatible devices.
