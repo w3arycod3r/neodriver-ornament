@@ -99,7 +99,7 @@ class NeoPixel_Slim {
     static uint8_t    get_sine_8(uint8_t u8_x);
     /*!
         @brief   An 8-bit gamma-correction function for basic pixel brightness
-                         adjustment. Makes color transitions appear more perceptially
+                         adjustment. Makes color transitions appear more perceptually
                          correct.
                          Static function, so it is independent of an object of this class.
         @param   x  Input brightness, 0 (minimum or off/black) to 255 (maximum).
