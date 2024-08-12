@@ -37,7 +37,7 @@
 			},
 			"problemMatcher": [],
 			"dependsOn": [
-				"Build eep_data_write",
+				"Build eep_data_write"
 			],
 			"dependsOrder": "sequence"
 		},
@@ -184,7 +184,6 @@
 			"label": "Build All",
 			"detail": "Build all configs in Microchip Studio",
 			"type": "shell",
-			// "command": "Write-Host \"Build All Successful\"",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
@@ -198,12 +197,12 @@
 				"isDefault": false
 			},
 			"problemMatcher": [],
-			"dependsOn":[
+			"dependsOn": [
 				"Build eep_data_write",
 				"Build neo_driver_app (Debug Config)",
-				"Build neo_driver_app (Release Config)",
+				"Build neo_driver_app (Release Config)"
 			],
 			"dependsOrder": "sequence"
-		},
+		}
 	]
 }
