@@ -319,7 +319,6 @@ static uint8_t u8_mode = SYS_MODE_ANIM_SEL;   // Current mode
 static uint16_t au16_pow10[] = { 1, 10, 100, 1000, 10000 }; // Powers of 10 used for B2D
 static bool b_animReset = true;               // Used to inform animations to reset
 static bool b_animCycleComplete = false;      // Signal from animations to mode logic
-static uint8_t au8_pixelData[PIX_CNT_MAX*3];  // 3 bytes of color data per pixel
 static uint32_t u32_randSeed;
 static volatile uint8_t u8_wdtCounter = 0;    // Used in WDT ISR
 static uint8_t u8_nextSleepTime = WDT_16MS;
@@ -353,7 +352,6 @@ static void (*apfn_renderFunc[])(void) {
 };
 
 /****************************** GLOBAL OBJECTS *******************************/
-static NeoPixel_Slim o_strip(au8_pixelData, PIX_CNT_MAX, PIX_CNT_INIT, IO_NP_DATA);
 static multiButton o_leftBtn, o_rightBtn;
 
 /****************************** SETUP FUNCTION *******************************/
@@ -372,15 +370,8 @@ void setup() {
     bitSetMask( PRR, _BV(PRTIM1) | _BV(PRUSI) );                   // Disable TIMER1, USI clocks
 
     // Read EEPROM settings data
-    uint8_t u8_rPix = EEPROM.read(EEP_SETT_NPIX);
     uint8_t u8_rAnim = EEPROM.read(EEP_SETT_ANIM);
     EEPROM.get(EEP_SETT_RSEED, u32_randSeed);
-
-    // Validate pixel count from EEPROM
-    if (u8_rPix > PIX_CNT_MAX || u8_rPix < PIX_CNT_MIN) {
-        u8_rPix = PIX_CNT_INIT;
-        EEPROM.write(EEP_SETT_NPIX, u8_rPix);
-    }
 
     // Validate animation number from EEPROM
     if (u8_rAnim >= ANIM_CNT) {
@@ -395,7 +386,6 @@ void setup() {
     prng_seed(u32_randSeed ^ read_vcc_mv());
     
     // Update state using EEPROM data
-    o_strip.update_length(u8_rPix);
     u8_anim = u8_rAnim;
 
     // Setup I/O
@@ -406,9 +396,9 @@ void setup() {
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
     // Init and clear NeoPixels
-    o_strip.begin();
-    o_strip.show();
-    o_strip.set_brightness(BRIGHT_INIT);
+    np_init();
+    np_show();
+    np_set_brightness(BRIGHT_INIT);
 
     // Init Vars
 
@@ -418,13 +408,13 @@ void setup() {
             delay(250);
             //draw_value(analogRead(IO_POT_ADC), 1023);
             draw_value(read_vcc_mv(), 3500);
-            o_strip.show();
+            np_show();
         }
     #endif
 
     #if DEBUG_RAND_SEED == 1
         draw_value_binary(u32_randSeed ^ read_vcc_mv());
-        o_strip.show();
+        np_show();
         delay(3000);
     #endif
     
@@ -436,8 +426,8 @@ void loop() {
 
     // Set brightness from potentiometer value
     uint16_t u16_potVal = analogRead(IO_POT_ADC);
-    uint8_t u8_bright = o_strip.get_gamma_8(map(u16_potVal, 0, 1023, BRIGHT_MIN, 255)); // Scale value
-    o_strip.set_brightness(u8_bright);
+    uint8_t u8_bright = np_get_gamma_8(map(u16_potVal, 0, 1023, BRIGHT_MIN, 255)); // Scale value
+    np_set_brightness(u8_bright);
 
     // Monitor vcc for low batt condition
     check_batt(read_vcc_mv());
@@ -451,11 +441,11 @@ void loop() {
 
     if ( (u8_mode == SYS_MODE_ANIM_SEL) || (u8_mode == SYS_MODE_ANIM_SHUFF) ) {
         (*apfn_renderFunc[u8_anim])();    // Render one frame in current anim
-        o_strip.show();                   // and update the NeoPixels to show it
+        np_show();                   // and update the NeoPixels to show it
     }
     if (u8_mode == SYS_MODE_PIX_ADJ) {
-        o_strip.fill(0xFF0000);
-        o_strip.show();
+        np_fill_all(0xFF0000);
+        np_show();
     }
 
 }
@@ -635,11 +625,11 @@ static void mode_logic() {
 
 // All NeoPixels off
 static void anim_off() {
-    o_strip.clear();
+    np_clear();
 }
 
 static void anim_white() {
-    o_strip.fill(0xFFFFFF);
+    np_fill_all(0xFFFFFF);
 }
 
 // Cycle through primary colors (red, green, blue), full brightness.
@@ -649,7 +639,7 @@ static void anim_primaries() {
     uint32_t u32_color;
     uint16_t u16_currTime = millis();
     uint16_t u16_currTimeMod = u16_currTime;
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -676,7 +666,7 @@ static void anim_primaries() {
         if      (u8_pixIdxMod < u8_numPixels/3)    u32_color = 0xFF0000; // Red
         else if (u8_pixIdxMod < 2*u8_numPixels/3)  u32_color = 0x00FF00; // Green
         else                                       u32_color = 0x0000FF; // Blue
-        o_strip.set_pix_color(u8_pixIdx, u32_color);
+        np_set_pix_color_pack(u8_pixIdx, u32_color);
     }
 
     // Signal mode logic of cycle completion
@@ -693,7 +683,7 @@ static void anim_colorwheel_gamma() {
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
     uint16_t u16_currTimeMod = u16_currTime;
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -709,8 +699,7 @@ static void anim_colorwheel_gamma() {
 
     // Generate time-modulated animation
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) {
-        o_strip.set_pix_color(u8_pixIdx,
-        o_strip.get_gamma_32(o_strip.hsv_to_pack((u16_currTimeMod * 50) + u8_pixIdx * 65536L / u8_numPixels)));
+        np_set_pix_color_pack(u8_pixIdx, np_get_gamma_32(np_hsv_to_pack_hue((u16_currTimeMod * 50) + u8_pixIdx * 65536L / u8_numPixels)));
     }
 
     // Signal mode logic of cycle completion
@@ -727,7 +716,7 @@ static void anim_half() {
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
     uint16_t u16_currTimeMod = u16_currTime;
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -748,7 +737,7 @@ static void anim_half() {
         uint8_t u8_pixIdxMod = u16_currTimeMod/4 + u8_pixIdx * 256 / u8_numPixels;
         u8_pixIdxMod = (u8_pixIdxMod >> 7) * 255;                     // ON or OFF
 
-        o_strip.set_pix_color(u8_pixIdx, u8_pixIdxMod * 0x010000);
+        np_set_pix_color_pack(u8_pixIdx, u8_pixIdxMod * 0x010000);
     }
 
     // Signal mode logic of cycle completion
@@ -768,7 +757,7 @@ static void anim_sparkle() {
     static uint8_t  u8_green;
     static uint8_t  u8_blue;
     uint16_t u16_currTime = millis();
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -790,14 +779,14 @@ static void anim_sparkle() {
     if (u16_currTime - u16_lastTime > SPK_STEP_MSEC) {
         u16_lastTime = u16_currTime;
 
-        o_strip.clear();                             // Clear pixels
+        np_clear();                             // Clear pixels
 
         uint8_t u8_newPixIdx;
         do { u8_newPixIdx = prng_upper(u8_numPixels); }  // Pick a new random pixel
         while (u8_newPixIdx == u8_pixIdx);           // but not the same as last time
 
         u8_pixIdx = u8_newPixIdx;                    // Save new random pixel index
-        o_strip.set_pix_color(u8_pixIdx, u8_red, u8_green, u8_blue);
+        np_set_pix_color(u8_pixIdx, u8_red, u8_green, u8_blue);
     }
 
     // Signal mode logic of cycle completion
@@ -814,7 +803,7 @@ static void anim_marquee() {
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
     uint16_t u16_currTimeMod = u16_currTime;
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -835,7 +824,7 @@ static void anim_marquee() {
         uint8_t u8_pixIdxMod = (u16_currTimeMod/4 + u8_pixIdx * 256 / u8_numPixels) & 0xFF;
         u8_pixIdxMod = ((u8_pixIdxMod >> 6) & 1) * 255;
 
-        o_strip.set_pix_color(u8_pixIdx, u8_pixIdxMod * 0x000100L);
+        np_set_pix_color_pack(u8_pixIdx, u8_pixIdxMod * 0x000100L);
     }
 
     // Signal mode logic of cycle completion
@@ -852,7 +841,7 @@ static void anim_sine_gamma() {
     static uint8_t u8_direction;        // Direction of the anim. (0, 1 : CW, CCW)
     uint16_t u16_currTime = millis();
     uint16_t u16_currTimeMod = u16_currTime;
-    uint8_t  u8_numPixels = o_strip.get_length();
+    uint8_t  u8_numPixels = np_get_length();
 
     // Reset static vars to starting values
     if (b_animReset) {
@@ -870,10 +859,10 @@ static void anim_sine_gamma() {
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) {
 
         // Time modulated pixel index
-        uint8_t u8_pixIdxMod = o_strip.get_sine_8((u16_currTimeMod/4 + u8_pixIdx * 512 / u8_numPixels) & 0xFF);
-        u8_pixIdxMod = o_strip.get_gamma_8(u8_pixIdxMod);
+        uint8_t u8_pixIdxMod = np_get_sine_8((u16_currTimeMod/4 + u8_pixIdx * 512 / u8_numPixels) & 0xFF);
+        u8_pixIdxMod = np_get_gamma_8(u8_pixIdxMod);
 
-        o_strip.set_pix_color(u8_pixIdx, u8_pixIdxMod * 0x000100L);
+        np_set_pix_color_pack(u8_pixIdx, u8_pixIdxMod * 0x000100L);
     }
 
     // Signal mode logic of cycle completion
@@ -921,29 +910,29 @@ static void anim_cov(uint8_t u8_pattType) {
     uint8_t u8_cycle = (u16_currTime - u16_lastTime)*255L / COV_STEP_MSEC;
 
     // Shift sine wave right by 64 to get off-on-off cycle
-    uint8_t u8_cBright = o_strip.get_gamma_8(o_strip.get_sine_8(u8_cycle - 64));
+    uint8_t u8_cBright = np_get_gamma_8(np_get_sine_8(u8_cycle - 64));
 
-    o_strip.clear();
-    uint8_t u8_numPixels = o_strip.get_length();
+    np_clear();
+    uint8_t u8_numPixels = np_get_length();
     uint8_t u8_quarter = u8_numPixels/4;                // Quarter of pixels
 
     // Render the quarter "slice" (or the char) for the current base, with sine-modulated brightness
     switch (read_cov_base(u16_baseCnt))
     {
     case 0: // A (Grn)
-        if      (u8_pattType == 0) { o_strip.fill(u8_cBright * 0x000100L, 0, u8_quarter); }  // Force 32-bit mult
+        if      (u8_pattType == 0) { np_fill(u8_cBright * 0x000100L, 0, u8_quarter); }  // Force 32-bit mult
         else if (u8_pattType == 1) { draw_char('A', u8_cBright * 0x000100L); }
         break;
     case 1: // C (Blu)
-        if      (u8_pattType == 0) { o_strip.fill(u8_cBright * 0x000001L, u8_quarter, u8_quarter); }
+        if      (u8_pattType == 0) { np_fill(u8_cBright * 0x000001L, u8_quarter, u8_quarter); }
         else if (u8_pattType == 1) { draw_char('C', u8_cBright * 0x000001L); }
         break;
     case 2: // G (Yel)
-        if      (u8_pattType == 0) { o_strip.fill(u8_cBright * 0x010100L, 2*u8_quarter, u8_quarter); }
+        if      (u8_pattType == 0) { np_fill(u8_cBright * 0x010100L, 2*u8_quarter, u8_quarter); }
         else if (u8_pattType == 1) { draw_char('G', u8_cBright * 0x010100L); }
         break;
     case 3: // U (Red)
-        if      (u8_pattType == 0) { o_strip.fill(u8_cBright * 0x010000L, 3*u8_quarter, 0); }
+        if      (u8_pattType == 0) { np_fill(u8_cBright * 0x010000L, 3*u8_quarter, 0); }
         else if (u8_pattType == 1) { draw_char('U', u8_cBright * 0x010000L); }
         break;
     }
@@ -1042,11 +1031,11 @@ static void anim_msg(const uint8_t* pu8_msg, uint32_t u32_color) {
 
     // Pick color to use
     uint32_t u32_c;
-    if (u32_color == 0) { u32_c = o_strip.get_gamma_32(o_strip.hsv_to_pack(u16_currTime*10)); } // Smooth time-modulated color wheel
+    if (u32_color == 0) { u32_c = np_get_gamma_32(np_hsv_to_pack_hue(u16_currTime*10)); } // Smooth time-modulated color wheel
     else                { u32_c = u32_color; }                                                  // Solid color from calling func
 
     // Render characters at current pos
-    o_strip.clear();
+    np_clear();
     draw_char(u8_cIn,  u32_c, i8_xIn);
     draw_char(u8_cOut, u32_c, i8_xOut);
 
@@ -1190,13 +1179,13 @@ static void anim_frames(FRAMES_CONFIG_T* pst_f) {
     // Pick color to use
     uint32_t u32_color;
     if (pst_f->u32_color == COLOR_WHEEL) {
-        u32_color = o_strip.get_gamma_32(o_strip.hsv_to_pack(u16_currTime*10)); // Smooth time-modulated color wheel
+        u32_color = np_get_gamma_32(np_hsv_to_pack_hue(u16_currTime*10)); // Smooth time-modulated color wheel
     } else {
         u32_color = pst_f->u32_color; // Solid color from spec
     }
 
     // Render frame
-    o_strip.clear();
+    np_clear();
     draw_char(u8_currFrame, u32_color, i8_x, i8_y);
 
     // Signal mode logic of cycle completion
@@ -1239,7 +1228,7 @@ static void anim_batt_level() {
         }
     }
 
-    o_strip.clear();
+    np_clear();
 
     // Render current frame
     switch (u8_stepLevel)
@@ -1313,21 +1302,21 @@ static uint8_t get_batt_level() {
 static void draw_value(uint32_t u32_val, uint32_t u32_maxVal) {
 
     // Linearly scale the value -> number of pixels to fill
-    uint8_t u8_scaledVal = map(u32_val, 0, u32_maxVal, 0, o_strip.get_length());
+    uint8_t u8_scaledVal = map(u32_val, 0, u32_maxVal, 0, np_get_length());
 
-    o_strip.clear();
-    if (u8_scaledVal != 0)  { o_strip.fill(COLOR_PURPLE, 0, u8_scaledVal); }
+    np_clear();
+    if (u8_scaledVal != 0)  { np_fill(COLOR_PURPLE, 0, u8_scaledVal); }
 
 }
 
 static void draw_value_binary(uint32_t u32_val) {
-    o_strip.clear();
+    np_clear();
 
     // Represent each bit with an ON or OFF pixel, LSB first
     for (uint8_t u8_bit = 0; u8_bit < 32; u8_bit++) {
 
         // set_pix_color() will enforce pixel index bounds
-        if (bitRead(u32_val, 0)) { o_strip.set_pix_color(u8_bit, COLOR_GREEN); }
+        if (bitRead(u32_val, 0)) { np_set_pix_color_pack(u8_bit, COLOR_GREEN); }
 
         u32_val >>= 1;
     }
@@ -1405,8 +1394,8 @@ static void disable_pc_ints() {
 // Turn off LEDs and send ATtiny to sleep, waiting for interrupt (WDT or pin change) to wake
 static void shutdown() {
 
-    o_strip.clear();
-    o_strip.show();
+    np_clear();
+    np_show();
 
     //DIDR0 |= (_BV(ADC2D));               // Disable digital input buffer for ADC2
     bitClearMask(DDRB, IO_NP_DATA          // Hi-Z to save power
@@ -1456,15 +1445,15 @@ static void shutdown() {
 // Quickly flash red battery icon to indicate low battery condition
 static void anim_low_batt() {
 
-    o_strip.clear();
+    np_clear();
     for (uint8_t u8_i = 0; u8_i < 4; u8_i++)
     {
         draw_char(BATT_ICON_DEAD, COLOR_RED);
-        o_strip.show();
+        np_show();
         delay(200);
 
-        o_strip.clear();
-        o_strip.show();
+        np_clear();
+        np_show();
         delay(200);
     }
 }
@@ -1472,17 +1461,17 @@ static void anim_low_batt() {
 // Quickly flash a short char sequence, without scrolling. Blocking animation.
 static void anim_flash_chars(char* msg) {
 
-    o_strip.clear();
+    np_clear();
     uint8_t i = 0;
     char c;
     while (c = msg[i++]) {
 
         draw_char(c, COLOR_BLUE);
-        o_strip.show();
+        np_show();
         delay(300);
 
-        o_strip.clear();
-        o_strip.show();
+        np_clear();
+        np_show();
         delay(300);
 
     }
@@ -1511,33 +1500,33 @@ static void anim_voltage(uint16_t u16_mv) {
     for (uint8_t u8_dig = 3; u8_dig >= 1; u8_dig--) // Digits 3 to 1
     {
         uint8_t u8_digVal = extract_digit(u16_mv, u8_dig);
-        anim_color_count(o_strip.rgb_to_pack(  0, 255,   0), 150, u8_digVal);
+        anim_color_count(np_rgb_to_pack(  0, 255,   0), 150, u8_digVal);
         delay(150 * u8_digVal);
 
-        o_strip.clear();
-        o_strip.show();
+        np_clear();
+        np_show();
         delay(300);
     }
 }
 
 
-// Fill o_strip pixels one after another with a color, with a wait in between frames.
+// Fill pixels one after another with a color, with a wait in between frames.
 static void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait) {
-    uint8_t u8_numPixels = o_strip.get_length();
+    uint8_t u8_numPixels = np_get_length();
 
-    for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) { // For each pixel in o_strip... 
-        o_strip.set_pix_color(u8_pixIdx, u32_color);  //  Set pixel's color (in RAM)
-        o_strip.show();                               //  Update o_strip to match
+    for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) { // For each pixel ... 
+        np_set_pix_color_pack(u8_pixIdx, u32_color);  //  Set pixel's color (in RAM)
+        np_show();                               //  Update pixels to match
         delay(u16_wait);                              //  Pause for a moment
     }
 }
 
-// Fill o_strip pixels with a color, from 0 to count, with a wait in between frames.
+// Fill pixels with a color, from 0 to count, with a wait in between frames.
 static void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count) {
 
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u16_count; u8_pixIdx++) { //  For count # of pixels          
-        o_strip.set_pix_color(u8_pixIdx, u32_color); //  Set pixel's color (in RAM)
-        o_strip.show();                              //  Update o_strip to match
+        np_set_pix_color_pack(u8_pixIdx, u32_color); //  Set pixel's color (in RAM)
+        np_show();                              //  Update pixels to match
         delay(u16_wait);                             //  Pause for a moment
     }
 }
@@ -1650,7 +1639,7 @@ static void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y)
 
 
             if (u8_line & 0x01) {
-                o_strip.set_pix_color(u8_pixIndex, u32_color); // Extract bit for (row,col)
+                np_set_pix_color_pack(u8_pixIndex, u32_color); // Extract bit for (row,col)
             }
 
             u8_line >>= 1; // Next column

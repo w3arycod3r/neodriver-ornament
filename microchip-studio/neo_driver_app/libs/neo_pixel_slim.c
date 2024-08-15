@@ -46,6 +46,20 @@
 #include "neo_pixel_slim.h"
 #include <ard_utility.h>
 
+/****************************** STATIC VARS ******************************/
+static uint8_t           u8_numLEDs = NP_PIXEL_COUNT;    ///< Number of RGB LEDs in strip
+static uint8_t           u8_numBytes = (3*NP_PIXEL_COUNT);  ///< Curr size of 'pixels' buffer below
+static uint8_t           u8_brightness = 0; ///< Strip brightness 0-255 (stored as +1)
+static uint16_t          u16_endTime = 0;   ///< Latch timing reference
+
+static uint8_t au8_pixelData[NP_PIXEL_COUNT*3];  // 3 bytes of color data per pixel
+
+// AVR Specific
+static volatile uint8_t* pu8_port = &PORTB;      ///< Output PORT register address
+static volatile uint8_t* pu8_ddr = &DDRB;       ///< Output PORT data direction register
+static uint8_t           u8_pinMask = NP_PIN;    ///< Output PORT bitmask
+
+
 // These two tables are declared outside the Adafruit_NeoPixel class
 // because some boards may require oldschool compilers that don't
 // handle the C++11 constexpr keyword.
@@ -108,58 +122,16 @@ static const uint8_t PROGMEM _au8_NeoPixelGammaTable[256] = {
 };
 
 /*!
-    @brief   NeoPixel constructor when length, pin and pixel type are known
-                     at compile-time.
-    @param   n  Number of NeoPixels in strand.
-    @param   p  Arduino pin number which will drive the NeoPixel data in.
-    @return  Adafruit_NeoPixel object. Call the begin() function before use.
-*/
-NeoPixel_Slim::NeoPixel_Slim(uint8_t* pu8_pixData, uint8_t u8_maxPix,
-                             uint8_t u8_numPix, uint8_t u8_pinMask) :
-    b_begun(false), u8_brightness(0), pu8_pixels(pu8_pixData), u16_endTime(0),
-    u8_numLEDs(u8_numPix), u8_maxLEDs(u8_maxPix), u16_numBytes(3*u8_numPix) {
-
-    // AVR
-    pu8_port = &PORTB; // Only PORTB on ATtiny85
-    pu8_ddr = &DDRB;
-    this->u8_pinMask = u8_pinMask;
-}
-
-/*!
     @brief   Configure NeoPixel pin for output.
 */
-void NeoPixel_Slim::begin(void) {
+void np_init(void) {
 
     // 1 in the DDR means output
     bitSetMask(*pu8_ddr, u8_pinMask);
     // Set pin LOW initially
     bitClearMask(*pu8_port, u8_pinMask);
-    b_begun = true;
+
 }
-
-/*!
-    @brief   Change the length of a previously-declared Adafruit_NeoPixel
-                     strip object. Old data is deallocated and new data is cleared.
-                     Pin number and pixel format are unchanged.
-    @param   n  New length of strip, in pixels.
-    @note    This function is deprecated, here only for old projects that
-                     may still be calling it. New projects should instead use the
-                     'new' keyword with the first constructor syntax (length, pin,
-                     type).
-*/
-void NeoPixel_Slim::update_length(uint8_t u8_numPix) {
-
-    // Clip the number if it is larger than we have space for in the array
-    if (u8_numPix > u8_maxLEDs) {
-        u8_numPix = u8_maxLEDs;
-    }
-
-    // Store new values
-    u8_numLEDs = u8_numPix;
-    u16_numBytes = 3*u8_numLEDs;
-    
-}
-
 
 /*!
     @brief   Transmit pixel data in RAM to NeoPixels.
@@ -172,11 +144,7 @@ void NeoPixel_Slim::update_length(uint8_t u8_numPix) {
                      specialized alternative or companion libraries exist that use
                      very device-specific peripherals to work around it.
 */
-void NeoPixel_Slim::show(void) {
-
-    if (!pu8_pixels) {
-        return;
-    }
+void np_show(void) {
 
     // Data latch = 300+ microsecond pause in the output stream. Rather than
     // put a delay at the end of the function, the ending time is noted and
@@ -184,7 +152,7 @@ void NeoPixel_Slim::show(void) {
     // subsequent round of data until the latch time has elapsed. This
     // allows the mainline code to start generating the next frame of data
     // rather than stalling for the latch.
-    while(!can_show()) {}
+    while(!np_can_show()) {}
     // endTime is a private member (rather than global var) so that multiple
     // instances on different pins can be quickly issued in succession (each
     // instance doesn't delay the next).
@@ -204,9 +172,9 @@ void NeoPixel_Slim::show(void) {
 // AVR MCUs -- ATmega & ATtiny (no XMEGA) ---------------------------------
 
     volatile uint16_t
-         i    =  u16_numBytes; // Loop counter
+         i    =  u8_numBytes; // Loop counter
     volatile uint8_t
-        *ptr  =  pu8_pixels,   // Pointer to next byte
+        *ptr  =  au8_pixelData,// Pointer to next byte
          b    = *ptr++,        // Current byte value
          hi,                   // PORT w/output bit set high
          lo;                   // PORT w/output bit set low
@@ -344,8 +312,7 @@ void NeoPixel_Slim::show(void) {
     @param   g  Green brightness, 0 = minimum (off), 255 = maximum.
     @param   b  Blue brightness, 0 = minimum (off), 255 = maximum.
 */
-void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint8_t u8_red, uint8_t u8_green,
-                                  uint8_t u8_blue) {
+void np_set_pix_color(uint8_t u8_index, uint8_t u8_red, uint8_t u8_green, uint8_t u8_blue) {
     
     // Verify that the index is in range
     if (u8_index < u8_numLEDs) {
@@ -359,7 +326,7 @@ void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint8_t u8_red, uint8_t u8_g
 
         // Lookup location in pixel data array
         uint8_t* pu8_pixStart;
-        pu8_pixStart = &pu8_pixels[u8_index * 3];    // 3 bytes per pixel
+        pu8_pixStart = &au8_pixelData[u8_index * 3];    // 3 bytes per pixel
 
         // GRB transmit order
         pu8_pixStart[0] = u8_green;
@@ -375,7 +342,7 @@ void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint8_t u8_red, uint8_t u8_g
     @param   c  32-bit color value. Most significant byte is ignored (for RGB pixels), 
                             next is red, then green, and least significant byte is blue.
 */
-void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint32_t u32_color) {
+void np_set_pix_color_pack(uint8_t u8_index, uint32_t u32_color) {
     
     // Extract each color
     uint8_t u8_red =   (uint8_t)(u32_color >> 16);
@@ -383,7 +350,7 @@ void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint32_t u32_color) {
     uint8_t u8_blue =  (uint8_t)(u32_color >>  0);
 
     // Call the other overload of this function
-    this->set_pix_color(u8_index, u8_red, u8_green, u8_blue);
+    np_set_pix_color(u8_index, u8_red, u8_green, u8_blue);
 
 }
 
@@ -398,7 +365,7 @@ void NeoPixel_Slim::set_pix_color(uint8_t u8_index, uint32_t u32_color) {
     @param   count  Number of pixels to fill, as a positive value. Passing
                                     0 or leaving unspecified will fill to end of strip.
 */
-void NeoPixel_Slim::fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_count) {
+void np_fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_count) {
 
     // Local Vars
     uint8_t u8_index;
@@ -422,8 +389,12 @@ void NeoPixel_Slim::fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_c
     }
 
     for (u8_index = u8_firstIndex; u8_index < u8_endPix; u8_index++) {
-        this->set_pix_color(u8_index, u32_color);
+        np_set_pix_color_pack(u8_index, u32_color);
     }
+}
+
+void np_fill_all(uint32_t u32_color) {
+    np_fill(u32_color, 0, 0);
 }
 
 /*!
@@ -449,7 +420,7 @@ void NeoPixel_Slim::fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_c
                      one-size-fits-all operation of gamma32(). Diffusing the LEDs also
                      really seems to help when using low-saturation colors.
 */
-uint32_t NeoPixel_Slim::hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat, uint8_t u8_val) {
+uint32_t np_hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat, uint8_t u8_val) {
 
     uint8_t u8_red;
     uint8_t u8_green;
@@ -528,6 +499,10 @@ uint32_t NeoPixel_Slim::hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat, uint8_t u8
             (((((u8_blue  * u16_satPlus1) >> 8) + u8_satInvert) * u32_valPlus1)            >> 8);
 }
 
+uint32_t   np_hsv_to_pack_hue(uint16_t u16_hue) {
+    return np_hsv_to_pack(u16_hue, 255, 255);
+}
+
 
 /*!
     @brief   Adjust output brightness. Does not immediately affect what's
@@ -544,14 +519,14 @@ uint32_t NeoPixel_Slim::hsv_to_pack(uint16_t u16_hue, uint8_t u8_sat, uint8_t u8
                      write-only resource, maintaining their own state to render each
                      frame of an animation, not relying on read-modify-write.
 */
-void NeoPixel_Slim::set_brightness(uint8_t u8_brightness) {
+void np_set_brightness(uint8_t u8_brightness_in) {
     // Stored brightness value is different than what's passed.
     // This simplifies the actual scaling math later, allowing a fast
     // 8x8-bit multiply and taking the MSB. 'brightness' is a uint8_t,
     // adding 1 here may (intentionally) roll over...so 0 = max brightness
     // (color values are interpreted literally; no scaling), 1 = min
     // brightness (off), 255 = just below max brightness.
-    this->u8_brightness = u8_brightness + 1;
+    u8_brightness = u8_brightness_in + 1;
 
     // Removed the rescaling code because I don't need it in my application.
 }
@@ -560,15 +535,15 @@ void NeoPixel_Slim::set_brightness(uint8_t u8_brightness) {
     @brief   Retrieve the last-set brightness value for the strip.
     @return  Brightness value: 0 = minimum (off), 255 = maximum.
 */
-uint8_t NeoPixel_Slim::get_brightness(void) const {
+uint8_t np_get_brightness(void) {
     return u8_brightness - 1;
 }
 
 /*!
     @brief   Fill the whole NeoPixel strip with 0 / black / off.
 */
-void NeoPixel_Slim::clear(void) {
-    memset(pu8_pixels, 0, u16_numBytes);
+void np_clear(void) {
+    memset(au8_pixelData, 0, u8_numBytes);
 }
 
   /*!
@@ -583,7 +558,7 @@ void NeoPixel_Slim::clear(void) {
              control you'll need to provide your own gamma-correction
              function instead.
   */
-uint32_t NeoPixel_Slim::get_gamma_32(uint32_t u32_color) {
+uint32_t np_get_gamma_32(uint32_t u32_color) {
 
     // Get a pointer to the start of the 32 bit int so we can address the bytes directly
     uint8_t* pu8_color = (uint8_t*)&u32_color;
@@ -597,16 +572,28 @@ uint32_t NeoPixel_Slim::get_gamma_32(uint32_t u32_color) {
     // of an RGB value, but this seems exceedingly rare and if it's
     // encountered in reality they can mask values going in or coming out.
     for (uint8_t u8_i = 0; u8_i < 4; u8_i++) {
-        pu8_color[u8_i] = get_gamma_8(pu8_color[u8_i]);
+        pu8_color[u8_i] = np_get_gamma_8(pu8_color[u8_i]);
     }
 
     return u32_color; // Packed 32-bit return
 }
 
-uint8_t NeoPixel_Slim::get_sine_8(uint8_t u8_x) {
+uint8_t np_get_sine_8(uint8_t u8_x) {
     return pgm_read_byte(&_au8_NeoPixelSineTable[u8_x]); // 0-255 in, 0-255 out
 }
 
-uint8_t NeoPixel_Slim::get_gamma_8(uint8_t u8_x) {
+uint8_t np_get_gamma_8(uint8_t u8_x) {
     return pgm_read_byte(&_au8_NeoPixelGammaTable[u8_x]); // 0-255 in, 0-255 out
+}
+
+uint32_t   np_rgb_to_pack(uint8_t u8_red, uint8_t u8_green, uint8_t u8_blue) {
+    return ((uint32_t)u8_red << 16) | ((uint32_t)u8_green <<  8) | u8_blue;
+}
+
+bool np_can_show(void) {
+    return ((uint16_t)micros()-u16_endTime) >= 300;
+}
+
+uint8_t np_get_length(void) {
+    return u8_numLEDs;
 }

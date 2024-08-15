@@ -63,7 +63,7 @@
 // First 16 bytes reserved for settings storage
 #define EEP_SETT_FIRST_ADDR     0
 #define EEP_SETT_ANIM           0
-#define EEP_SETT_NPIX           1
+#define EEP_SETT_NPIX           1   // No longer needed, since we are using a fixed 5x5 matrix
 #define EEP_SETT_RSEED          2   // Addr 2-5, 4 bytes
 #define EEP_SETT_FLAGS          6   // 8 Status Flags
 // Runtime since last charge in minutes. Includes "on" and "off" time. Stops counting once battery is "dead".

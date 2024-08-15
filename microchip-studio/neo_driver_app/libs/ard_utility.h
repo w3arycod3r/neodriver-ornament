@@ -8,6 +8,11 @@
 
 #include <stdint.h>
 
+// Allow compilation with C++ compiler
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 /********************************** DEFINES **********************************/
 /* definition to expand macro then apply to pragma message */
 // Usage example below
@@ -69,4 +74,8 @@ uint8_t strlen(char* ac_str);
 void rev_string(char* ac_str);
 void memset(uint8_t*, uint8_t, uint8_t);
 
+#ifdef __cplusplus
+} // extern "C"
 #endif
+
+#endif /* ARD_UTILITY_H */

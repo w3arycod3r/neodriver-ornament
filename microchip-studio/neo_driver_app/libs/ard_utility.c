@@ -1,4 +1,4 @@
-/* File:      ard_utility.cpp
+/* File:      ard_utility.c
  * Author:    Garrett Carter
  * Purpose:   Arduino utility functions
  */

@@ -27,10 +27,8 @@ bool eep_compressed_chars(bool validate);
 /********************************** DEFINES **********************************/
 
 /******************************** GLOBAL VARS ********************************/
-uint8_t au8_pixelData[PIX_CNT_MAX*3];  // 3 bytes of color data per pixel
 
 /****************************** GLOBAL OBJECTS *******************************/
-NeoPixel_Slim o_strip(au8_pixelData, PIX_CNT_MAX, PIX_CNT_INIT, IO_NP_DATA);
 
 
 /****************************** FLASH CONSTANTS ******************************/
@@ -50,9 +48,8 @@ void setup() {
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
     // Init and clear NeoPixels
-    o_strip.begin();
-    o_strip.show();
-    o_strip.set_brightness(CONFIRM_BLINK_BRIGHT_LVL);
+    np_init();
+    np_set_brightness(CONFIRM_BLINK_BRIGHT_LVL);
 
     // Update EEPROM Data
     eep_compressed_chars(false);
@@ -84,14 +81,14 @@ void setup() {
     }
     
     // Indicate verification status
-    o_strip.clear();
+    np_clear();
     for (int i=0; i<3; i++) {
-        o_strip.set_pix_color(0, flash_color);
-        o_strip.show();
+        np_set_pix_color_pack(0, flash_color);
+        np_show();
         delay(500);
 
-        o_strip.clear();
-        o_strip.show();
+        np_clear();
+        np_show();
         delay(500);
     }
 

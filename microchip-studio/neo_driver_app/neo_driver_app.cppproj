@@ -291,7 +291,7 @@
     <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="libs\ard_utility.cpp">
+    <Compile Include="libs\ard_utility.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\ard_utility.h">
@@ -306,13 +306,13 @@
     <Compile Include="libs\multi_button.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="libs\neo_common.cpp">
+    <Compile Include="libs\neo_common.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\neo_common.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="libs\neo_pixel_slim.cpp">
+    <Compile Include="libs\neo_pixel_slim.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\neo_pixel_slim.h">
