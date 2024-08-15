@@ -144,6 +144,21 @@ void np_init(void) {
                      specialized alternative or companion libraries exist that use
                      very device-specific peripherals to work around it.
 */
+/*
+* light weight WS2812 lib V2.5b
+* https://github.com/cpldcpu/light_ws2812/tree/master/light_ws2812_AVR/Light_WS2812
+*
+* Controls WS2811/WS2812/WS2812B RGB-LEDs
+* Author: Tim (cpldcpu@gmail.com)
+*
+* Jan 18, 2014  v2.0b Initial Version
+* Nov 29, 2015  v2.3  Added SK6812RGBW support
+* Nov 11, 2023  v2.5  Added support for ports that cannot be addressed with "out"
+*                       Added LGT8F88A support
+* May 1, 2024   v2.6 Added support for reduced core AVRs
+*
+* License: GNU GPL v2+ (see License.txt)
+*/
 void np_show(void) {
 
     // Data latch = 300+ microsecond pause in the output stream. Rather than
