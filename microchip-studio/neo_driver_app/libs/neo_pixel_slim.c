@@ -159,6 +159,10 @@ void np_init(void) {
 *
 * License: GNU GPL v2+ (see License.txt)
 */
+/*
+  This routine writes an array of bytes with RGB values to the Dataout pin
+  using the fast 800kHz clockless WS2811/2812 protocol.
+*/
 void np_show(void) {
 
     // Data latch = 300+ microsecond pause in the output stream. Rather than
@@ -182,140 +186,93 @@ void np_show(void) {
     // state, computes 'pin high' and 'pin low' values, and writes these back
     // to the PORT register as needed.
 
-    noInterrupts(); // Need 100% focus on instruction timing
+    // `maskhi` is 0x80 if P?7 is LED DATA
+    uint8_t curbyte, ctr, masklo, maskhi;
+    uint8_t sreg_prev;
+    uint8_t *data = au8_pixelData;
+    uint8_t datlen = u8_numBytes;
+    uint8_t *port = pu8_port;
+    
+    // `masklo` and `maskhi` are written to PORT to drive the DATA line low or
+    // high (rather than setting or clearing the bit in PORT)
+    maskhi =  ( u8_pinMask   & (*port));
+    masklo	= ((~u8_pinMask) | (*port));
+    
+    sreg_prev=SREG;
 
-// AVR MCUs -- ATmega & ATtiny (no XMEGA) ---------------------------------
+    // Disable interrupts
+    // Maybe move this before the sampling of the port, like the Adafruit code
+    cli();
 
-    volatile uint16_t
-         i    =  u8_numBytes; // Loop counter
-    volatile uint8_t
-        *ptr  =  au8_pixelData,// Pointer to next byte
-         b    = *ptr++,        // Current byte value
-         hi,                   // PORT w/output bit set high
-         lo;                   // PORT w/output bit set low
+    while (datlen--) {
+        curbyte = *data++;
+        
+        __asm__ volatile(
+        "       ldi   %0,8  \n\t"
+        "loop%=:            \n\t"
+        "       st    X,%3 \n\t"    //  '1' [02] '0' [02] - re
 
-    // Hand-tuned assembly code issues data to the LED drivers at a specific
-    // rate. There's separate code for different CPU speeds (8, 12, 16 MHz)
-    // for both the WS2811 (400 KHz) and WS2812 (800 KHz) drivers. The
-    // datastream timing for the LED drivers allows a little wiggle room each
-    // way (listed in the datasheets), so the conditions for compiling each
-    // case are set up for a range of frequencies rather than just the exact
-    // 8, 12 or 16 MHz values, permitting use with some close-but-not-spot-on
-    // devices (e.g. 16.5 MHz DigiSpark). The ranges were arrived at based
-    // on the datasheet figures and have not been extensively tested outside
-    // the canonical 8/12/16 MHz speeds; there's no guarantee these will work
-    // close to the extremes (or possibly they could be pushed further).
-    // Keep in mind only one CPU speed case actually gets compiled; the
-    // resulting program isn't as massive as it might look from source here.
+    #if (w1_nops&1)
+    w_nop1
+    #endif
+    #if (w1_nops&2)
+    w_nop2
+    #endif
+    #if (w1_nops&4)
+    w_nop4
+    #endif
+    #if (w1_nops&8)
+    w_nop8
+    #endif
+    #if (w1_nops&16)
+    w_nop16
+    #endif
+        "       sbrs  %1,7  \n\t"    //  '1' [04] '0' [03]
+        "       st    X,%4 \n\t"     //  '1' [--] '0' [05] - fe-low
+        "       lsl   %1    \n\t"    //  '1' [05] '0' [06]
+    #if (w2_nops&1)
+    w_nop1
+    #endif
+    #if (w2_nops&2)
+    w_nop2
+    #endif
+    #if (w2_nops&4)
+    w_nop4
+    #endif
+    #if (w2_nops&8)
+    w_nop8
+    #endif
+    #if (w2_nops&16)
+    w_nop16 
+    #endif
+        "       brcc skipone%= \n\t"    //  '1' [+1] '0' [+2] - 
+        "       st   X,%4      \n\t"    //  '1' [+3] '0' [--] - fe-high
+        "skipone%=:               "     //  '1' [+3] '0' [+2] - 
+    #if (w3_nops&1)
+    w_nop1
+    #endif
+    #if (w3_nops&2)
+    w_nop2
+    #endif
+    #if (w3_nops&4)
+    w_nop4
+    #endif
+    #if (w3_nops&8)
+    w_nop8
+    #endif
+    #if (w3_nops&16)
+    w_nop16
+    #endif
 
-// 8 MHz(ish) AVR ---------------------------------------------------------
+        "       dec   %0    \n\t"    //  '1' [+4] '0' [+3]
+        "       brne  loop%=\n\t"    //  '1' [+5] '0' [+4]
+        :	"=&d" (ctr)
+        :	"r" (curbyte), "x" (port), "r" (maskhi), "r" (masklo)
+        );
+    }
+    
+    SREG=sreg_prev;
 
-        volatile uint8_t n1, n2 = 0;  // First, next bits out
-
-        // Squeezing an 800 KHz stream out of an 8 MHz chip requires code
-        // specific to each PORT register.
-
-        // 10 instruction clocks per bit: HHxxxxxLLL
-        // OUT instructions:              ^ ^    ^   (T=0,2,7)
-
-        // PORTB OUTPUT ----------------------------------------------------
-
-            hi = PORTB |  u8_pinMask;
-            lo = PORTB & ~u8_pinMask;
-            n1 = lo;
-            if(b & 0x80) n1 = hi;
-
-            // Dirty trick: RJMPs proceeding to the next instruction are used
-            // to delay two clock cycles in one instruction word (rather than
-            // using two NOPs). This was necessary in order to squeeze the
-            // loop down to exactly 64 words -- the maximum possible for a
-            // relative branch.
-
-            asm volatile(
-             "headD:"                      "\n\t" // Clk  Pseudocode
-                // Bit 7:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n2]   , %[lo]"    "\n\t" // 1    n2   = lo
-                "out   %[port] , %[n1]"    "\n\t" // 1    PORT = n1
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 6"        "\n\t" // 1-2  if(b & 0x40)
-                "mov   %[n2]   , %[hi]"    "\n\t" // 0-1   n2 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 6:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n1]   , %[lo]"    "\n\t" // 1    n1   = lo
-                "out   %[port] , %[n2]"    "\n\t" // 1    PORT = n2
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 5"        "\n\t" // 1-2  if(b & 0x20)
-                "mov   %[n1]   , %[hi]"    "\n\t" // 0-1   n1 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 5:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n2]   , %[lo]"    "\n\t" // 1    n2   = lo
-                "out   %[port] , %[n1]"    "\n\t" // 1    PORT = n1
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 4"        "\n\t" // 1-2  if(b & 0x10)
-                "mov   %[n2]   , %[hi]"    "\n\t" // 0-1   n2 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 4:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n1]   , %[lo]"    "\n\t" // 1    n1   = lo
-                "out   %[port] , %[n2]"    "\n\t" // 1    PORT = n2
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 3"        "\n\t" // 1-2  if(b & 0x08)
-                "mov   %[n1]   , %[hi]"    "\n\t" // 0-1   n1 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 3:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n2]   , %[lo]"    "\n\t" // 1    n2   = lo
-                "out   %[port] , %[n1]"    "\n\t" // 1    PORT = n1
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 2"        "\n\t" // 1-2  if(b & 0x04)
-                "mov   %[n2]   , %[hi]"    "\n\t" // 0-1   n2 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 2:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n1]   , %[lo]"    "\n\t" // 1    n1   = lo
-                "out   %[port] , %[n2]"    "\n\t" // 1    PORT = n2
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 1"        "\n\t" // 1-2  if(b & 0x02)
-                "mov   %[n1]   , %[hi]"    "\n\t" // 0-1   n1 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                // Bit 1:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n2]   , %[lo]"    "\n\t" // 1    n2   = lo
-                "out   %[port] , %[n1]"    "\n\t" // 1    PORT = n1
-                "rjmp  .+0"                "\n\t" // 2    nop nop
-                "sbrc  %[byte] , 0"        "\n\t" // 1-2  if(b & 0x01)
-                "mov   %[n2]   , %[hi]"    "\n\t" // 0-1   n2 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "sbiw  %[count], 1"        "\n\t" // 2    i-- (don't act on Z flag yet)
-                // Bit 0:
-                "out   %[port] , %[hi]"    "\n\t" // 1    PORT = hi
-                "mov   %[n1]   , %[lo]"    "\n\t" // 1    n1   = lo
-                "out   %[port] , %[n2]"    "\n\t" // 1    PORT = n2
-                "ld    %[byte] , %a[ptr]+" "\n\t" // 2    b = *ptr++
-                "sbrc  %[byte] , 7"        "\n\t" // 1-2  if(b & 0x80)
-                "mov   %[n1]   , %[hi]"    "\n\t" // 0-1   n1 = hi
-                "out   %[port] , %[lo]"    "\n\t" // 1    PORT = lo
-                "brne headD"               "\n"   // 2    while(i) (Z flag set above)
-            : [byte]    "+r" (b),
-                [n1]    "+r" (n1),
-                [n2]    "+r" (n2),
-                [count] "+w" (i)
-            : [port]    "I"  (_SFR_IO_ADDR(PORTB)),
-                [ptr]   "e"  (ptr),
-                [hi]    "r"  (hi),
-                [lo]    "r"  (lo));
-
-
-    interrupts();
     u16_endTime = micros(); // Save EOD time for latch on next call
 }
 
