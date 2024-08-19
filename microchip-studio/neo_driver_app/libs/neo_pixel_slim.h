@@ -96,8 +96,8 @@ extern "C"{
 #if w_lowtime>550
    #error "Light_ws2812: Sorry, the clock speed is too low. Did you set F_CPU correctly?"
 #elif w_lowtime>450
-   #warning "Light_ws2812: The timing is critical and may only work on WS2812B, not on WS2812(S)."
-   #warning "Please consider a higher clockspeed, if possible"
+   #error "Light_ws2812: The timing is critical and may only work on WS2812B, not on WS2812(S)."
+   #error "Please consider a higher clockspeed, if possible"
 #endif   
 
 #if w2>0
