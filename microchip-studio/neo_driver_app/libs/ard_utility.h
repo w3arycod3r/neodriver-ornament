@@ -26,6 +26,10 @@ extern "C"{
 #define bitClearMask(reg, bitMask) ((reg) &= ~(bitMask))
 #define bitReadMask(reg, bitMask) ((reg) & (bitMask))
 
+// Set or clear the bitMask in reg and return the new value
+#define bitSetMaskRet(reg, bitMask) ((reg) | (bitMask))
+#define bitClearMaskRet(reg, bitMask) ((reg) & ~(bitMask))
+
 #define BIT0 (1UL << 0)
 #define BIT1 (1UL << 1)
 #define BIT2 (1UL << 2)

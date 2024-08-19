@@ -195,8 +195,8 @@ void np_show(void) {
     
     // `masklo` and `maskhi` are written to PORT to drive the DATA line low or
     // high (rather than setting or clearing the bit in PORT)
-    maskhi =  ( u8_pinMask   & (*port));
-    masklo	= ((~u8_pinMask) | (*port));
+    maskhi =  bitSetMaskRet(*port, u8_pinMask);
+    masklo	= bitClearMaskRet(*port, u8_pinMask);
     
     sreg_prev=SREG;
 
