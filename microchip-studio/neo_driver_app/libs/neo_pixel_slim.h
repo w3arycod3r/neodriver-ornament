@@ -73,8 +73,11 @@ extern "C"{
 
 
 // Insert NOPs to match the timing, if possible
+// Computes to 2.
 #define w_zerocycles    (((F_CPU/1000)*w_zeropulse          )/1000000)
+// Computes to 7.
 #define w_onecycles     (((F_CPU/1000)*w_onepulse    +500000)/1000000)
+// Computes to 10.
 #define w_totalcycles   (((F_CPU/1000)*w_totalperiod +500000)/1000000)
 
 // w1 - nops between rising edge and falling edge - low
