@@ -47,6 +47,8 @@ extern "C"{
 // We are using F_CPU = 8,000,000 (8 MHz)
 // Computes to 8.
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000UL )
+// Computes to 125.
+#define nanosecondsPerClockCycle() ( 1000000000UL / F_CPU )
 
 #define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )
 #define microsecondsToClockCycles(a) ( (a) * clockCyclesPerMicrosecond() )

@@ -60,61 +60,61 @@ extern "C"{
 #define CONCAT_EXP(a, b)   CONCAT(a, b)
 #endif
 
-// Timing in ns
-#define w_zeropulse   350
-#define w_onepulse    900
-#define w_totalperiod 1250
+// Target timing in ns (from WS2812B datasheet)
+#define w_t0h_target_nsec         (350)
+#define w_t1h_target_nsec         (900)
+#define w_totalperiod_target_nsec (1250)
+#define w_tolerance_nsec          (150)
 
 // Fixed cycles used by the inner loop
 // AVR core
-#define w_fixedlow    3
-#define w_fixedhigh   6
-#define w_fixedtotal  10
-
+#define w_fixedlow    (3)
+#define w_fixedhigh   (6)
+#define w_fixedtotal  (10)
 
 // Insert NOPs to match the timing, if possible
 // Computes to 2.
-#define w_zerocycles    (((F_CPU/1000)*w_zeropulse          )/1000000)
+#define w_t0h_target_cyc    (w_t0h_target_nsec / nanosecondsPerClockCycle())
 // Computes to 7.
-#define w_onecycles     (((F_CPU/1000)*w_onepulse    +500000)/1000000)
+#define w_t1h_target_cyc     (w_t1h_target_nsec / nanosecondsPerClockCycle())
 // Computes to 10.
-#define w_totalcycles   (((F_CPU/1000)*w_totalperiod +500000)/1000000)
+#define w_totalperiod_target_cyc   (w_totalperiod_target_nsec / nanosecondsPerClockCycle())
 
-// w1 - nops between rising edge and falling edge - low
-#define w1 (w_zerocycles-w_fixedlow)
-// w2   nops between fe low and fe high
-#define w2 (w_onecycles-w_fixedhigh-w1)
-// w3   nops to complete loop
-#define w3 (w_totalcycles-w_fixedtotal-w1-w2)
-
-#if w1>0
-  #define w1_nops w1
+// wait1 - nops between rising edge and falling edge - low
+#if (w_t0h_target_cyc > w_fixedlow)
+  #define w_wait1_cyc (w_t0h_target_cyc - w_fixedlow)
 #else
-  #define w1_nops  0
+  #define w_wait1_cyc  (0)
+#endif
+
+// wait2 - nops between fe low and fe high
+#if (w_t1h_target_cyc > (w_fixedhigh + w_wait1_cyc))
+  #define w_wait2_cyc (w_t1h_target_cyc - w_fixedhigh - w_wait1_cyc)
+#else
+  #define w_wait2_cyc  (0)
+#endif
+
+// wait3 - nops to complete loop
+#if (w_totalperiod_target_cyc > (w_fixedtotal + w_wait1_cyc + w_wait2_cyc))
+  #define w_wait3_cyc (w_totalperiod_target_cyc - w_fixedtotal - w_wait1_cyc - w_wait2_cyc)
+#else
+  #define w_wait3_cyc  (0)
 #endif
 
 // The only critical timing parameter is the minimum pulse length of the "0"
 // Warn or throw error if this timing can not be met with current F_CPU settings.
-#define w_lowtime ((w1_nops+w_fixedlow)*1000000)/(F_CPU/1000)
-#if w_lowtime>550
+#define w_t0h_actual_cyc    (w_wait1_cyc + w_fixedlow)
+#define w_t0h_actual_nsec   (w_t0h_actual_cyc * nanosecondsPerClockCycle())
+
+#if (w_t0h_actual_nsec > (w_t0h_target_nsec + ((4*w_tolerance_nsec)/3)))
    #error "Light_ws2812: Sorry, the clock speed is too low. Did you set F_CPU correctly?"
-#elif w_lowtime>450
+#elif (w_t0h_actual_nsec > (w_t0h_target_nsec + ((2*w_tolerance_nsec)/3)))
    #error "Light_ws2812: The timing is critical and may only work on WS2812B, not on WS2812(S)."
    #error "Please consider a higher clockspeed, if possible"
-#endif   
-
-#if w2>0
-#define w2_nops w2
-#else
-#define w2_nops  0
 #endif
 
-#if w3>0
-#define w3_nops w3
-#else
-#define w3_nops  0
-#endif
-
+// One NOP equals one clock cycle.
+// brid (used to branch to next instruction) delays two clock cycles in one instruction word.
 #define w_nop1  "nop      \n\t"
 #define w_nop2  "brid .+0 \n\t"
 #define w_nop4  w_nop2 w_nop2

@@ -211,56 +211,61 @@ void np_show(void) {
         "       ldi   %0,8  \n\t"
         "loop%=:            \n\t"
         "       st    X,%3 \n\t"    //  '1' [02] '0' [02] - re
-
-    #if (w1_nops&1)
+    
+    // Check bits in the cycle count for this wait step. Add the appropriate number of NOPs.
+    #if (w_wait1_cyc & 1)
     w_nop1
     #endif
-    #if (w1_nops&2)
+    #if (w_wait1_cyc & 2)
     w_nop2
     #endif
-    #if (w1_nops&4)
+    #if (w_wait1_cyc & 4)
     w_nop4
     #endif
-    #if (w1_nops&8)
+    #if (w_wait1_cyc & 8)
     w_nop8
     #endif
-    #if (w1_nops&16)
+    #if (w_wait1_cyc & 16)
     w_nop16
     #endif
         "       sbrs  %1,7  \n\t"    //  '1' [04] '0' [03]
         "       st    X,%4 \n\t"     //  '1' [--] '0' [05] - fe-low
         "       lsl   %1    \n\t"    //  '1' [05] '0' [06]
-    #if (w2_nops&1)
+
+    // Check bits in the cycle count for this wait step. Add the appropriate number of NOPs.
+    #if (w_wait2_cyc & 1)
     w_nop1
     #endif
-    #if (w2_nops&2)
+    #if (w_wait2_cyc & 2)
     w_nop2
     #endif
-    #if (w2_nops&4)
+    #if (w_wait2_cyc & 4)
     w_nop4
     #endif
-    #if (w2_nops&8)
+    #if (w_wait2_cyc & 8)
     w_nop8
     #endif
-    #if (w2_nops&16)
+    #if (w_wait2_cyc & 16)
     w_nop16 
     #endif
         "       brcc skipone%= \n\t"    //  '1' [+1] '0' [+2] - 
         "       st   X,%4      \n\t"    //  '1' [+3] '0' [--] - fe-high
         "skipone%=:               "     //  '1' [+3] '0' [+2] - 
-    #if (w3_nops&1)
+
+    // Check bits in the cycle count for this wait step. Add the appropriate number of NOPs.
+    #if (w_wait3_cyc & 1)
     w_nop1
     #endif
-    #if (w3_nops&2)
+    #if (w_wait3_cyc & 2)
     w_nop2
     #endif
-    #if (w3_nops&4)
+    #if (w_wait3_cyc & 4)
     w_nop4
     #endif
-    #if (w3_nops&8)
+    #if (w_wait3_cyc & 8)
     w_nop8
     #endif
-    #if (w3_nops&16)
+    #if (w_wait3_cyc & 16)
     w_nop16
     #endif
 
