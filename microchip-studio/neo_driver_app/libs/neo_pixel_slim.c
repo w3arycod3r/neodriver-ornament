@@ -45,20 +45,13 @@
 
 #include "neo_pixel_slim.h"
 #include <ard_utility.h>
+#include <avr/io.h>
 
 /****************************** STATIC VARS ******************************/
-static uint8_t           u8_numLEDs = NP_PIXEL_COUNT;    ///< Number of RGB LEDs in strip
-static uint8_t           u8_numBytes = (3*NP_PIXEL_COUNT);  ///< Curr size of 'pixels' buffer below
 static uint8_t           u8_brightness = 0; ///< Strip brightness 0-255 (stored as +1)
 static uint16_t          u16_endTime = 0;   ///< Latch timing reference
 
-static uint8_t au8_pixelData[NP_PIXEL_COUNT*3];  // 3 bytes of color data per pixel
-
-// AVR Specific
-static volatile uint8_t* pu8_port = &PORTB;      ///< Output PORT register address
-static volatile uint8_t* pu8_ddr = &DDRB;       ///< Output PORT data direction register
-static uint8_t           u8_pinMask = NP_PIN;    ///< Output PORT bitmask
-
+static uint8_t au8_pixelData[NP_ARR_SIZE];  // 3 bytes of GRB color data per pixel
 
 // These two tables are declared outside the Adafruit_NeoPixel class
 // because some boards may require oldschool compilers that don't
@@ -127,9 +120,9 @@ static const uint8_t PROGMEM _au8_NeoPixelGammaTable[256] = {
 void np_init(void) {
 
     // 1 in the DDR means output
-    bitSetMask(*pu8_ddr, u8_pinMask);
+    bitSet(NP_DDR, NP_PIN);
     // Set pin LOW initially
-    bitClearMask(*pu8_port, u8_pinMask);
+    bitClear(NP_PORT, NP_PIN);
 
 }
 
@@ -187,22 +180,20 @@ void np_show(void) {
     // to the PORT register as needed.
 
     // `maskhi` is 0x80 if P?7 is LED DATA
-    uint8_t curbyte, ctr, masklo, maskhi;
+    uint8_t curbyte, bitctr, masklo, maskhi;
     uint8_t sreg_prev;
-    uint8_t *data = au8_pixelData;
-    uint8_t datlen = u8_numBytes;
-    uint8_t *port = pu8_port;
+    uint8_t* data = au8_pixelData;
+    uint8_t datlen = NP_ARR_SIZE;
+    uint8_t* port = &NP_PORT;
     
+    // Disable interrupts
+    sreg_prev = SREG;
+    cli();
+
     // `masklo` and `maskhi` are written to PORT to drive the DATA line low or
     // high (rather than setting or clearing the bit in PORT)
-    maskhi =  bitSetMaskRet(*port, u8_pinMask);
-    masklo	= bitClearMaskRet(*port, u8_pinMask);
-    
-    sreg_prev=SREG;
-
-    // Disable interrupts
-    // Maybe move this before the sampling of the port, like the Adafruit code
-    cli();
+    maskhi =  bitSetRet(*port, NP_PIN);
+    masklo	= bitClearRet(*port, NP_PIN);
 
     while (datlen--) {
         curbyte = *data++;
@@ -271,12 +262,12 @@ void np_show(void) {
 
         "       dec   %0    \n\t"    //  '1' [+4] '0' [+3]
         "       brne  loop%=\n\t"    //  '1' [+5] '0' [+4]
-        :	"=&d" (ctr)
+        :	"=&d" (bitctr)
         :	"r" (curbyte), "x" (port), "r" (maskhi), "r" (masklo)
         );
     }
     
-    SREG=sreg_prev;
+    SREG = sreg_prev;
 
     u16_endTime = micros(); // Save EOD time for latch on next call
 }
@@ -292,7 +283,7 @@ void np_show(void) {
 void np_set_pix_color(uint8_t u8_index, uint8_t u8_red, uint8_t u8_green, uint8_t u8_blue) {
     
     // Verify that the index is in range
-    if (u8_index < u8_numLEDs) {
+    if (u8_index < NP_PIXEL_COUNT) {
 
         // Scale brightness of each color
         if (u8_brightness) { // See notes in setBrightness()
@@ -349,19 +340,19 @@ void np_fill(uint32_t u32_color, uint8_t u8_firstIndex, uint8_t u8_count) {
     uint8_t u8_endPix;
 
     // If first LED is past end of strip, nothing to do
-    if (u8_firstIndex >= u8_numLEDs) {
+    if (u8_firstIndex >= NP_PIXEL_COUNT) {
         return;
     }
 
     // Calculate the index ONE AFTER the last pixel to fill
     if (u8_count == 0) {
         // Fill to end of strip
-        u8_endPix = u8_numLEDs;
+        u8_endPix = NP_PIXEL_COUNT;
     } else {
         // Ensure that the loop won't go past the last pixel
         u8_endPix = u8_firstIndex + u8_count;
-        if (u8_endPix > u8_numLEDs) {
-            u8_endPix = u8_numLEDs;
+        if (u8_endPix > NP_PIXEL_COUNT) {
+            u8_endPix = NP_PIXEL_COUNT;
         }
     }
 
@@ -520,7 +511,7 @@ uint8_t np_get_brightness(void) {
     @brief   Fill the whole NeoPixel strip with 0 / black / off.
 */
 void np_clear(void) {
-    memset(au8_pixelData, 0, u8_numBytes);
+    memset(au8_pixelData, 0, NP_ARR_SIZE);
 }
 
   /*!
@@ -572,5 +563,5 @@ bool np_can_show(void) {
 }
 
 uint8_t np_get_length(void) {
-    return u8_numLEDs;
+    return NP_PIXEL_COUNT;
 }

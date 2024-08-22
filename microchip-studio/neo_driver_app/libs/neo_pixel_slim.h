@@ -46,8 +46,12 @@ extern "C"{
 #endif
 
 /****************************** DEFINES ******************************/
-#define NP_PIXEL_COUNT  (25)
-#define NP_PIN          (BIT3)                          // PB3, ADC3 - NeoPixel Data
+#define NP_PORT             (PORTB)
+#define NP_DDR              (DDRB)
+#define NP_PIN              (3)     // PB3, ADC3 - NeoPixel Data
+#define NP_PIXEL_COUNT      (25)
+#define NP_BYTES_PER_PIXEL  (3)     // GRB order
+#define NP_ARR_SIZE         (NP_PIXEL_COUNT * NP_BYTES_PER_PIXEL)
 
 /*
  * Internal defines
