@@ -10,6 +10,7 @@
 #include <Arduino.h>
 #include <ard_utility.h>
 #include <avr/pgmspace.h>
+#include <wiring_analog.h>
 
 /********************************** DEFINES **********************************/
 
@@ -32,12 +33,17 @@
 #define MATRIX_NUM_PIX (MATRIX_WIDTH_PIX * MATRIX_HEIGHT_PIX)
 
 // I/O Mapping
-#define IO_SW_LEFT       BIT0                       // PB0, AREF - Left switch
-#define IO_SW_RIGHT      BIT1                       // PB1       - Right switch
-#define IO_NP_ENABLE     BIT2                       // PB2, ADC1 - NeoPixel Enable
-#define IO_NP_DATA       BIT3                       // PB3, ADC3 - NeoPixel Data
-#define IO_POT_ADC       ADMUX_MUX_SE_ADC2_PB4      // PB4, ADC2 - Brightness Potentiometer
-                                                    // PB5, ADC0 - Reset
+#define IO_SW_LEFT       (BIT0)                       // PB0, AREF - Left switch
+#define IO_SW_RIGHT      (BIT1)                       // PB1       - Right switch
+#define IO_NP_ENABLE     (BIT2)                       // PB2, ADC1 - NeoPixel Enable
+#define IO_NP_DATA       (BIT3)                       // PB3, ADC3 - NeoPixel Data
+#define IO_POT_ADC_CH    (ADMUX_MUX_SE_ADC2_PB4)      // PB4, ADC2 - Brightness Potentiometer
+#define IO_POT_ADC_REF   (ADMUX_REFS_VCC_AS_REF)      // PB4, ADC2 - Brightness Potentiometer
+                                                      // PB5, ADC0 - Reset
+
+// Channel and reference for VCC measurement
+#define VCC_AN_MEAS_CH   (ADMUX_MUX_SE_VBG_INT_1V1)
+#define VCC_AN_MEAS_REF  (ADMUX_REFS_VCC_AS_REF)
 
 // Pixel params
 #define BRIGHT_MIN   24

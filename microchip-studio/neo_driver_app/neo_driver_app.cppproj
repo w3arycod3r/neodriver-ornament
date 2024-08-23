@@ -288,6 +288,9 @@
     <Compile Include="arduino_core\wiring_analog.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="arduino_core\wiring_analog.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>

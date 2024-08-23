@@ -406,7 +406,7 @@ void setup() {
     #if DEBUG_ADC_VAL == 1
         while(1) {
             delay(250);
-            //draw_value(analogRead(IO_POT_ADC), 1023);
+            //draw_value(analogRead(IO_POT_ADC_CH, IO_POT_ADC_REF), 1023);
             draw_value(read_vcc_mv(), 3500);
             np_show();
         }
@@ -425,7 +425,7 @@ void setup() {
 void loop() {
 
     // Set brightness from potentiometer value
-    uint16_t u16_potVal = analogRead(IO_POT_ADC);
+    uint16_t u16_potVal = analogRead(IO_POT_ADC_CH, IO_POT_ADC_REF);
     uint8_t u8_bright = np_get_gamma_8(map(u16_potVal, 0, 1023, BRIGHT_MIN, 255)); // Scale value
     np_set_brightness(u8_bright);
 
@@ -1539,20 +1539,8 @@ static uint16_t read_vcc_mv() {
         return SPOOF_BATT_LVL;
     #endif
 
-    // Set the reference to Vcc and the measurement to the internal 1.1V reference
-    ADMUX = _BV(MUX3) | _BV(MUX2);       // ATtiny85 specific
-
-    delay(2);                            // Wait for Vref to settle
-    ADCSRA |= _BV(ADSC);                 // Start conversion
-    while (bit_is_set(ADCSRA, ADSC)) {}  // Measuring...
-
-    uint8_t u8_low  = ADCL;              // Must read ADCL first - it then locks ADCH
-    uint8_t u8_high = ADCH;              // Unlocks both
-
-    uint16_t u16_result = ((u8_high << 8) | u8_low);
-
-    u16_result = 1125300L / u16_result;  // Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
-    return u16_result;                   // Vcc in millivolts
+    // Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
+    return (1125300L / analogRead(VCC_AN_MEAS_CH, VCC_AN_MEAS_REF));
 }
 
 // Extract base data from sequence table stored in EEPROM

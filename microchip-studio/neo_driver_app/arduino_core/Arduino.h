@@ -70,21 +70,9 @@ extern "C"{
 
 typedef void (*voidFuncPtr)(void);
 
-//                  ATMEL ATTINY85
-//
-//                      +-\/-+
-//  ADC0  !RESET  PB5  1|    |8  VCC
-//  ADC3  PCINT3  PB3  2|    |7  PB2  PCINT2  ADC1
-//  ADC2          PB4  3|    |6  PB1  PCINT1     
-//                GND  4|    |5  PB0  PCINT0  AREF
-//                      +----+
-#define ADMUX_MUX_SE_ADC2_PB4 (0b0010)
-
 
 /****************************** PROTOTYPES ******************************/
 void init(void);
-
-uint16_t analogRead(uint8_t);
 
 uint32_t millis(void);
 uint32_t micros(void);
