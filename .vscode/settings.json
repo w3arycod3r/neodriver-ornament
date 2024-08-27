@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "*.vht": "vhdl",
+        "*.tcl": "shellscript",
+        "*.mif": "vhdl",
+        "*.asm": "asm-intel-x86-generic",
+        "wdt.h": "c"
+    }
+}

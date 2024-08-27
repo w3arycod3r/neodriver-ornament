@@ -28,15 +28,12 @@
 
 #include <Arduino.h>
 #include <avr/boot.h>
+#include <wiring_analog.h>
 
 /****************************** DEFINES ******************************/
 // Timer0 is running at 8 MHz / 64 = 125 KHz
 #define TIMER0_PRESCALER        (0b011)
 #define TIMER0_PRESCALER_VALUE  (64)
-
-// These prescaler bits correspond to "divide by 64"
-//----> 8 MHz (Sys Clk) / 64 = 125 KHz (ADC Clk)
-#define ADC_CLK_PRESCALER   (0b110)
 
 // the prescaler is set so that the millis timer ticks every TIMER0_PRESCALER_VALUE (64) clock cycles, and the
 // the overflow handler is called every 256 ticks. (Timer0 is an 8-bit timer/counter)
@@ -70,7 +67,23 @@ static volatile uint32_t millis_timer_millis = 0;
 static volatile uint8_t millis_timer_fract = 0;
 
 
+/************************** STATIC PROTOTYPES **************************/
+static void timer0_init();
+
 /****************************** FUNCTIONS ******************************/
+static void timer0_init()
+{
+    // Timer0 Setup for millis() and micros():
+    // Use the Millis Timer for fast PWM (unless it doesn't have an output).
+    // if Timer0 has PWM
+    TCCR0A = (1<<WGM01) | (1<<WGM00);
+    TCCR0B = (TIMER0_PRESCALER << CS00);
+
+    // Enable the Timer0 overflow interrupt (this is the basic system tic-toc for millis)
+    sbi(TIMSK, TOIE0);
+
+}
+
 // Timer0 overflow interrupt
 ISR(TIMER0_OVF_vect)
 {
@@ -200,21 +213,10 @@ void delay_usec(uint16_t us)
 
 void init(void)
 {
-
-    // Timer0 Setup for millis() and micros():
-    // Use the Millis Timer for fast PWM (unless it doesn't have an output).
-    // if Timer0 has PWM
-    TCCR0A = (1<<WGM01) | (1<<WGM00);
-    TCCR0B = (TIMER0_PRESCALER << CS00);
+    timer0_init();
+    adc_init();
 
     // this needs to be called before setup() or some functions won't work there
     sei();
 
-    // Enable the Timer0 overflow interrupt (this is the basic system tic-toc for millis)
-    sbi(TIMSK, TOIE0);
-
-
-    // Initialize the ADC
-    // set a2d prescale factor, enable a2d conversions
-    ADCSRA = (ADC_CLK_PRESCALER << ADPS0) | (1<<ADEN);
 }

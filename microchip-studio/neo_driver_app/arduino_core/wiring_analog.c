@@ -32,6 +32,14 @@
 
 /****************************** DEFINES ******************************/
 
+void adc_init()
+{
+    // Initialize the ADC
+    // set a2d prescale factor, enable a2d conversions
+    ADCSRA = (ADC_CLK_PRESCALER << ADPS0) | (1<<ADEN);
+
+}
+
 // Pass in the channel (ADMUX_MUX selection) and reference (ADMUX_REFS selection)
 uint16_t adc_read(uint8_t ch, uint8_t analog_reference)
 {

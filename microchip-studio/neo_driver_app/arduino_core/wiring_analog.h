@@ -15,6 +15,10 @@ extern "C" {
 #endif
 
 /****************************** DEFINES ******************************/
+// These prescaler bits correspond to "divide by 64"
+//----> 8 MHz (Sys Clk) / 64 = 125 KHz (ADC Clk)
+#define ADC_CLK_PRESCALER   (0b110)
+
 #define ADC_NUM_BITS            (10)
 #define ADC_MAX_VALUE           ((1 << ADC_NUM_BITS) - 1)
 #define MILLIVOLTS_PER_VOLT     (1000)
@@ -62,6 +66,7 @@ extern "C" {
 #define COMPOSE_ADMUX(ch, ref) (((ref & ADMUX_REFS1_REFS0_MASK) << REFS0) | (((ref & ADMUX_REFS2_MASK) >> 2) << REFS2) | ((ch & ADMUX_MUX_MASK) << MUX0))
 
 /****************************** PROTOTYPES ******************************/
+void adc_init();
 uint16_t adc_read(uint8_t ch, uint8_t analog_reference);
 
 #ifdef __cplusplus

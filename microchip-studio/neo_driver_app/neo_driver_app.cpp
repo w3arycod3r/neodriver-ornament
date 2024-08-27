@@ -371,8 +371,6 @@ void setup() {
     bitSetMask( DIDR0, _BV(ADC2D) );                               // Disable digital input buffer on ADC2
     bitSetMask( PRR, _BV(PRTIM1) | _BV(PRUSI) );                   // Disable TIMER1, USI clocks
 
-    wdt_disable();                                                 // Disable watchdog timer
-
     // Read EEPROM settings data
     uint8_t u8_rAnim = EEPROM.read(EEP_SETT_ANIM);
 
@@ -393,7 +391,7 @@ void setup() {
     // Setup I/O
     bitSetMask(DDRB, IO_NP_ENABLE);               // Set as o/p
     bitSetMask(PORTB, IO_NP_ENABLE);              // Enable MOSFET for NeoPixel power
-    delay_msec(5);                                     // Time for MOSFET to switch on
+    delay_msec(5);                                // Time for MOSFET to switch on
     bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
@@ -1739,6 +1737,7 @@ static void startup_seed_prng() {
 
 }
 
+// https://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_softreset
 static void soft_reset() {
 
     // Enable the watchdog timer in "reset" mode, not "interrupt" mode.
