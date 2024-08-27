@@ -391,7 +391,7 @@ void setup() {
     // Setup I/O
     bitSetMask(DDRB, IO_NP_ENABLE);               // Set as o/p
     bitSetMask(PORTB, IO_NP_ENABLE);              // Enable MOSFET for NeoPixel power
-    delay(5);                                     // Time for MOSFET to switch on
+    delay_msec(5);                                     // Time for MOSFET to switch on
     bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
@@ -405,7 +405,7 @@ void setup() {
     // Debug code
     #if DEBUG_ADC_VAL == 1
         while(1) {
-            delay(250);
+            delay_msec(250);
             //draw_value(analogRead(IO_POT_ADC_CH, IO_POT_ADC_REF), 1023);
             draw_value(read_vcc_mv(), 3500);
             np_show();
@@ -415,7 +415,7 @@ void setup() {
     #if DEBUG_RAND_SEED == 1
         draw_value_binary(u32_randSeed ^ read_vcc_mv());
         np_show();
-        delay(3000);
+        delay_msec(3000);
     #endif
     
 
@@ -1450,11 +1450,11 @@ static void anim_low_batt() {
     {
         draw_char(BATT_ICON_DEAD, COLOR_RED);
         np_show();
-        delay(200);
+        delay_msec(200);
 
         np_clear();
         np_show();
-        delay(200);
+        delay_msec(200);
     }
 }
 
@@ -1468,11 +1468,11 @@ static void anim_flash_chars(char* msg) {
 
         draw_char(c, COLOR_BLUE);
         np_show();
-        delay(300);
+        delay_msec(300);
 
         np_clear();
         np_show();
-        delay(300);
+        delay_msec(300);
 
     }
     
@@ -1501,11 +1501,11 @@ static void anim_voltage(uint16_t u16_mv) {
     {
         uint8_t u8_digVal = extract_digit(u16_mv, u8_dig);
         anim_color_count(np_rgb_to_pack(  0, 255,   0), 150, u8_digVal);
-        delay(150 * u8_digVal);
+        delay_msec(150 * u8_digVal);
 
         np_clear();
         np_show();
-        delay(300);
+        delay_msec(300);
     }
 }
 
@@ -1517,7 +1517,7 @@ static void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait) {
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u8_numPixels; u8_pixIdx++) { // For each pixel ... 
         np_set_pix_color_pack(u8_pixIdx, u32_color);  //  Set pixel's color (in RAM)
         np_show();                               //  Update pixels to match
-        delay(u16_wait);                              //  Pause for a moment
+        delay_msec(u16_wait);                              //  Pause for a moment
     }
 }
 
@@ -1527,7 +1527,7 @@ static void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16
     for (uint8_t u8_pixIdx = 0; u8_pixIdx < u16_count; u8_pixIdx++) { //  For count # of pixels          
         np_set_pix_color_pack(u8_pixIdx, u32_color); //  Set pixel's color (in RAM)
         np_show();                              //  Update pixels to match
-        delay(u16_wait);                             //  Pause for a moment
+        delay_msec(u16_wait);                             //  Pause for a moment
     }
 }
 

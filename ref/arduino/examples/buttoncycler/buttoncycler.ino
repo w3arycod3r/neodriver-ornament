@@ -46,7 +46,7 @@ void loop() {
   // Check if state changed from high to low (button press).
   if((newState == LOW) && (oldState == HIGH)) {
     // Short delay to debounce button.
-    delay(20);
+    delay_msec(20);
     // Check if button is still low after debounce.
     newState = digitalRead(BUTTON_PIN);
     if(newState == LOW) {      // Yes, still low
@@ -96,7 +96,7 @@ void colorWipe(uint32_t color, int wait) {
   for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
     strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)
     strip.show();                          //  Update strip to match
-    delay(wait);                           //  Pause for a moment
+    delay_msec(wait);                           //  Pause for a moment
   }
 }
 
@@ -112,7 +112,7 @@ void theaterChase(uint32_t color, int wait) {
         strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
       }
       strip.show(); // Update strip with new contents
-      delay(wait);  // Pause for a moment
+      delay_msec(wait);  // Pause for a moment
     }
   }
 }
@@ -137,7 +137,7 @@ void rainbow(int wait) {
       strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(pixelHue)));
     }
     strip.show(); // Update strip with new contents
-    delay(wait);  // Pause for a moment
+    delay_msec(wait);  // Pause for a moment
   }
 }
 
@@ -157,7 +157,7 @@ void theaterChaseRainbow(int wait) {
         strip.setPixelColor(c, color); // Set pixel 'c' to value 'color'
       }
       strip.show();                // Update strip with new contents
-      delay(wait);                 // Pause for a moment
+      delay_msec(wait);                 // Pause for a moment
       firstPixelHue += 65536 / 90; // One cycle of color wheel over 90 frames
     }
   }

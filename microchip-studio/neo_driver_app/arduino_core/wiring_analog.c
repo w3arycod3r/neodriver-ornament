@@ -55,7 +55,7 @@ uint16_t analogRead(uint8_t ch, uint8_t analog_reference)
     if (ch == ADMUX_MUX_SE_VBG_INT_1V1)
     {
         // Wait for Vref to settle
-        delay(2);
+        delay_msec(2);
     }
 
     // Start conversion

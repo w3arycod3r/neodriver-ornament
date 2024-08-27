@@ -76,8 +76,8 @@ void init(void);
 
 uint32_t millis(void);
 uint32_t micros(void);
-void delay(uint32_t);
-void delayMicroseconds(uint16_t us);
+void delay_msec(uint32_t ms);
+void delay_usec(uint16_t us);
 
 void setup(void);
 void loop(void);

@@ -141,7 +141,8 @@ static void __empty()
 }
 void yield(void) __attribute__ ((weak, alias("__empty")));
 
-void delay(uint32_t ms)
+/* Delay for the given number of milliseconds. */
+void delay_msec(uint32_t ms)
 {
     uint16_t start = (uint16_t)micros();
 
@@ -158,7 +159,7 @@ void delay(uint32_t ms)
 
 
 /* Delay for the given number of microseconds.  Assumes a 1, **8**, 12, 16, 20 or 24 MHz clock. */
-void delayMicroseconds(uint16_t us)
+void delay_usec(uint16_t us)
 {
     #define _MORENOP_ "" // redefine to include NOPs depending on frequency. No more were needed for 8MHz clock.
 
