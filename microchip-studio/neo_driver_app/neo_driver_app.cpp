@@ -39,6 +39,8 @@ static void _wd_hw_enable(uint8_t u8_timeout);
 static void store_rand_seed();
 static uint8_t eep_char_read_line(char c_char, uint8_t line);
 static void inc_sat_eep_cntr_u16(uint8_t eep_addr);
+static void startup_seed_prng();
+static void soft_reset();
 
 // Drawing functions
 static void draw_char(char c_char, uint32_t u32_color, int8_t i8_x=0, int8_t i8_y=0);
@@ -369,9 +371,10 @@ void setup() {
     bitSetMask( DIDR0, _BV(ADC2D) );                               // Disable digital input buffer on ADC2
     bitSetMask( PRR, _BV(PRTIM1) | _BV(PRUSI) );                   // Disable TIMER1, USI clocks
 
+    wdt_disable();                                                 // Disable watchdog timer
+
     // Read EEPROM settings data
     uint8_t u8_rAnim = EEPROM.read(EEP_SETT_ANIM);
-    EEPROM.get(EEP_SETT_RSEED, u32_randSeed);
 
     // Validate animation number from EEPROM
     if (u8_rAnim >= ANIM_CNT) {
@@ -382,8 +385,7 @@ void setup() {
     // Update power-on counter
     inc_sat_eep_cntr_u16(EEP_SETT_NUM_POWER_ON);
 
-    // Seed PRNG with a number derived from a source of entropy (human input)
-    prng_seed(u32_randSeed ^ read_vcc_mv());
+    startup_seed_prng();
     
     // Update state using EEPROM data
     u8_anim = u8_rAnim;
@@ -406,7 +408,7 @@ void setup() {
     #if DEBUG_ADC_VAL == 1
         while(1) {
             delay_msec(250);
-            //draw_value(analogRead(IO_POT_ADC_CH, IO_POT_ADC_REF), 1023);
+            //draw_value(adc_read(IO_POT_ADC_CH, IO_POT_ADC_REF), 1023);
             draw_value(read_vcc_mv(), 3500);
             np_show();
         }
@@ -425,7 +427,7 @@ void setup() {
 void loop() {
 
     // Set brightness from potentiometer value
-    uint16_t u16_potVal = analogRead(IO_POT_ADC_CH, IO_POT_ADC_REF);
+    uint16_t u16_potVal = adc_read(IO_POT_ADC_CH, IO_POT_ADC_REF);
     uint8_t u8_bright = np_get_gamma_8(map(u16_potVal, 0, 1023, BRIGHT_MIN, 255)); // Scale value
     np_set_brightness(u8_bright);
 
@@ -447,6 +449,13 @@ void loop() {
         np_fill_all(0xFF0000);
         np_show();
     }
+
+    #if (DEBUG_SOFT_RESET_ON_INTERVAL_EN == 1)
+    if (millis() > (DEBUG_SOFT_RESET_INTERVAL_SEC * 1000))
+    {
+        soft_reset();
+    }
+    #endif /* DEBUG_SOFT_RESET_ON_INTERVAL_EN */
 
 }
 
@@ -1541,7 +1550,7 @@ static uint16_t read_vcc_mv() {
 
     // Calculate Vcc (in mV)
     // Unsigned division, since all values are positive
-    return ((uint32_t)(ADC_MAX_VALUE * ADC_INT_1V1_REF_VOLTAGE * MILLIVOLTS_PER_VOLT) / analogRead(VCC_AN_MEAS_CH, VCC_AN_MEAS_REF));
+    return ((uint32_t)(ADC_MAX_VALUE * ADC_INT_1V1_REF_VOLTAGE * MILLIVOLTS_PER_VOLT) / adc_read(VCC_AN_MEAS_CH, VCC_AN_MEAS_REF));
 }
 
 // Extract base data from sequence table stored in EEPROM
@@ -1677,6 +1686,11 @@ static void wd_enable(uint8_t u8_timeout) {
 // Sets up WDT hardware. Enable WDT interrupt and set prescale value.
 static void _wd_hw_enable(uint8_t u8_timeout) {
 
+    //  FUSE: WDTON=1   WDT in Safety level 1, initially disabled.
+    // We are cycling between these two states:
+    // WDE  WDIE   Watchdog Timer State    Action on Time-out
+    // 0    0      Stopped                 None
+    // 0    1      Running                 Interrupt
     wdt_reset();
     WDTCR = ((1 << WDIE) | ((u8_timeout & 0x8) << 2) | (u8_timeout & 0x7));
 }
@@ -1697,6 +1711,41 @@ static void inc_sat_eep_cntr_u16(uint8_t eep_addr) {
         u16_eepCounter++;
         EEPROM.put(eep_addr, u16_eepCounter);        
     }
+}
+
+static void startup_seed_prng() {
+
+    uint8_t adc_read_ctr = 8;
+    uint8_t adc_rand_bits = 0;
+    
+    // Do consecutive reads of the ADC to get some entropy, compose a seed from the LSB of each read
+    do {
+        if (bitRead(adc_read(RAND_AN_MEAS_CH, RAND_AN_MEAS_REF), 0))
+        {
+            bitSet(adc_rand_bits, 0);
+        }
+        adc_rand_bits <<= 1;
+
+        // Decrement loop index gives a smaller code size, according to Atmel app note.
+        adc_read_ctr--;
+    } while (adc_read_ctr);
+    
+    // Read the seed from EEPROM, increment it with the ADC-derived bits, store it back
+    EEPROM.get(EEP_SETT_RSEED, u32_randSeed);
+    u32_randSeed += adc_rand_bits;
+    store_rand_seed();
+
+    prng_seed(u32_randSeed);
+
+}
+
+static void soft_reset() {
+
+    // Enable the watchdog timer in "reset" mode, not "interrupt" mode.
+    wdt_enable(WDTO_15MS);
+
+    // Wait for the watchdog to reset the processor
+    while (1) {}
 }
 
 #endif

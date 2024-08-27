@@ -62,7 +62,7 @@ extern "C" {
 #define COMPOSE_ADMUX(ch, ref) (((ref & ADMUX_REFS1_REFS0_MASK) << REFS0) | (((ref & ADMUX_REFS2_MASK) >> 2) << REFS2) | ((ch & ADMUX_MUX_MASK) << MUX0))
 
 /****************************** PROTOTYPES ******************************/
-uint16_t analogRead(uint8_t ch, uint8_t analog_reference);
+uint16_t adc_read(uint8_t ch, uint8_t analog_reference);
 
 #ifdef __cplusplus
 } // extern "C"

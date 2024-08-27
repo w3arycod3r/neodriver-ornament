@@ -33,7 +33,7 @@
 /****************************** DEFINES ******************************/
 
 // Pass in the channel (ADMUX_MUX selection) and reference (ADMUX_REFS selection)
-uint16_t analogRead(uint8_t ch, uint8_t analog_reference)
+uint16_t adc_read(uint8_t ch, uint8_t analog_reference)
 {
     // VREF can be selected as either VCC, or internal 1.1V / 2.56V voltage
     // reference, or external AREF pin. The first ADC conversion result after switching voltage reference source may

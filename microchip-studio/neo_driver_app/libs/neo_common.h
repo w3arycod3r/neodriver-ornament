@@ -16,10 +16,11 @@
 
 /*
  *  FUSE SETTINGS:
- *  EESAVE    ENABLE
- *  BODLEVEL  ENABLE at VCC = 1.8V
- *  CKDIV8    DISABLE
- *  SUT_CKSEL INTRCOSC_8MHZ_6CK_14CK_64MS
+ *  EESAVE          ENABLE
+ *  BODLEVEL        ENABLE at VCC = 1.8V
+ *  CKDIV8          DISABLE
+ *  SUT_CKSEL       INTRCOSC_8MHZ_6CK_14CK_64MS
+ *  WDTON       1   WDT in Safety level 1, initially disabled.
  *
  *  LOW       0xE2
  *  HIGH      0xD6

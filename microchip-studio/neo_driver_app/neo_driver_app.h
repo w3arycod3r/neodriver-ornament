@@ -136,12 +136,15 @@ typedef struct {
 #define ANIM_ROT_SEL 3
 
 /******************************* DEBUG PARAMS ********************************/
-#define DEBUG_COV_ANIM  0
-#define DEBUG_LOW_BATT  0
-#define DEBUG_BATT_LVL  0
-#define DEBUG_ADC_VAL   0
-#define DEBUG_RAND_SEED 0
-#define DEBUG_BRIGHT    0
+#define DEBUG_COV_ANIM  (0)
+#define DEBUG_LOW_BATT  (0)
+#define DEBUG_BATT_LVL  (0)
+#define DEBUG_ADC_VAL   (0)
+#define DEBUG_RAND_SEED (0)
+#define DEBUG_BRIGHT    (0)
+
+#define DEBUG_SOFT_RESET_ON_INTERVAL_EN (1)
+#define DEBUG_SOFT_RESET_INTERVAL_SEC   (5)
 
 // Debug CoV animation
 #if DEBUG_COV_ANIM == 1
