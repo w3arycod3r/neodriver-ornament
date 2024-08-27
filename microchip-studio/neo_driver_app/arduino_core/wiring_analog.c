@@ -32,12 +32,7 @@
 
 /****************************** DEFINES ******************************/
 
-// Pass in the channel (ADMUX selection)
-// Maybe add reference as a param later.
-// Could we get "random" read by using PB0 (AREF) as external ref to ADC?
-// PB0 goes to left switch, with no external pullup.
-// Could measure any constant channel, with the "random" reference.
-// Probably need to do consecutive reads, and composite the least significant bits.
+// Pass in the channel (ADMUX_MUX selection) and reference (ADMUX_REFS selection)
 uint16_t analogRead(uint8_t ch, uint8_t analog_reference)
 {
     // VREF can be selected as either VCC, or internal 1.1V / 2.56V voltage

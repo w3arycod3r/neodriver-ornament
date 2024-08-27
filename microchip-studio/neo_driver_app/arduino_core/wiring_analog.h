@@ -15,6 +15,10 @@ extern "C" {
 #endif
 
 /****************************** DEFINES ******************************/
+#define ADC_NUM_BITS            (10)
+#define ADC_MAX_VALUE           ((1 << ADC_NUM_BITS) - 1)
+#define MILLIVOLTS_PER_VOLT     (1000)
+#define ADC_INT_1V1_REF_VOLTAGE (1.1)
 
 // Below defines are the possible values for the ADMUX_REFS bits in the ADMUX register.
 #define ADMUX_REFS1_REFS0_MASK           (0b011)
@@ -51,8 +55,11 @@ extern "C" {
 // 0b0100 - 0b1011 are used for differential channels.
 #define ADMUX_MUX_SE_VBG_INT_1V1  (0b1100)  // Internal bandgap (1.1V) voltage reference
 #define ADMUX_MUX_SE_GND          (0b1101)
-#define ADMUX_MUX_SE_ADC4         (0b1111)  // Where is ADC4?
+#define ADMUX_MUX_SE_ADC4         (0b1111)  // Temperature sensor, must be used with 1.1V internal reference.
 
+// This macro computes the ADMUX register value based on the channel and reference selection bits, at compile time.
+// This assumes ADLAR is always 0.
+#define COMPOSE_ADMUX(ch, ref) (((ref & ADMUX_REFS1_REFS0_MASK) << REFS0) | (((ref & ADMUX_REFS2_MASK) >> 2) << REFS2) | ((ch & ADMUX_MUX_MASK) << MUX0))
 
 /****************************** PROTOTYPES ******************************/
 uint16_t analogRead(uint8_t ch, uint8_t analog_reference);

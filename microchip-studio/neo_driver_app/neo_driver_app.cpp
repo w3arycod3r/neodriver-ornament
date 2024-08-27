@@ -1532,15 +1532,16 @@ static void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16
 }
 
 
-// Read 1.1V reference against AVcc
+// Read 1.1V reference against VCC
 static uint16_t read_vcc_mv() {
 
     #if DEBUG_BATT_LVL == 1
         return SPOOF_BATT_LVL;
     #endif
 
-    // Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
-    return (1125300L / analogRead(VCC_AN_MEAS_CH, VCC_AN_MEAS_REF));
+    // Calculate Vcc (in mV)
+    // Unsigned division, since all values are positive
+    return ((uint32_t)(ADC_MAX_VALUE * ADC_INT_1V1_REF_VOLTAGE * MILLIVOLTS_PER_VOLT) / analogRead(VCC_AN_MEAS_CH, VCC_AN_MEAS_REF));
 }
 
 // Extract base data from sequence table stored in EEPROM

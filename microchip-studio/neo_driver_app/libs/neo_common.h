@@ -41,9 +41,20 @@
 #define IO_POT_ADC_REF   (ADMUX_REFS_VCC_AS_REF)      // PB4, ADC2 - Brightness Potentiometer
                                                       // PB5, ADC0 - Reset
 
-// Channel and reference for VCC measurement
+// Analog channel and reference for VCC measurement
 #define VCC_AN_MEAS_CH   (ADMUX_MUX_SE_VBG_INT_1V1)
 #define VCC_AN_MEAS_REF  (ADMUX_REFS_VCC_AS_REF)
+
+// 
+
+/*  Analog channel and reference for "random noise" measurement
+    Could we get "random" read by using PB0 (AREF) as external ref to ADC?
+    PB0 goes to left switch, with no external pullup.
+    Could measure any constant channel, with the "random" reference.
+    Probably need to do consecutive reads, and composite the least significant bits.
+*/
+#define RAND_AN_MEAS_CH  (IO_POT_ADC_CH)
+#define RAND_AN_MEAS_REF (ADMUX_REFS_EXT_PB0_AREF)
 
 // Pixel params
 #define BRIGHT_MIN   24
