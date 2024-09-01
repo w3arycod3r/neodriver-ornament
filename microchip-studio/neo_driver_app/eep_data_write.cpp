@@ -15,10 +15,11 @@
 #ifdef COMPILE_EEP_DATA_WRITE
 
 #include <Arduino.h>
-#include <EEPROM.h>
+#include <avr/eeprom.h>
 #include <neo_pixel_slim.h>
 #include <neo_common.h>
 #include <ard_utility.h>
+#include <stdint.h>
 
 /******************************** PROTOTYPES *********************************/
 void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);
@@ -56,7 +57,7 @@ void setup() {
 
     #ifdef EEP_COV_DATA_WRITE_ENABLE
     for (uint16_t i = 0; i < EEP_COV_DATA_NUM_BYTES; i++) {
-        EEPROM.update(EEP_COV_DATA_START_ADDR+i, pgm_read_byte(&covSeqData[i]));
+        eeprom_update_byte((uint8_t*)(EEP_COV_DATA_START_ADDR+i), pgm_read_byte(&covSeqData[i]));
     }
     #endif
 
@@ -66,7 +67,7 @@ void setup() {
 
     #ifdef EEP_COV_DATA_WRITE_ENABLE
     for (uint16_t i = 0; i < EEP_COV_DATA_NUM_BYTES; i++) {
-        if (EEPROM.read(EEP_COV_DATA_START_ADDR+i) != pgm_read_byte(&covSeqData[i])) { dataOK = false; }
+        if (eeprom_read_byte((uint8_t*)(EEP_COV_DATA_START_ADDR+i)) != pgm_read_byte(&covSeqData[i])) { dataOK = false; }
     }
     #endif
 
@@ -127,7 +128,7 @@ void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num
 */
 bool eep_compressed_chars(bool validate)
 {
-    uint16_t eep_addr = EEP_CHAR_DATA_START_ADDR;
+    uint8_t* eep_addr = (uint8_t*)(EEP_CHAR_DATA_START_ADDR);
     uint8_t input_byte = 0;
     uint16_t input_byte_cnt = 0;
     uint8_t input_bits_rem = 0;
@@ -173,11 +174,11 @@ bool eep_compressed_chars(bool validate)
         {
             if (validate)
             {
-                if (EEPROM.read(eep_addr) != output_byte) { dataOK = false; }
+                if (eeprom_read_byte(eep_addr) != output_byte) { dataOK = false; }
             }
             else
             {
-                EEPROM.update(eep_addr, output_byte);
+                eeprom_update_byte(eep_addr, output_byte);
             }
             output_byte = 0;
             output_bits_rem = 8;

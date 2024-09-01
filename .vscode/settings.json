@@ -4,6 +4,8 @@
         "*.tcl": "shellscript",
         "*.mif": "vhdl",
         "*.asm": "asm-intel-x86-generic",
-        "wdt.h": "c"
+        "wdt.h": "c",
+        "neo_pixel_slim.h": "c",
+        "eeprom.h": "c"
     }
 }

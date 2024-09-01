@@ -79,21 +79,21 @@
 // EEPROM Addresses
 
 // First 16 bytes reserved for settings storage
-#define EEP_SETT_FIRST_ADDR     0
-#define EEP_SETT_ANIM           0
-#define EEP_SETT_NPIX           1   // No longer needed, since we are using a fixed 5x5 matrix
-#define EEP_SETT_RSEED          2   // Addr 2-5, 4 bytes
-#define EEP_SETT_FLAGS          6   // 8 Status Flags
+#define EEP_SETT_FIRST_ADDR     (0)
+#define EEP_SETT_ANIM           ((uint8_t*)(0))
+#define EEP_SETT_NPIX           ((uint8_t*)(1))    // No longer needed, since we are using a fixed 5x5 matrix
+#define EEP_SETT_RSEED          ((uint32_t*)(2))   // Addr 2-5, 4 bytes
+#define EEP_SETT_FLAGS          ((uint8_t*)(6))    // 8 Status Flags
 // Runtime since last charge in minutes. Includes "on" and "off" time. Stops counting once battery is "dead".
-#define EEP_SETT_RUNTIME_MIN    7   // 2 bytes
+#define EEP_SETT_RUNTIME_MIN    ((uint16_t*)(7))   // 2 bytes
 // Number of animation cycles since stat reset.
-#define EEP_SETT_NUM_CYCLES     9   // 2 bytes
+#define EEP_SETT_NUM_CYCLES     ((uint16_t*)(9))   // 2 bytes
 // Number of power-on's since stat reset.
-#define EEP_SETT_NUM_POWER_ON   11   // 2 bytes
-#define EEP_SETT_LAST_ADDR      15
+#define EEP_SETT_NUM_POWER_ON   ((uint16_t*)(11))  // 2 bytes
+#define EEP_SETT_LAST_ADDR      (15)
 
 // Status Flags (bits in EEP_SETT_FLAGS)
-#define STAT_FLG_BATT_DEAD  BIT0
+#define STAT_FLG_BATT_DEAD  (BIT0)
 
 
 // EEPROM Ranges & Sizes

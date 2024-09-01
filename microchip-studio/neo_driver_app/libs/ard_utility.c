@@ -6,6 +6,7 @@
 #include "ard_utility.h"
 #include <stdint.h>
 #include <avr/wdt.h>
+#include <avr/eeprom.h>
 
 // ac_str must be large enough for the decimal digits and null terminator
 // See U32_DEC_STR_MAX_BUFF_SIZE
@@ -74,4 +75,17 @@ void soft_reset() {
 
     // Wait for the watchdog to reset the processor
     while (1) {}
+}
+
+// Increment a u16 counter in EEPROM with "saturate"
+// Saturate the counter at max value, don't wrap around
+void inc_sat_eep_cntr_u16(uint16_t* eep_addr) {
+    uint16_t u16_eepCounter;
+
+    u16_eepCounter = eeprom_read_word(eep_addr);
+
+    if (u16_eepCounter != 0xFFFF) {
+        u16_eepCounter++;
+        eeprom_update_word(eep_addr, u16_eepCounter);
+    }
 }

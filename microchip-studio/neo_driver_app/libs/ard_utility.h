@@ -82,6 +82,7 @@ uint8_t strlen(char* ac_str);
 void rev_string(char* ac_str);
 void memset(uint8_t*, uint8_t, uint8_t);
 void soft_reset();
+void inc_sat_eep_cntr_u16(uint16_t* eep_addr);
 
 #ifdef __cplusplus
 } // extern "C"
