@@ -5,6 +5,7 @@
 
 #include "ard_utility.h"
 #include <stdint.h>
+#include <avr/wdt.h>
 
 // ac_str must be large enough for the decimal digits and null terminator
 // See U32_DEC_STR_MAX_BUFF_SIZE
@@ -63,4 +64,14 @@ void memset(uint8_t* ptr, uint8_t val, uint8_t num_bytes) {
         ptr++;
         num_bytes--;
     } while (num_bytes);
+}
+
+// https://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_softreset
+void soft_reset() {
+
+    // Enable the watchdog timer in "reset" mode, not "interrupt" mode.
+    wdt_enable(WDTO_15MS);
+
+    // Wait for the watchdog to reset the processor
+    while (1) {}
 }

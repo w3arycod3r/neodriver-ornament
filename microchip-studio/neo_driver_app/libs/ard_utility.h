@@ -81,6 +81,7 @@ void u32_to_dec_string(uint32_t u32_val, char* ac_str);
 uint8_t strlen(char* ac_str);
 void rev_string(char* ac_str);
 void memset(uint8_t*, uint8_t, uint8_t);
+void soft_reset();
 
 #ifdef __cplusplus
 } // extern "C"

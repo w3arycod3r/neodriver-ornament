@@ -40,7 +40,6 @@ static void store_rand_seed();
 static uint8_t eep_char_read_line(char c_char, uint8_t line);
 static void inc_sat_eep_cntr_u16(uint8_t eep_addr);
 static void startup_seed_prng();
-static void soft_reset();
 
 // Drawing functions
 static void draw_char(char c_char, uint32_t u32_color, int8_t i8_x=0, int8_t i8_y=0);
@@ -1735,16 +1734,6 @@ static void startup_seed_prng() {
 
     prng_seed(u32_randSeed);
 
-}
-
-// https://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_softreset
-static void soft_reset() {
-
-    // Enable the watchdog timer in "reset" mode, not "interrupt" mode.
-    wdt_enable(WDTO_15MS);
-
-    // Wait for the watchdog to reset the processor
-    while (1) {}
 }
 
 #endif
