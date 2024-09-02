@@ -122,19 +122,6 @@ typedef struct {
 // Frames
 #define FRAMES_SLEEP_TIME      WDT_8S
 
-/*
- *   ANIM_ROT_SEL - Rotation select for 5x5 Matrix - Increasing #, Turning clockwise
- *   Used by several text based animations
- *
- *   Value |  Input wires located at:
- *   ================================
- *   1     |  BOTTOM
- *   2     |  LEFT
- *   3     |  TOP
- *   4     |  RIGHT
- */
-#define ANIM_ROT_SEL 3
-
 /******************************* DEBUG PARAMS ********************************/
 #define DEBUG_COV_ANIM  (0)
 #define DEBUG_LOW_BATT  (0)
