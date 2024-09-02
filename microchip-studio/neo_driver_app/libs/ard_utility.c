@@ -10,8 +10,8 @@
 
 // ac_str must be large enough for the decimal digits and null terminator
 // See U32_DEC_STR_MAX_BUFF_SIZE
+// Reference code: https://github.com/mpaland/printf/blob/master/printf.c
 void u32_to_dec_string(uint32_t u32_val, char* ac_str) {
-    // Reference code: https://github.com/mpaland/printf/blob/master/printf.c
     uint8_t u8_idx = 0;
 
     // Convert binary to decimal

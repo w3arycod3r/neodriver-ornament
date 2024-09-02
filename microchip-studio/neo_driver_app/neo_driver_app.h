@@ -3,6 +3,13 @@
  * Purpose:   Main NeoPixel driver program.
  */
 
+/*  Code References:
+    https://github.com/adafruit/Adafruit_NeoPixel/blob/master/examples/buttoncycler/buttoncycler.ino
+    https://learn.adafruit.com/sipping-power-with-neopixels/demo-code
+    https://github.com/adafruit/Adafruit_NeoPixel
+    https://github.com/adafruit/Adafruit_NeoPixel/tree/master/examples/strandtest_wheel
+*/
+
 #ifndef NEO_DRIVER_APP_H
 #define NEO_DRIVER_APP_H
 
