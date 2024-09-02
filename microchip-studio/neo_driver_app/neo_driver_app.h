@@ -80,13 +80,6 @@ typedef struct {
 #define BATT_LVL_STEP_MSEC   400
 #define BATT_LVL_SLEEP_TIME  WDT_8S
 
-#define BATT_ICON_LVL_1     '#'
-#define BATT_ICON_LVL_2     '$'
-#define BATT_ICON_LVL_3     '%'
-#define BATT_ICON_LVL_4     '&'
-#define BATT_ICON_LVL_5     '\''
-#define BATT_ICON_DEAD      '('
-
 // Animation params
 #define ANIM_CNT (sizeof(apfn_renderFunc) / sizeof(apfn_renderFunc[0]))
 #define ANIM_MANUAL_CYCLES     1              // Number of cycles to play in "manual" mode before going to shuffle mode

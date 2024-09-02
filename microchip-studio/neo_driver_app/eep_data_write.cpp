@@ -20,6 +20,7 @@
 #include <neo_common.h>
 #include <ard_utility.h>
 #include <stdint.h>
+#include <draw.h>
 
 /******************************** PROTOTYPES *********************************/
 void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);

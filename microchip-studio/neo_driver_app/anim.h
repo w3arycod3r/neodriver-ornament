@@ -1,6 +1,6 @@
 /* File:      anim.h
  * Author:    Garrett Carter
- * Purpose:   Animation functions
+ * Purpose:   Animation "task" functions, non-blocking
  */
 
 #ifndef ANIM_H

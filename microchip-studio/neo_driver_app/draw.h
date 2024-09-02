@@ -28,6 +28,23 @@ extern "C"{
  */
 #define ANIM_ROT_SEL 3
 
+#define BATT_ICON_LVL_1     '#'
+#define BATT_ICON_LVL_2     '$'
+#define BATT_ICON_LVL_3     '%'
+#define BATT_ICON_LVL_4     '&'
+#define BATT_ICON_LVL_5     '\''
+#define BATT_ICON_DEAD      '('
+
+// Colors
+#define COLOR_TEAL   0x00FFFFL
+#define COLOR_YELLOW 0xFFFF00L
+#define COLOR_WHITE  0xFFFFFFL
+#define COLOR_PURPLE 0xFF00FFL
+#define COLOR_RED    0xFF0000L
+#define COLOR_GREEN  0x00FF00L
+#define COLOR_BLUE   0x0000FFL
+
+#define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
 
 /********************************** PROTOTYPES **********************************/
 // Drawing functions

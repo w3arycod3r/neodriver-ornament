@@ -65,17 +65,6 @@
 #define PIX_CNT_MAX  25
 #define PIX_CNT_INIT 25                 // Cannot be greater than PIX_CNT_MAX
 
-// Colors
-#define COLOR_TEAL   0x00FFFFL
-#define COLOR_YELLOW 0xFFFF00L
-#define COLOR_WHITE  0xFFFFFFL
-#define COLOR_PURPLE 0xFF00FFL
-#define COLOR_RED    0xFF0000L
-#define COLOR_GREEN  0x00FF00L
-#define COLOR_BLUE   0x0000FFL
-
-#define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
-
 // EEPROM Addresses
 
 // First 16 bytes reserved for settings storage

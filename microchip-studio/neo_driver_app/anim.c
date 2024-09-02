@@ -1,6 +1,6 @@
 /* File:      anim.c
  * Author:    Garrett Carter
- * Purpose:   Animation functions
+ * Purpose:   Animation "task" functions, non-blocking
  */
 
 #include "anim.h"
