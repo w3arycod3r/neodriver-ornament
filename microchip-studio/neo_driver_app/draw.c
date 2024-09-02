@@ -118,7 +118,8 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y) {
     }
 }
 
-void draw_char_cntr(char c_char, uint32_t u32_color)
+// Draw a character, centered (no X or Y shift)
+void draw_char_cent(char c_char, uint32_t u32_color)
 {
     draw_char(c_char, u32_color, 0, 0);
 }

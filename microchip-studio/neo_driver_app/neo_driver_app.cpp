@@ -920,19 +920,19 @@ static void anim_cov(uint8_t u8_pattType) {
     {
     case 0: // A (Grn)
         if      (u8_pattType == 0) { np_fill(u8_cBright * 0x000100L, 0, u8_quarter); }  // Force 32-bit mult
-        else if (u8_pattType == 1) { draw_char_cntr('A', u8_cBright * 0x000100L); }
+        else if (u8_pattType == 1) { draw_char_cent('A', u8_cBright * 0x000100L); }
         break;
     case 1: // C (Blu)
         if      (u8_pattType == 0) { np_fill(u8_cBright * 0x000001L, u8_quarter, u8_quarter); }
-        else if (u8_pattType == 1) { draw_char_cntr('C', u8_cBright * 0x000001L); }
+        else if (u8_pattType == 1) { draw_char_cent('C', u8_cBright * 0x000001L); }
         break;
     case 2: // G (Yel)
         if      (u8_pattType == 0) { np_fill(u8_cBright * 0x010100L, 2*u8_quarter, u8_quarter); }
-        else if (u8_pattType == 1) { draw_char_cntr('G', u8_cBright * 0x010100L); }
+        else if (u8_pattType == 1) { draw_char_cent('G', u8_cBright * 0x010100L); }
         break;
     case 3: // U (Red)
         if      (u8_pattType == 0) { np_fill(u8_cBright * 0x010000L, 3*u8_quarter, 0); }
-        else if (u8_pattType == 1) { draw_char_cntr('U', u8_cBright * 0x010000L); }
+        else if (u8_pattType == 1) { draw_char_cent('U', u8_cBright * 0x010000L); }
         break;
     }
 
@@ -1233,19 +1233,19 @@ static void anim_batt_level() {
     switch (u8_stepLevel)
     {
     case 1:
-        draw_char_cntr(BATT_ICON_LVL_1, COLOR_RED);
+        draw_char_cent(BATT_ICON_LVL_1, COLOR_RED);
         break;
     case 2:
-        draw_char_cntr(BATT_ICON_LVL_2, COLOR_YELLOW);
+        draw_char_cent(BATT_ICON_LVL_2, COLOR_YELLOW);
         break;
     case 3:
-        draw_char_cntr(BATT_ICON_LVL_3, COLOR_YELLOW);
+        draw_char_cent(BATT_ICON_LVL_3, COLOR_YELLOW);
         break;
     case 4:
-        draw_char_cntr(BATT_ICON_LVL_4, COLOR_GREEN);
+        draw_char_cent(BATT_ICON_LVL_4, COLOR_GREEN);
         break;
     case 5:
-        draw_char_cntr(BATT_ICON_LVL_5, COLOR_GREEN);
+        draw_char_cent(BATT_ICON_LVL_5, COLOR_GREEN);
         break;
     }
 
@@ -1426,7 +1426,7 @@ static void anim_low_batt() {
     np_clear();
     for (uint8_t u8_i = 0; u8_i < 4; u8_i++)
     {
-        draw_char_cntr(BATT_ICON_DEAD, COLOR_RED);
+        draw_char_cent(BATT_ICON_DEAD, COLOR_RED);
         np_show();
         delay_msec(200);
 
@@ -1444,7 +1444,7 @@ static void anim_flash_chars(char* msg) {
     char c;
     while (c = msg[i++]) {
 
-        draw_char_cntr(c, COLOR_BLUE);
+        draw_char_cent(c, COLOR_BLUE);
         np_show();
         delay_msec(300);
 
