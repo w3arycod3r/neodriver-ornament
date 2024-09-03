@@ -309,6 +309,9 @@
     <Compile Include="arduino_core\wiring_analog.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="debug.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="draw.c">
       <SubType>compile</SubType>
     </Compile>
@@ -318,10 +321,7 @@
     <Compile Include="eep_data_write.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="libs\ard_utility.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="libs\ard_utility.h">
+    <Compile Include="libs\eep_data.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\multi_button.cpp">
@@ -346,6 +346,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="libs\prng.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="libs\utility.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="libs\utility.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="neo_driver_app.cpp">

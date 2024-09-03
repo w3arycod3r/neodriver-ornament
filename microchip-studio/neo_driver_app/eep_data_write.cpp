@@ -18,13 +18,13 @@
 #include <avr/eeprom.h>
 #include <neo_pixel_slim.h>
 #include <neo_common.h>
-#include <ard_utility.h>
+#include <utility.h>
 #include <stdint.h>
 #include <draw.h>
+#include <eep_data.h>
 
 /******************************** PROTOTYPES *********************************/
-void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);
-bool eep_compressed_chars(bool validate);
+static bool eep_compressed_chars(bool validate);
 
 /********************************** DEFINES **********************************/
 
@@ -32,12 +32,7 @@ bool eep_compressed_chars(bool validate);
 
 /****************************** GLOBAL OBJECTS *******************************/
 
-
 /****************************** FLASH CONSTANTS ******************************/
-/*
-    Settings Data (7B)
-    EEPROM 0-6
-*/
 
 /****************************** SETUP FUNCTION *******************************/
 void setup() {
@@ -45,7 +40,7 @@ void setup() {
     // Setup I/O
     bitSetMask(DDRB, IO_NP_ENABLE);               // Set as o/p
     bitSetMask(PORTB, IO_NP_ENABLE);              // Enable MOSFET for NeoPixel power
-    delay_msec(5);                                     // Time for MOSFET to switch on
+    delay_msec(5);                                // Time for MOSFET to switch on
     bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
@@ -99,35 +94,14 @@ void setup() {
 
 /********************************* MAIN LOOP *********************************/
 void loop() {
-
-}
-
-// Shift in upper num_bits from data_in, into data, from the right
-// num_bits should be <= 8
-void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits)
-{
-    if (num_bits == 0)
-    {
-        return;
-    }
-    
-    // A bit mask with num_bits of 1's in lower positions
-    uint8_t bitmask = (1 << num_bits) - 1;
-    // Handle 8 bits specially, overflows the above left shift..
-    if (num_bits == 8)
-    {
-        bitmask = 0xFF;
-    }
-    
-    *data <<= num_bits;
-    *data |= ((data_in >> (8-num_bits)) & bitmask);
+    // Do nothing
 }
 
 /*
     validate = false -> "Update" EEPROM with correct values, possibly performing writes
     validate = true  -> Check EEPROM for correct values, performing no writes, returning status
 */
-bool eep_compressed_chars(bool validate)
+static bool eep_compressed_chars(bool validate)
 {
     uint8_t* eep_addr = (uint8_t*)(EEP_CHAR_DATA_START_ADDR);
     uint8_t input_byte = 0;

@@ -17,12 +17,12 @@ extern "C"{
 
 /********************************** PROTOTYPES **********************************/
 // Blocking animations
-void anim_voltage(uint16_t u16_mv);
-void anim_low_batt();
-void anim_flash_chars(char* msg);
-void anim_color_wipe(uint32_t u32_color, uint16_t u16_wait);
-void anim_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count);
-void anim_print_dec_u32(uint32_t u32_val);
+void anim_blk_voltage(uint16_t u16_mv);
+void anim_blk_low_batt();
+void anim_blk_flash_chars(char* msg);
+void anim_blk_color_wipe(uint32_t u32_color, uint16_t u16_wait);
+void anim_blk_color_count(uint32_t u32_color, uint16_t u16_wait, uint16_t u16_count);
+void anim_blk_print_dec_u32(uint32_t u32_val);
 
 
 #ifdef __cplusplus

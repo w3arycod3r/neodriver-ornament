@@ -44,7 +44,7 @@
  */
 
 #include "neo_pixel_slim.h"
-#include <ard_utility.h>
+#include <utility.h>
 #include <avr/io.h>
 
 /****************************** STATIC VARS ******************************/

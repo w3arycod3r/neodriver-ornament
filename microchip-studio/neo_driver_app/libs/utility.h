@@ -1,10 +1,10 @@
-/* File:      ard_utility.h
+/* File:      utility.h
  * Author:    Garrett Carter
- * Purpose:   Arduino utility functions
+ * Purpose:   Utility functions
  */
 
-#ifndef ARD_UTILITY_H
-#define ARD_UTILITY_H
+#ifndef UTILITY_H
+#define UTILITY_H
 
 #include <stdint.h>
 
@@ -76,6 +76,12 @@ extern "C"{
 #define U32_DEC_MAX_DIGITS 10
 #define U32_DEC_STR_MAX_BUFF_SIZE (U32_DEC_MAX_DIGITS+1)
 
+// Battery level thresholds
+#define BATT_LVL_THRESH_1_MV  (2750)
+#define BATT_LVL_THRESH_2_MV  (3000)
+#define BATT_LVL_THRESH_3_MV  (3100)
+#define BATT_LVL_THRESH_4_MV  (3200)
+
 /********************************** PROTOTYPES **********************************/
 void u32_to_dec_string(uint32_t u32_val, char* ac_str);
 uint8_t strlen(char* ac_str);
@@ -83,9 +89,13 @@ void rev_string(char* ac_str);
 void memset(uint8_t*, uint8_t, uint8_t);
 void soft_reset();
 void inc_sat_eep_cntr_u16(uint16_t* eep_addr);
+uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig);
+uint16_t read_vcc_mv();
+uint8_t get_batt_level();
+void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
-#endif /* ARD_UTILITY_H */
+#endif /* UTILITY_H */

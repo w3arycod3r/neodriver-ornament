@@ -5,9 +5,11 @@
 
 #include "draw.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include <neo_pixel_slim.h>
 #include <neo_common.h>
 #include <avr/eeprom.h>
+#include <eep_data.h>
 
 /****************************** STATIC PROTOTYPES ******************************/
 static uint8_t eep_char_read_line(char c_char, uint8_t line);
@@ -146,4 +148,14 @@ static uint8_t eep_char_read_line(char c_char, uint8_t line)
 
     return line_data;
     
+}
+
+// Extract base data from sequence table stored in EEPROM
+uint8_t read_cov_base(uint16_t u16_baseNum) {
+
+    // 0th base is encoded in the 2 most significant bits
+    uint8_t u8_pos = 3 - u16_baseNum % 4;
+    uint8_t u8_data = eeprom_read_byte((uint8_t*)(EEP_COV_DATA_START_ADDR + u16_baseNum/4));
+
+    return (u8_data >> (2 * u8_pos)) & 0b00000011;
 }

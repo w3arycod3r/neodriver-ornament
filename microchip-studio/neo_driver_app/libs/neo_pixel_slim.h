@@ -38,7 +38,7 @@
 
 #include <Arduino.h>
 #include <stdint.h>
-#include <ard_utility.h>
+#include <utility.h>
 
 // Allow compilation with C++ compiler
 #ifdef __cplusplus

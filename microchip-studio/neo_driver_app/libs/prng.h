@@ -7,7 +7,7 @@
 #define PRNG_H
 
 #include <stdbool.h>
-#include <ard_utility.h>
+#include <utility.h>
 
 #ifdef __cplusplus
 extern "C" {

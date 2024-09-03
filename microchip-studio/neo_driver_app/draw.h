@@ -35,16 +35,16 @@ extern "C"{
 #define BATT_ICON_LVL_5     '\''
 #define BATT_ICON_DEAD      '('
 
-// Colors
-#define COLOR_TEAL   0x00FFFFL
-#define COLOR_YELLOW 0xFFFF00L
-#define COLOR_WHITE  0xFFFFFFL
-#define COLOR_PURPLE 0xFF00FFL
-#define COLOR_RED    0xFF0000L
-#define COLOR_GREEN  0x00FF00L
-#define COLOR_BLUE   0x0000FFL
+// 32-bit packed colors
+#define COLOR_TEAL   0x00FFFFUL
+#define COLOR_YELLOW 0xFFFF00UL
+#define COLOR_WHITE  0xFFFFFFUL
+#define COLOR_PURPLE 0xFF00FFUL
+#define COLOR_RED    0xFF0000UL
+#define COLOR_GREEN  0x00FF00UL
+#define COLOR_BLUE   0x0000FFUL
 
-#define COLOR_WHEEL  0x000000L // Dynamic color wheel effect
+#define COLOR_WHEEL  0x000000UL // Dynamic color wheel effect
 
 /********************************** PROTOTYPES **********************************/
 // Drawing functions
@@ -52,6 +52,9 @@ void draw_char(char c_char, uint32_t u32_color, int8_t i8_x, int8_t i8_y);
 void draw_char_cent(char c_char, uint32_t u32_color);
 void draw_value(uint32_t u32_val, uint32_t u32_maxVal);
 void draw_value_binary(uint32_t u32_val);
+
+// Drawing "support" functions
+uint8_t read_cov_base(uint16_t u16_baseNum);
 
 #ifdef __cplusplus
 } // extern "C"

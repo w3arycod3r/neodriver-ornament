@@ -8,7 +8,7 @@
 
 #include <Arduino.h>
 #include <stdbool.h>
-#include <ard_utility.h>
+#include <utility.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,6 +64,10 @@ extern "C" {
 // This macro computes the ADMUX register value based on the channel and reference selection bits, at compile time.
 // This assumes ADLAR is always 0.
 #define COMPOSE_ADMUX(ch, ref) (((ref & ADMUX_REFS1_REFS0_MASK) << REFS0) | (((ref & ADMUX_REFS2_MASK) >> 2) << REFS2) | ((ch & ADMUX_MUX_MASK) << MUX0))
+
+// Analog channel and reference for VCC measurement
+#define VCC_AN_MEAS_CH   (ADMUX_MUX_SE_VBG_INT_1V1)
+#define VCC_AN_MEAS_REF  (ADMUX_REFS_VCC_AS_REF)
 
 /****************************** PROTOTYPES ******************************/
 void adc_init();
