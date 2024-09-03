@@ -25,6 +25,7 @@
 #include <anim_blk.h>
 #include <anim.h>
 #include <eep_data.h>
+#include <debug.h>
 
 /******************************** PROTOTYPES *********************************/
 static void randomize_anim();
@@ -108,36 +109,27 @@ void setup() {
     bitSetMask( DIDR0, _BV(ADC2D) );                               // Disable digital input buffer on ADC2
     bitSetMask( PRR, _BV(PRTIM1) | _BV(PRUSI) );                   // Disable TIMER1, USI clocks
 
-    // Read EEPROM settings data
-    uint8_t u8_rAnim = eeprom_read_byte(EEP_SETT_ANIM);
-
-    // Validate animation number from EEPROM
-    if (u8_rAnim >= ANIM_CNT) {
-        u8_rAnim = 0;
-        eeprom_update_byte(EEP_SETT_ANIM, u8_rAnim);
-    }
+    // Read EEPROM settings data -- Nothing to read currently.
 
     // Update power-on counter
     inc_sat_eep_cntr_u16(EEP_SETT_NUM_POWER_ON);
 
+    // Call this before we enable the pull-up on PB0
     startup_seed_prng();
     
-    // Update state using EEPROM data
-    u8_anim = u8_rAnim;
+    randomize_anim();
 
     // Setup I/O
     bitSetMask(DDRB, IO_NP_ENABLE);               // Set as o/p
     bitSetMask(PORTB, IO_NP_ENABLE);              // Enable MOSFET for NeoPixel power
     delay_msec(5);                                // Time for MOSFET to switch on
-    bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p
+    bitClearMask(DDRB, IO_SW_LEFT | IO_SW_RIGHT); // Set as i/p. TODO: This is the reset state, can we skip this?
     bitSetMask(PORTB, IO_SW_LEFT | IO_SW_RIGHT);  // Enable pull-ups
 
     // Init and clear NeoPixels
     np_init();
     np_show();
     np_set_brightness(BRIGHT_INIT);
-
-    // Init Vars
 
     // Debug code
     #if DEBUG_ADC_VAL_EN == 1
@@ -150,9 +142,10 @@ void setup() {
     #endif
 
     #if DEBUG_RAND_SEED_EN == 1
-        draw_value_binary(u32_randSeed ^ read_vcc_mv());
+        draw_value_binary(u32_randSeed);
         np_show();
-        delay_msec(3000);
+        while((bitReadMask(PINB, IO_SW_LEFT)) && (bitReadMask(PINB, IO_SW_RIGHT))) {}
+        soft_reset();
     #endif
     
 
@@ -339,9 +332,6 @@ static void mode_logic() {
     }
 }
 
-/***************************** RENDER FUNCTIONS ******************************/
-
-
 /*********************************** ISR's ***********************************/
 
 // Left or Right Switch
@@ -525,6 +515,8 @@ static void startup_seed_prng() {
     uint8_t adc_rand_bits = 0;
     
     // Do consecutive reads of the ADC to get some entropy, compose a seed from the LSB of each read
+    // We are using the ADC to measure a constant channel with a "random" reference, PB0.
+    // This function is called before the pull-up is enabled on PB0, so PB0 is set as a floating input.
     do {
         if (bitRead(adc_read(RAND_AN_MEAS_CH, RAND_AN_MEAS_REF), 0))
         {

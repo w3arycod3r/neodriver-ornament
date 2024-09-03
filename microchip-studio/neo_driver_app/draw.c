@@ -25,6 +25,8 @@ void draw_value(uint32_t u32_val, uint32_t u32_maxVal) {
 
 }
 
+// Represent each bit with an ON or OFF pixel, LSB first.
+// Bit 0 corresponds to pixel 0, bit 1 to pixel 1, etc.
 void draw_value_binary(uint32_t u32_val) {
     np_clear();
 
