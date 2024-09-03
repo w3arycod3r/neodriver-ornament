@@ -18,7 +18,7 @@
 
 // First 16 bytes reserved for settings storage
 #define EEP_SETT_FIRST_ADDR     (0)
-#define EEP_SETT_ANIM           ((uint8_t*)(0))
+#define EEP_SETT_ANIM           ((uint8_t*)(0))    // No longer used, since we are picking a random animation at startup
 #define EEP_SETT_NPIX           ((uint8_t*)(1))    // No longer needed, since we are using a fixed 5x5 matrix
 #define EEP_SETT_RSEED          ((uint32_t*)(2))   // Addr 2-5, 4 bytes
 #define EEP_SETT_FLAGS          ((uint8_t*)(6))    // 8 Status Flags
