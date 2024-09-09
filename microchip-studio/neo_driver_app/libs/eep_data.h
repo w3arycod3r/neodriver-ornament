@@ -46,7 +46,7 @@
 
 #define EEP_CHAR_DATA_START_ADDR (16)
 
-// These below progmem arrays are OK to define in .h file, as they're only used by the eep_data_write program.
+// These below progmem arrays (charSet and covSeqData) are OK to define in .h file, as they're only used by the eep_data_write program.
 // Double allocation in flash wouldn't be an issue there.
 /*
     5x5 font inspired by: http://batchout.blogspot.com/2018/02/five-by-five-my-5x5-pixel-font.html
@@ -775,8 +775,10 @@ static const uint8_t PROGMEM charSet[] = {
     0b11111,
 };
 
+// charSet is defined in this header so that we can automatically calculate the number of chars and bytes
 #define FLASH_CHAR_SET_SIZE_BYTES (sizeof(charSet) / sizeof(charSet[0]))
 #define EEP_CHAR_DATA_NUM_CHARS  (FLASH_CHAR_SET_SIZE_BYTES / MATRIX_HEIGHT_PIX)
+// This define is assuming that the data is stored in a compacted format in the eeprom, with 1 bit per pixel, no padding.
 #define EEP_CHAR_DATA_NUM_BYTES  (DIV_CEILING((EEP_CHAR_DATA_NUM_CHARS * MATRIX_NUM_PIX) , 8))
 
 // ASCII char set limits
