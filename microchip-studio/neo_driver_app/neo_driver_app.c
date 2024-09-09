@@ -1,4 +1,4 @@
-/* File:      neo_driver_app.cpp
+/* File:      neo_driver_app.c
  * Author:    Garrett Carter
  * Purpose:   Main NeoPixel driver program.
  */
@@ -47,8 +47,9 @@ ISR(PCINT0_vect);
 ISR(WDT_vect);
 
 /****************************** FLASH CONSTANTS ******************************/
-// NOTE: If these are defined in the header file instead, they get placed in flash twice!
-// PROGMEM arrays should be defined in .cpp/.c files!
+// NOTE: PROGMEM arrays should be defined in .cpp/.c files! 
+// If PROGMEM arrays are defined in the header file instead, they get placed in flash twice!
+// They can be declared in the header file, but should be defined in the .cpp/.c file.
 
 /************************ GLOBAL RAM VARS DEFINITIONS ************************/
 
@@ -63,9 +64,10 @@ static uint8_t u8_mode = SYS_MODE_ANIM_SEL;   // Current mode
 static uint32_t u32_randSeed;
 static volatile uint8_t u8_wdtCounter = 0;    // Used by WDT code to handle multiple sleeps
 static volatile bool b_pinChangeWake = false; // Signal from pin change ISR to mode logic
+static MULTIBUTTON_DATA_T s_leftBtn, s_rightBtn;
 
 // Array of animation "task" function pointers, in order of cycle
-static void (*apfn_renderFunc[])(void) {
+static void (*apfn_renderFunc[])(void) = {
     //anim_off,
     //anim_white,
     anim_primaries, anim_colorwheel_gamma,
@@ -90,9 +92,6 @@ static void (*apfn_renderFunc[])(void) {
     anim_frames_10,
     anim_batt_level,
 };
-
-/****************************** GLOBAL OBJECTS *******************************/
-static multiButton o_leftBtn, o_rightBtn;
 
 /****************************** SETUP FUNCTION *******************************/
 void setup() {
@@ -130,6 +129,10 @@ void setup() {
     np_init();
     np_show();
     np_set_brightness(BRIGHT_INIT);
+
+    // Reset the button state machines
+    mb_reset(&s_leftBtn);
+    mb_reset(&s_rightBtn);
 
     // Debug code
     #if DEBUG_ADC_VAL_EN == 1
@@ -226,14 +229,14 @@ static void mode_logic() {
     }
 
     // Update button events
-    uint8_t u8_lEvent = o_leftBtn.check(bitReadMask(PINB, IO_SW_LEFT));
-    uint8_t u8_rEvent = o_rightBtn.check(bitReadMask(PINB, IO_SW_RIGHT));
+    uint8_t u8_lEvent = mb_check(&s_leftBtn, bitReadMask(PINB, IO_SW_LEFT));
+    uint8_t u8_rEvent = mb_check(&s_rightBtn, bitReadMask(PINB, IO_SW_RIGHT));
 
     // Respond to left button events
     switch (u8_lEvent)
     {
     // Left Click
-    case 1:
+    case MB_EVENT_CLICK:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF)
         {
@@ -251,15 +254,15 @@ static void mode_logic() {
 
         break;
     // Left Double Click
-    case 2:
+    case MB_EVENT_DOUBLE_CLICK:
 
         break;
     // Left Hold
-    case 3:
+    case MB_EVENT_HOLD:
 
         break;
     // Left Long Hold
-    case 4:
+    case MB_EVENT_LONG_HOLD:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF) {
             u8_mode = SYS_MODE_PIX_ADJ;
@@ -294,7 +297,7 @@ static void mode_logic() {
     switch (u8_rEvent)
     {
     // Right Click
-    case 1:
+    case MB_EVENT_CLICK:
 
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF)
         {
@@ -312,15 +315,15 @@ static void mode_logic() {
 
         break;
     // Right Double Click
-    case 2:
+    case MB_EVENT_DOUBLE_CLICK:
 
         break;
     // Right Hold
-    case 3:
+    case MB_EVENT_HOLD:
 
         break;
     // Right Long Hold
-    case 4:
+    case MB_EVENT_LONG_HOLD:
         if (u8_mode == SYS_MODE_ANIM_SEL || u8_mode == SYS_MODE_ANIM_SHUFF) {
             u8_mode = SYS_MODE_PIX_ADJ;
         }
@@ -473,8 +476,8 @@ static void shutdown() {
     ADCSRA |= _BV(ADEN);                   // Enable ADC
 
     // Reset the button state machines
-    o_leftBtn.reset();
-    o_rightBtn.reset();
+    mb_reset(&s_leftBtn);
+    mb_reset(&s_rightBtn);
 }
 
 
@@ -537,4 +540,4 @@ static void startup_seed_prng() {
 
 }
 
-#endif
+#endif /* #ifndef COMPILE_EEP_DATA_WRITE */

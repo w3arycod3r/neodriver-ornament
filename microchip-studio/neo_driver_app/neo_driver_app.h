@@ -17,6 +17,11 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 
+// Allow compilation with C++ compiler
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 /*********************************** ENUMS ***********************************/
 typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
                SYS_MODE_ANIM_SHUFF,     // "Shuffle mode". Play randomly selected animations in turn.
@@ -74,5 +79,8 @@ typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
     #define BRIGHT_MIN  (0)
 #endif
 
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* NEO_DRIVER_APP_H */

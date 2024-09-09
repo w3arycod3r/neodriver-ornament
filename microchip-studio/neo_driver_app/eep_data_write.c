@@ -1,4 +1,4 @@
-﻿/* File:      eep_data_write.cpp
+﻿/* File:      eep_data_write.c
  * Author:    Garrett Carter
  * Purpose:   Write the EEPROM data needed for the main NeoDriver program
  */
@@ -29,8 +29,6 @@ static bool eep_compressed_chars(bool validate);
 /********************************** DEFINES **********************************/
 
 /******************************** GLOBAL VARS ********************************/
-
-/****************************** GLOBAL OBJECTS *******************************/
 
 /****************************** FLASH CONSTANTS ******************************/
 
