@@ -3,6 +3,7 @@
 # Purpose: Execute development test sequence
 
 $ErrorActionPreference = 'Stop'
+$desired_fuses_file = "$PSScriptRoot\..\microchip-studio\fuses.txt"
 
 Write-Host "**********************************************************"
 Write-Host "Building eep_data_write..."
@@ -29,9 +30,16 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "**********************************************************"
+Write-Host "Updating fuses..."
+Write-Host "**********************************************************"
+& $PSScriptRoot\ms-update-fuses.ps1 $desired_fuses_file
+# Failure of updating fuses is expected if the target was in debugWIRE mode, or the tool is in a bad state.
+# We will handle that case later in the sequence during the flashing.
+
+Write-Host "**********************************************************"
 Write-Host "Flashing eep_data_write..."
 Write-Host "**********************************************************"
-& $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $PSScriptRoot\..\microchip-studio\fuses.txt -hex_to_flash $eep_hex_file
+& $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $desired_fuses_file -hex_to_flash $eep_hex_file
 if ($LASTEXITCODE -ne 0) {
     Exit $LASTEXITCODE
 }
@@ -44,7 +52,7 @@ Start-Sleep -Seconds 3
 Write-Host "**********************************************************"
 Write-Host "Flashing neo_driver_app..."
 Write-Host "**********************************************************"
-& $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $PSScriptRoot\..\microchip-studio\fuses.txt -hex_to_flash $main_hex_file
+& $PSScriptRoot\ms-flash-hex.ps1 -desired_fuses_file $desired_fuses_file -hex_to_flash $main_hex_file
 if ($LASTEXITCODE -ne 0) {
     Exit $LASTEXITCODE
 }

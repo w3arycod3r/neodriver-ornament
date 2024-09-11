@@ -20,7 +20,7 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "Test eep_data_write",
+			"label": "Flash eep_data_write",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
 			"presentation": {
@@ -61,7 +61,7 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "Test neo_driver_app (Debug Config)",
+			"label": "Flash neo_driver_app (Debug Config)",
 			"detail": "Link Time Optimization (LTO) OFF",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app.hex",
@@ -103,7 +103,7 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "Test neo_driver_app (Release Config)",
+			"label": "Flash neo_driver_app (Release Config)",
 			"detail": "Link Time Optimization (LTO) ON",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
@@ -126,7 +126,7 @@
 			"dependsOrder": "sequence"
 		},
 		{
-			"label": "Test eep_data_write and neo_driver_app",
+			"label": "Flash All",
 			"detail": "Run complete dev sequence",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-dev-sequence.ps1",
