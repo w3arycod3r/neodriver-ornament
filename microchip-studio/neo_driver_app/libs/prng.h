@@ -29,7 +29,6 @@ void prng_seed(uint32_t);
 uint32_t prng_next();
 uint32_t prng_upper(uint32_t);
 uint32_t prng_range(uint32_t, uint32_t);
-uint32_t map(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 #ifdef __cplusplus
 } // extern "C"

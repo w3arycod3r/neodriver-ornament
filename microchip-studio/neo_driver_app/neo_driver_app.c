@@ -135,7 +135,7 @@ void setup() {
     mb_reset(&s_rightBtn);
 
     // Debug code
-    #if DEBUG_ADC_VAL_EN == 1
+    #ifdef DEBUG_ADC_VAL_EN
         while(1) {
             delay_msec(250);
             //draw_value(adc_read(IO_POT_ADC_CH, IO_POT_ADC_REF), 1023);
@@ -144,7 +144,7 @@ void setup() {
         }
     #endif
 
-    #if DEBUG_RAND_SEED_EN == 1
+    #ifdef DEBUG_RAND_SEED_EN
         draw_value_binary(u32_randSeed);
         np_show();
         while((bitReadMask(PINB, IO_SW_LEFT)) && (bitReadMask(PINB, IO_SW_RIGHT))) {}
@@ -181,7 +181,7 @@ void loop() {
         np_show();
     }
 
-    #if (DEBUG_SOFT_RESET_ON_INTERVAL_EN == 1)
+    #ifdef DEBUG_SOFT_RESET_ON_INTERVAL_EN
     if (millis() > (DEBUG_SOFT_RESET_INTERVAL_SEC * 1000))
     {
         soft_reset();

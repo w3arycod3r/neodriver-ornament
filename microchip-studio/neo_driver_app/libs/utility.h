@@ -84,15 +84,16 @@ extern "C"{
 
 /********************************** PROTOTYPES **********************************/
 void u32_to_dec_string(uint32_t u32_val, char* ac_str);
-uint8_t strlen(char* ac_str);
+uint8_t util_strlen(char* ac_str);
 void rev_string(char* ac_str);
-void memset(uint8_t*, uint8_t, uint8_t);
+void util_memset(uint8_t*, uint8_t, uint8_t);
 void soft_reset();
 void inc_sat_eep_cntr_u16(uint16_t* eep_addr);
 uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig);
 uint16_t read_vcc_mv();
 uint8_t get_batt_level();
 void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num_bits);
+uint32_t map(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 #ifdef __cplusplus
 } // extern "C"

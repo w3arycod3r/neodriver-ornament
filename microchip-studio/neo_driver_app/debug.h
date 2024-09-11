@@ -14,15 +14,15 @@ extern "C"{
 #endif
 
 /********************************** DEFINES **********************************/
-// Set these to 1 to enable debug code
-#define DEBUG_COV_ANIM_EN  (0)
-#define DEBUG_LOW_BATT_EN  (0)
-#define DEBUG_BATT_LVL_EN  (0)
-#define DEBUG_ADC_VAL_EN   (0)
-#define DEBUG_RAND_SEED_EN (0)
-#define DEBUG_BRIGHT_EN    (0)
+// Define these to enable debug code
+// #define DEBUG_COV_ANIM_EN
+// #define DEBUG_LOW_BATT_EN
+// #define DEBUG_BATT_LVL_EN
+// #define DEBUG_ADC_VAL_EN
+// #define DEBUG_RAND_SEED_EN
+// #define DEBUG_BRIGHT_EN
 
-#define DEBUG_SOFT_RESET_ON_INTERVAL_EN (0)
+// #define DEBUG_SOFT_RESET_ON_INTERVAL_EN
 #define DEBUG_SOFT_RESET_INTERVAL_SEC   (2)
 
 

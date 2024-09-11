@@ -47,7 +47,7 @@ void anim_blk_flash_chars(char* msg) {
     np_clear();
     uint8_t i = 0;
     char c;
-    while (c = msg[i++]) {
+    while ((c = msg[i++])) {
 
         draw_char_cent(c, COLOR_BLUE);
         np_show();

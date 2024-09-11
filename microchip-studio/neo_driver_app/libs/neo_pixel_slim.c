@@ -184,7 +184,7 @@ void np_show(void) {
     uint8_t sreg_prev;
     uint8_t* data = au8_pixelData;
     uint8_t datlen = NP_ARR_SIZE;
-    uint8_t* port = &NP_PORT;
+    volatile uint8_t* port = &NP_PORT;
     
     // Disable interrupts
     sreg_prev = SREG;
@@ -511,7 +511,7 @@ uint8_t np_get_brightness(void) {
     @brief   Fill the whole NeoPixel strip with 0 / black / off.
 */
 void np_clear(void) {
-    memset(au8_pixelData, 0, NP_ARR_SIZE);
+    util_memset(au8_pixelData, 0, NP_ARR_SIZE);
 }
 
   /*!

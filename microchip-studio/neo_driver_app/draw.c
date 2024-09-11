@@ -10,6 +10,7 @@
 #include <neo_common.h>
 #include <avr/eeprom.h>
 #include <eep_data.h>
+#include <utility.h>
 
 /****************************** STATIC PROTOTYPES ******************************/
 static uint8_t eep_char_read_line(char c_char, uint8_t line);

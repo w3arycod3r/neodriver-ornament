@@ -16,6 +16,7 @@
 /********************************* INCLUDES **********************************/
 #include <stdint.h>
 #include <avr/interrupt.h>
+#include <debug.h>
 
 // Allow compilation with C++ compiler
 #ifdef __cplusplus
@@ -64,18 +65,18 @@ typedef enum { SYS_MODE_ANIM_SEL,       // Play one selected animation.
 /***************************** DEBUG DEFINE OVERRIDES *****************************/
 
 // Debug low battery
-#if DEBUG_LOW_BATT_EN == 1
+#ifdef DEBUG_LOW_BATT_EN
     #define BATT_TON_MSEC  (2000)
     #define BATT_DISCHG_THRESH_MV (1000)
 #endif
 
 // Debug batt level animation
-#if DEBUG_BATT_LVL_EN == 1
+#ifdef DEBUG_BATT_LVL_EN
     #define SPOOF_BATT_LVL (3200)
 #endif
 
 // Debug brightness
-#if DEBUG_BRIGHT_EN == 1
+#ifdef DEBUG_BRIGHT_EN
     #define BRIGHT_MIN  (0)
 #endif
 

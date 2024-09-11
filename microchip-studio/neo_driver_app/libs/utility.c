@@ -32,7 +32,7 @@ void u32_to_dec_string(uint32_t u32_val, char* ac_str) {
     rev_string(ac_str);
 }
 
-uint8_t strlen(char* ac_str) {
+uint8_t util_strlen(char* ac_str) {
     uint8_t u8_len = 0;
 
     while (ac_str[u8_len]) {
@@ -44,7 +44,7 @@ uint8_t strlen(char* ac_str) {
 
 void rev_string(char* ac_str) {
 
-    uint8_t u8_len = strlen(ac_str);
+    uint8_t u8_len = util_strlen(ac_str);
     if (u8_len < 2) {
         // Nothing to reverse...
         return;
@@ -61,7 +61,7 @@ void rev_string(char* ac_str) {
     }
 }
 
-void memset(uint8_t* ptr, uint8_t val, uint8_t num_bytes) {
+void util_memset(uint8_t* ptr, uint8_t val, uint8_t num_bytes) {
     
     // Decrement loop index gives a smaller code size, according to Atmel app note.
     do {
@@ -102,7 +102,7 @@ uint8_t extract_digit(uint16_t u16_val, uint8_t u8_dig) {
 // Read 1.1V reference against VCC
 uint16_t read_vcc_mv() {
 
-    #if DEBUG_BATT_LVL_EN == 1
+    #ifdef DEBUG_BATT_LVL_EN
         return SPOOF_BATT_LVL;
     #endif
 
@@ -148,4 +148,9 @@ void shift_in_from_right(uint8_t* data, const uint8_t data_in, const uint8_t num
     
     *data <<= num_bits;
     *data |= ((data_in >> (8-num_bits)) & bitmask);
+}
+
+uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max)
+{
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }

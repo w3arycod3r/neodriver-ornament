@@ -60,7 +60,7 @@ extern "C"{
 
 /***************************** DEBUG DEFINE OVERRIDES *****************************/
 // Debug CoV animation
-#if DEBUG_COV_ANIM_EN == 1
+#ifdef DEBUG_COV_ANIM_EN
     #define COV_BASES_CNT  10
     #define COV_STEP_MSEC  1000
     #define COV_SLEEP_TIME WDT_125MS
