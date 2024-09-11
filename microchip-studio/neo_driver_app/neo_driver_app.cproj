@@ -30,15 +30,15 @@
     <EraseKey />
     <AsfFrameworkConfig>
       <framework-data xmlns="">
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.52.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.52.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
     <avrtoolserialnumber>J42700015942</avrtoolserialnumber>
@@ -206,6 +206,11 @@
     <PostBuildEvent>pwsh -ExecutionPolicy Bypass -File "$(MSBuildProjectDirectory)/../../scripts/ms-get-size-info.ps1" -elf_to_parse "$(OutputDirectory)/$(OutputFileName)$(OutputFileExtension)" -output_text_file "$(OutputDirectory)/$(OutputFileName)_syms.txt"</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="arduino_core\" />
+    <Folder Include="arduino_core\" />
+    <Folder Include="libs\" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="anim.c">
       <SubType>compile</SubType>
     </Compile>
@@ -284,11 +289,6 @@
     <Compile Include="neo_driver_app.h">
       <SubType>compile</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="arduino_core\" />
-    <Folder Include="arduino_core\" />
-    <Folder Include="libs\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
