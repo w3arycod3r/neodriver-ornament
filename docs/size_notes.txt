@@ -1,9 +1,0 @@
-With digitalWrite, malloc, free, memset: 6282B
-malloc and free removed: 5680B
-digitalRead, digitalWrite, pinMode removed: 5222B
-
-with pst_sequenceX globals: 8160B flash, 389B RAM
-without /\: No change
-
-with msg3: 7368B flash, 372B RAM
-without /\: 7336B flash, 370B RAM

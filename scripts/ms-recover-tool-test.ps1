@@ -1,0 +1,1 @@
+& $PSScriptRoot\ms-recover-tool.ps1 -desired_fuses_file $PSScriptRoot\..\microchip-studio\fuses.txt

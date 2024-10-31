@@ -2,43 +2,132 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Test eep_data_write",
+			"label": "Build eep_data_write",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write -exec_name eep_data_write -clean_build true",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared",
 				"showReuseMessage": true,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
 		{
-			"label": "Test neo_driver_app",
+			"label": "Flash eep_data_write",
 			"type": "shell",
-			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -clean_build true && ${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/eep_data_write/eep_data_write.hex",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
 				"focus": true,
 				"panel": "shared",
 				"showReuseMessage": true,
-				"clear": true
+				"clear": false
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build eep_data_write"
+			],
+			"dependsOrder": "sequence"
+		},
+		{
+			"label": "Build neo_driver_app (Debug Config)",
+			"detail": "Link Time Optimization (LTO) OFF",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Debug -exec_name neo_driver_app -clean_build true",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
 		{
-			"label": "Test eep_data_write and neo_driver_app",
+			"label": "Flash neo_driver_app (Debug Config)",
+			"detail": "Link Time Optimization (LTO) OFF",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Debug/neo_driver_app.hex",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build neo_driver_app (Debug Config)"
+			],
+			"dependsOrder": "sequence"
+		},
+		{
+			"label": "Build neo_driver_app (Release Config)",
+			"detail": "Link Time Optimization (LTO) ON",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-build-config.ps1 -config_folder ${workspaceFolder}/microchip-studio/neo_driver_app/Release -exec_name neo_driver_app -clean_build true",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Flash neo_driver_app (Release Config)",
+			"detail": "Link Time Optimization (LTO) ON",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-flash-hex.ps1 -desired_fuses_file ${workspaceFolder}/microchip-studio/fuses.txt -hex_to_flash ${workspaceFolder}/microchip-studio/neo_driver_app/Release/neo_driver_app.hex",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build neo_driver_app (Release Config)"
+			],
+			"dependsOrder": "sequence"
+		},
+		{
+			"label": "Flash All",
+			"detail": "Run complete dev sequence",
 			"type": "shell",
 			"command": "${workspaceFolder}/scripts/ms-dev-sequence.ps1",
 			"presentation": {
@@ -51,7 +140,7 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
@@ -69,9 +158,51 @@
 			},
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": []
 		},
+		{
+			"label": "Check Target Voltage",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/ms-check-voltage.ps1",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build All",
+			"detail": "Build all configs in Microchip Studio",
+			"type": "shell",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"dependsOn": [
+				"Build eep_data_write",
+				"Build neo_driver_app (Debug Config)",
+				"Build neo_driver_app (Release Config)"
+			],
+			"dependsOrder": "sequence"
+		}
 	]
 }

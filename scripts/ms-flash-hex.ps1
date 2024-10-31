@@ -5,11 +5,17 @@ param (
     [Parameter(Mandatory)]
     [string]
     $hex_to_flash,
-    # Need fuse settings to properly disable debugWIRE
+    # Need fuse settings to properly disable debugWIRE. These fuse settings should have DWEN set to 0.
     [Parameter(Mandatory)]
     [string]
-    $desired_fuses_file
+    $desired_fuses_file,
+    # Number of times to attempt flashing before giving up
+    [int]
+    $max_flash_attempts = 2
 )
+
+# If the program step takes longer than this, the tool is likely in a bad state and we should recover it.
+$max_flash_time_sec = 10
 
 $ErrorActionPreference = 'Stop'
 if (-Not (Get-Command atprogram.exe -ErrorAction SilentlyContinue)) {
@@ -28,45 +34,50 @@ if ($atprog_use_verbose -eq 1){
     $atprog_verbose = $null
 }
 
-# atprogram.exe $atprog_verbose -t atmelice -i ISP -d attiny85 info
+$num_flash_attempts = 1
+$flash_success = $false
+$last_attempt = $false
+$stop_watch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
+while ($num_flash_attempts -le $max_flash_attempts) {
 
-Write-Host "Issuing reset to atmelice..."
-$atprogram_command = "atprogram $atprog_verbose --force -t atmelice reboot"
-Write-Host $atprogram_command
-Invoke-Expression $atprogram_command
-if ($LASTEXITCODE -ne 0) {
-    Exit $LASTEXITCODE
+    if ($num_flash_attempts -eq $max_flash_attempts) {
+        $last_attempt = $true
+    }
+
+    Write-Host "Flashing $hex_to_flash (Attempt $num_flash_attempts)"
+    $atprogram_command = "atprogram.exe $atprog_verbose --force -t atmelice -i ISP -d attiny85 --externalreset program --chiperase -f $hex_to_flash --verify"
+    Write-Host $atprogram_command
+    $stop_watch.Reset()
+    $stop_watch.Start()
+    Invoke-Expression $atprogram_command
+    $stop_watch.Stop()
+    
+    if ($LASTEXITCODE -ne 0) {
+        # If we failed to flash, try to recover the tool and target before trying again.
+        Write-Host "Failed to flash $hex_to_flash"
+        if (-Not $last_attempt) {
+            & $PSScriptRoot\ms-recover-tool.ps1 -desired_fuses_file $desired_fuses_file
+        }
+    } else {
+        $flash_success = $true
+        Write-Host "Successfully flashed $hex_to_flash"
+        # If we successfully flashed, exit the loop
+        break
+    }
+    $num_flash_attempts++
+    
 }
 
-Write-Host "Waiting for atmelice to reset..."
-Start-Sleep -Seconds 2
-
-Write-Host "Attempting to disable debugWIRE interface..."
-Write-Host "(Failure is expected if the target was not in debugWIRE mode)"
-$atprogram_command = "atprogram.exe $atprog_verbose --force -t atmelice -i debugWIRE -d attiny85 --externalreset dwdisable"
-Write-Host $atprogram_command
-Invoke-Expression $atprogram_command
-
-# Clear DWEN fuse via ISP interface
-& $PSScriptRoot\ms-update-fuses.ps1 $desired_fuses_file
-if ($LASTEXITCODE -ne 0) {
-    Exit $LASTEXITCODE
+if (-Not $flash_success) {
+    Write-Host "Failed to flash $hex_to_flash after $max_flash_attempts attempts"
+    Exit 1
 }
 
-Write-Host "Checking target voltage..."
-$atprogram_command = "atprogram.exe $atprog_verbose --force -t atmelice -i ISP -d attiny85 --externalreset info --voltage"
-Write-Host $atprogram_command
-Invoke-Expression $atprogram_command
-if ($LASTEXITCODE -ne 0) {
-    Exit $LASTEXITCODE
-}
-
-Write-Host "Flashing $hex_to_flash"
-$atprogram_command = "atprogram.exe $atprog_verbose --force -t atmelice -i ISP -d attiny85 --externalreset program --chiperase -f $hex_to_flash --verify"
-Write-Host $atprogram_command
-Invoke-Expression $atprogram_command
-if ($LASTEXITCODE -ne 0) {
-    Exit $LASTEXITCODE
+$last_flash_time = $stop_watch.Elapsed.TotalSeconds
+Write-Host "Flashing took $last_flash_time seconds"
+if ($last_flash_time -gt $max_flash_time_sec) {
+    Write-Host "Flashing took longer than $max_flash_time_sec seconds. The tool may be in a bad state."
+    & $PSScriptRoot\ms-recover-tool.ps1 -desired_fuses_file $desired_fuses_file
 }
 
 Exit 0

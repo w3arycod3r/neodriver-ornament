@@ -1,6 +1,12 @@
 {
     "files.associations": {
-        "wiring_private.h": "c"
-    },
-    "terminal.integrated.defaultProfile.windows": "Windows PowerShell"
+        "*.vht": "vhdl",
+        "*.tcl": "shellscript",
+        "*.mif": "vhdl",
+        "*.asm": "asm-intel-x86-generic",
+        "wdt.h": "c",
+        "neo_pixel_slim.h": "c",
+        "eeprom.h": "c",
+        "neo_common.h": "c"
+    }
 }

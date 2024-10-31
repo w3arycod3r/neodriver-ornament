@@ -1,4 +1,0 @@
-(NeoPixels disconnected)
-MCU only, nothing OFF, active mode: ~4.85 mA
-Tim1 OFF, USI OFF, PLL OFF: ~4.16 mA
-Analog Comp OFF, Dig I/P Buffer (ADC2) OFF: ~4.12 mA

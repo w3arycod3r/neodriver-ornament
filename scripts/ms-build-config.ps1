@@ -6,6 +6,10 @@ param (
     [Parameter(Mandatory)]
     [string]
     $config_folder,
+    # The executable name within the config_folder, without an extension. Ex. neo_driver_app
+    [Parameter(Mandatory)]
+    [string]
+    $exec_name,
     [Parameter(Mandatory=$false)]
     [ValidateSet("true", "false")]
     [string]
@@ -40,6 +44,11 @@ if ($clean_build -eq "true") {
 }
 
 make.exe all --jobs 8 --output-sync
+if ($LASTEXITCODE -ne 0) {
+    Exit $LASTEXITCODE
+}
+
+& $PSScriptRoot\ms-get-size-info.ps1 -elf_to_parse "${config_folder}\${exec_name}.elf" -output_text_file "${config_folder}\${exec_name}_syms.txt"
 if ($LASTEXITCODE -ne 0) {
     Exit $LASTEXITCODE
 }
